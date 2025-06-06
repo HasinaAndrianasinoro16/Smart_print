@@ -35,9 +35,9 @@ export default function Facturation(){
         const emission = rowData.code;
         const date =emission +' - '+ echeance;
         return(
-            <div>
+            <>
                 {date}
-            </div>
+            </>
         );
     }
     const actionBodyTemplate = (rowData) => {
