@@ -1,24 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import './assets/dist/js/bootstrap.bundle.min';
+import './assets/fontawesome-5/css/all.min.css';
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+import './assets/fontawesome-5/css/all.css';
+import './assets/dist/css/bootstrap.min.css';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import Headers from "./Body/Headers";
+import Facturation from "./Page/Facturation";
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Headers/>
+      <Routes>
+          <Route path='/' element={<Facturation/>}/>
+      </Routes>
+    </Router>
   );
 }
 
