@@ -1,8 +1,9 @@
 import React, {useState} from "react";
 import {Dropdown} from "primereact/dropdown";
-import {InputNumber} from "primereact/inputnumber";
+// import {InputNumber} from "primereact/inputnumber";
 import { Calendar } from 'primereact/calendar';
-import { InputText } from "primereact/inputtext";
+// import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
 
 
 export default function Modals_Creation_Facture(){
@@ -48,11 +49,13 @@ export default function Modals_Creation_Facture(){
 
             </div>
             <label htmlFor="nom" className="form-label">condition de paiement:</label>
-            <InputText id="nom" value={condition}
+            <InputTextarea id="nom" value={condition}
                        onChange={(e) => setCondition(e.target.value)}
-                       className="w-100"
+                       rows={2} cols={30}
+                           className="w-100"
                        required
             />
+            <div className="py-2"/>
             <div className="text-center">
                 <button className="w-50 btn btn-success">Ajouter <i
                     className="fas fa-plus"/></button>

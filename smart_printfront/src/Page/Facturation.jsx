@@ -3,6 +3,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
 import { Dialog } from "primereact/dialog";
+import { Link } from 'react-router-dom';
 
 
 import Modals_Ajout_client from "../Components/Modals_Ajout_client";
@@ -43,12 +44,12 @@ export default function Facturation(){
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="d-flex gap-3 mb-3 text-center">
-                <button
+                <Link to='/info?id=1'
                     className="btn btn-info btn-sm"
-                    onClick={() => handleInfo(rowData)}
+                    // onClick={() => handleInfo(rowData)}
                 >
                     <i className="fas fa-info-circle"/> Info
-                </button>
+                </Link>
                 <button
                     className="btn btn-outline-dark btn-sm"
                     onClick={() => setVisible3(true)}

@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Headers from "./Body/Headers";
 import Facturation from "./Page/Facturation";
+import Info_facture from "./Components/Info_facture";
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
       <Headers/>
       <Routes>
           <Route path='/' element={<Facturation/>}/>
+          <Route path='/info' element={<Info_facture/>}/>
       </Routes>
     </Router>
   );

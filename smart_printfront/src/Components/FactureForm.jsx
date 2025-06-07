@@ -67,12 +67,12 @@ export default function FactureForm() {
                                 value={ligne.prixUnitaire}
                                 onValueChange={(e) => handleChange(index, 'prixUnitaire', e.value || 0)}
                                 mode="currency"
-                                currency="EUR"
+                                currency="MGA"
                                 locale="fr-FR"
                             />
                         </td>
                         <td>
-                            {(ligne.quantite * ligne.prixUnitaire).toFixed(2)} €
+                            {(ligne.quantite * ligne.prixUnitaire).toFixed(2)} Ar
                         </td>
                         <td>
                             <Button
@@ -97,15 +97,15 @@ export default function FactureForm() {
                         <tbody>
                         <tr>
                             <td><strong>Total HT :</strong></td>
-                            <td>{totalHT.toFixed(2)} €</td>
+                            <td>{totalHT.toFixed(2)} Ar</td>
                         </tr>
                         <tr>
                             <td><strong>TVA ({tauxTVA}%) :</strong></td>
-                            <td>{totalTVA.toFixed(2)} €</td>
+                            <td>{totalTVA.toFixed(2)} Ar</td>
                         </tr>
                         <tr>
                             <td><strong>Total TTC :</strong></td>
-                            <td><strong>{totalTTC.toFixed(2)} €</strong></td>
+                            <td><strong>{totalTTC.toFixed(2)} Ar</strong></td>
                         </tr>
                         </tbody>
                     </table>
