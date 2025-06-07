@@ -85,7 +85,7 @@ export default function Facturation(){
             </Dialog>
 
             <div className="container-lg">
-                <div className="text-start bold h4">Smart Print Facturation:</div>
+                <div className="text-start bold h4">Smart Print Facturation :</div>
                 <div className="py-1"/>
                 <div className="row">
                     <div className="d-flex justify-content-center gap-3 mb-3">

@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Headers from "./Body/Headers";
 import Facturation from "./Page/Facturation";
 import Info_facture from "./Components/Info_facture";
+import Histoique_facture from "./Page/Hitsorique_facture";
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
       <Routes>
           <Route path='/' element={<Facturation/>}/>
           <Route path='/info' element={<Info_facture/>}/>
+          <Route path='/Historique' element={<Histoique_facture/>}/>
       </Routes>
     </Router>
   );
