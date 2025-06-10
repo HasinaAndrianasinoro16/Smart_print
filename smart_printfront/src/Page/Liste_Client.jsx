@@ -70,9 +70,10 @@ export default function Liste_Client(){
                             tableStyle={{minWidth: '50rem'}}
                             header="Liste des Factures en cours"
                         >
-                            <Column field="code" header="Code" sortable filter></Column>
-                            <Column field="name" header="Client" sortable filter></Column>
-                            <Column header="Date d'emission - date d'echeance" body={date_emission_echeance} sortable filter></Column>
+                            <Column field="code" header="Client" sortable filter></Column>
+                            <Column field="name" header="Adresse" sortable filter></Column>
+                            <Column header="email" body={date_emission_echeance} sortable filter></Column>
+                            <Column header="Telephone" body={date_emission_echeance} sortable filter></Column>
                             <Column header="Action" body={actionBodyTemplate} />
                         </DataTable>
                     </div>
