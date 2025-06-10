@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::prefix('clients')->group(function () {
+    Route::get('/',[\App\Http\Controllers\Client_controller::class,'get_all_Clients']);
+    Route::get('/{id}',[\App\Http\Controllers\Client_controller::class,'get_Client']);
+    Route::post('/add',[\App\Http\Controllers\Client_controller::class,'Form_add_client']);
+});
