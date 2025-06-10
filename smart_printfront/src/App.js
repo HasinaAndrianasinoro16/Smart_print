@@ -9,6 +9,7 @@ import Headers from "./Body/Headers";
 import Facturation from "./Page/Facturation";
 import Info_facture from "./Components/Info_facture";
 import Histoique_facture from "./Page/Hitsorique_facture";
+import Liste_Client from "./Page/Liste_Client";
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path='/' element={<Facturation/>}/>
           <Route path='/info' element={<Info_facture/>}/>
           <Route path='/Historique' element={<Histoique_facture/>}/>
+          <Route path='/liste_client' element={<Liste_Client/>}/>
       </Routes>
     </Router>
   );

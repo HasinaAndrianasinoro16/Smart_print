@@ -32,12 +32,12 @@ export default function Liste_Client(){
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="d-flex gap-3 mb-3 text-center">
-                <Link to='/info?id=1'
-                      className="btn btn-info btn-sm"
-                    // onClick={() => handleInfo(rowData)}
-                >
-                    <i className="fas fa-info-circle"/> Info
-                </Link>
+               <button className="btn btn-danger">
+                   <i className="fas fa-trash"/>
+               </button>
+                <button className="btn btn-warning">
+                    <i className="fas fa-pencil-alt"/>
+                </button>
             </div>
         );
     };

@@ -15,7 +15,7 @@ export default function Headers(){
 
             <ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0" style={{ gap: '15px' }}>
                 <li><Link to="/" className="nav-link px-3 text-white h5"><i className="fas fa-money-check-alt" ></i> Facturation</Link></li>
-                {/*<li><Link to="/" className="nav-link px-3 text-white"><i className="fas fa-chart-bar" ></i> Statistique</Link></li>*/}
+                <li><Link to="/" className="nav-link px-3 text-white"><i className="fas fa-users" ></i> Liste des clients</Link></li>
                 <li><Link to="/Historique" className="nav-link px-3 text-white"><i className="fas fa-folder-open" ></i> Historique facture</Link></li>
             </ul>
 
