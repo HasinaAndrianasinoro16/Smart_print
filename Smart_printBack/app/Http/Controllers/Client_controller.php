@@ -47,4 +47,28 @@ class Client_controller extends Controller
             throw new \Exception($e->getMessage());
         }
     }
+
+    //modifier un client
+    public function update(Request $request, $id)
+    {
+        $updated = Client::update_client(
+            $id,
+            $request->nom,
+            $request->adresse,
+            $request->nif,
+            $request->email,
+            $request->stat,
+            $request->telephone,
+            $request->rcs
+        );
+
+        return response()->json(['updated' => $updated]);
+    }
+
+    // Supprimer un client
+    public function destroy($id)
+    {
+        $deleted = Client::destroy($id);
+        return response()->json(['deleted' => $deleted]);
+    }
 }

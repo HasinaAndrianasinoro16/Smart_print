@@ -1,34 +1,33 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {InputText} from "primereact/inputtext";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
+import {getApiUrl} from "../Link/URL";
 
 export default function Liste_Client(){
     const [globalFilter, setGlobalFilter] = useState('');
-    const testProducts = [
-        { code: 'P001', name: 'Imprimante HP LaserJet', category: 'Informatique', quantity: 12 },
-        { code: 'P002', name: 'Papier A4 80g', category: 'Papeterie', quantity: 200 },
-        { code: 'P003', name: 'Toner Samsung', category: 'Informatique', quantity: 8 },
-        { code: 'P004', name: 'Agrafeuse', category: 'Fournitures', quantity: 35 },
-        { code: 'P005', name: 'Clé USB 32GB', category: 'Informatique', quantity: 50 },
-        { code: 'P006', name: 'Bloc-notes', category: 'Papeterie', quantity: 120 },
-        { code: 'P007', name: 'Souris Logitech', category: 'Informatique', quantity: 15 },
-        { code: 'P008', name: 'Enveloppe kraft', category: 'Papeterie', quantity: 75 },
-        { code: 'P009', name: 'Câble HDMI', category: 'Informatique', quantity: 22 },
-        { code: 'P010', name: 'Stylo bille bleu', category: 'Papeterie', quantity: 300 },
-    ];
+    const [Clients, setClients] = useState()
 
-    const date_emission_echeance = (rowData) => {
-        const echeance = rowData.name;
-        const emission = rowData.code;
-        const date =emission +' - '+ echeance;
-        return(
-            <>
-                {date}
-            </>
-        );
+    const Liste_clients = async () => {
+        try {
+            const reponse = await fetch(getApiUrl("clients"));
+            if (!reponse.ok){
+                throw new Error("Erreur lors de la recuperation des categories");
+            }
+            const data = await  reponse.json();
+            setClients(data);
+
+        }catch (error){
+            console.error("erreur", error.message || error.toString());
+        }
     }
+
+    useEffect(() => {
+        Liste_clients();
+    }, []);
+
+
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="d-flex gap-3 mb-3 text-center">
@@ -61,7 +60,7 @@ export default function Liste_Client(){
                         </div>
 
                         <DataTable
-                            value={testProducts}
+                            value={Clients}
                             removableSort
                             paginator
                             rows={5}
@@ -70,10 +69,10 @@ export default function Liste_Client(){
                             tableStyle={{minWidth: '50rem'}}
                             header="Liste des Clients   "
                         >
-                            <Column field="code" header="Client" sortable filter></Column>
-                            <Column field="name" header="Adresse" sortable filter></Column>
-                            <Column header="email" body={date_emission_echeance} sortable filter></Column>
-                            <Column header="Telephone" body={date_emission_echeance} sortable filter></Column>
+                            <Column field="nom" header="Client" sortable filter></Column>
+                            <Column field="adresse" header="Adresse" sortable filter></Column>
+                            <Column field="email" header="Email" sortable filter></Column>
+                            <Column field="telephone" header="contact" sortable filter></Column>
                             <Column header="Action" body={actionBodyTemplate} />
                         </DataTable>
                     </div>
