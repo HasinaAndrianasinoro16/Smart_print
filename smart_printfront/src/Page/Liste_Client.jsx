@@ -45,7 +45,7 @@ export default function Liste_Client(){
     return(
         <>
             <div className="container-lg">
-                <div className="text-start bold h4">Smart Print Historique Facturation:</div>
+                <div className="text-start bold h4">Smart Print Liste des clients:</div>
                 <div className="py-1"/>
                 <div className="row">
                     <div className="card">
@@ -68,7 +68,7 @@ export default function Liste_Client(){
                             rowsPerPageOptions={[5, 10, 20]}
                             globalFilter={globalFilter}
                             tableStyle={{minWidth: '50rem'}}
-                            header="Liste des Factures en cours"
+                            header="Liste des Clients   "
                         >
                             <Column field="code" header="Client" sortable filter></Column>
                             <Column field="name" header="Adresse" sortable filter></Column>
