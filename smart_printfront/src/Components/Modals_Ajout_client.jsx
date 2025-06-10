@@ -32,7 +32,7 @@ export default function Modals_Ajout_client() {
         };
 
         try {
-            const response = await fetch(getApiUrl('add'), {
+            const response = await fetch(getApiUrl('clients/add'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(clientData),
