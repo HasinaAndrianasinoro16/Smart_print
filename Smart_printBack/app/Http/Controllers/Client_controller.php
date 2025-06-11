@@ -9,12 +9,13 @@ use Illuminate\Support\Facades\DB;
 class Client_controller extends Controller
 {
     //controller pour la liste des clients
-    public function get_all_Clients(){
+    public function get_all_Clients()
+    {
         try {
-            $clients = DB::table('clients')->get()->where('etat','=',0);
+            $clients = Client::where('etat', '=', 0)->get();
             return response()->json($clients);
-        }catch (\Exception $e){
-            throw new \Exception($e->getMessage());
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -69,7 +70,7 @@ class Client_controller extends Controller
     // Supprimer un client
     public function destroy($id)
     {
-        $deleted = DB::table('clients')->where('id','=',$id)->Update(['etat'=>1]);
+        $deleted = DB::table('client')->where('id','=',$id)->Update(['etat'=>1]);
         return response()->json(['deleted' => $deleted]);
     }
 }

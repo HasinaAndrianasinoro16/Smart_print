@@ -23,5 +23,5 @@ Route::prefix('clients')->group(function () {
     Route::get('/{id}',[\App\Http\Controllers\Client_controller::class,'get_Client']);
     Route::post('/add',[\App\Http\Controllers\Client_controller::class,'Form_add_client']);
     Route::put('/update/{id}', [\App\Http\Controllers\Client_controller::class, 'update']);
-    Route::delete('/delete/{id}', [\App\Http\Controllers\Client_controller::class, 'destroy']);
+    Route::put('/delete/{id}', [\App\Http\Controllers\Client_controller::class, 'destroy']);
 });
