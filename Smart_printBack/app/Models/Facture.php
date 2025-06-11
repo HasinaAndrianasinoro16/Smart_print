@@ -42,6 +42,8 @@ class Facture extends Model
             $facture->date_echeance  = $date_echeance;
             $facture->condition_paiement = $condition_paiement;
             $facture->statut  = 0; //par defaut 0 car elle sont toutes en attentes au depart
+            $facture->save();
+            return $facture;
         }catch (\Exception $exception){
             return $exception->getMessage();
         }
