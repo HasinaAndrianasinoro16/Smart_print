@@ -3,7 +3,7 @@ import {getApiUrl} from "../Link/URL";
 import {InputText} from "primereact/inputtext";
 import {InputNumber} from "primereact/inputnumber";
 
-export default function Modals_update_clients({idClients}){
+export default function Modals_update_clients({ idClients, onClose }){
     const [nom, setNom] = useState('');
     const [adresse, setAdresse] = useState('');
     const [email, setEmail] = useState('');
@@ -71,14 +71,15 @@ export default function Modals_update_clients({idClients}){
 
             if (!response.ok) throw new Error("Erreur lors de l'ajout du client");
 
-            alert("Client modifier avec succès !");
-            setNom("");
-            setAdresse("");
-            setEmail("");
-            setTelephone("");
-            setNif(null);
-            setStat(null);
-            setRcs("");
+            alert("Client modifié avec succès !");
+            onClose();
+            // setNom("");
+            // setAdresse("");
+            // setEmail("");
+            // setTelephone("");
+            // setNif(null);
+            // setStat(null);
+            // setRcs("");
 
         } catch (error) {
             console.error("Erreur :", error.message);
