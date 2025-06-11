@@ -19,7 +19,7 @@ class Facture_controller extends Controller
     }
 
     //controller pour ajouter les factures
-    public function Form_add_factures(Request $request)
+    public function Form_add_facture(Request $request)
     {
         try {
             $request->validate([
