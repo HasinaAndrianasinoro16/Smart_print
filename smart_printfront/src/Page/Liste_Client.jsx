@@ -4,10 +4,14 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { getApiUrl } from "../Link/URL";
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
+import { Dialog } from "primereact/dialog";
+import Modals_update_clients from "../Components/Modals_update_clients";
 
 export default function Liste_Client() {
     const [globalFilter, setGlobalFilter] = useState('');
     const [Clients, setClients] = useState([]);
+    const [visible, setVisible] = useState(false);
+    const [selectedClientId, setSelectedClientId] = useState(null);  // <- Ici on stocke l'id du client à modifier
 
     const Liste_clients = async () => {
         try {
@@ -63,7 +67,10 @@ export default function Liste_Client() {
             <button className="btn btn-danger" onClick={(e) => { e.preventDefault(); confirm(e, rowData.id) }}>
                 <i className="fas fa-trash" />
             </button>
-            <button className="btn btn-warning">
+            <button className="btn btn-warning" onClick={() => {
+                setSelectedClientId(rowData.id); // <-- on sélectionne l'id du client
+                setVisible(true);
+            }}>
                 <i className="fas fa-pencil-alt" />
             </button>
         </div>
@@ -72,6 +79,20 @@ export default function Liste_Client() {
     return (
         <>
             <ConfirmPopup />
+            <Dialog
+                header="Modifier un Client"
+                visible={visible}
+                style={{width: '70vw'}}
+                onHide={() => setVisible(false)}
+            >
+                {selectedClientId && (
+                    <Modals_update_clients
+                        idClients={selectedClientId}
+                        onClose={() => { setVisible(false); Liste_clients(); }}
+                    />
+                )}
+            </Dialog>
+
             <div className="container-lg">
                 <div className="text-start bold h4">Smart Print Liste des clients:</div>
                 <div className="py-1" />
