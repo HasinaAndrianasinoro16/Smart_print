@@ -4,6 +4,7 @@ import {InputText} from "primereact/inputtext";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {getApiUrl} from "../Link/URL";
+import { confirmPopup } from 'primereact/confirmpopup';
 
 export default function Liste_Client(){
     const [globalFilter, setGlobalFilter] = useState('');
@@ -40,6 +41,8 @@ export default function Liste_Client(){
             </div>
         );
     };
+
+    const DeleteClients = async ()
 
     return(
         <>

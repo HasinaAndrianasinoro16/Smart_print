@@ -12,6 +12,7 @@ create table Client(
     telephone varchar(50),
     rcs varchar(50)
 );
+alter table client add column etat int; --0 si creer 1 si supprimer
 
 create sequence seq_facture increment by 1;
 create table facture(

@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class Client_controller extends Controller
 {
     //controller pour la liste des clients
     public function get_all_Clients(){
         try {
-            $clients = Client::all();
+            $clients = DB::table('clients')->get()->where('etat','=',0);
             return response()->json($clients);
         }catch (\Exception $e){
             throw new \Exception($e->getMessage());
@@ -68,7 +69,7 @@ class Client_controller extends Controller
     // Supprimer un client
     public function destroy($id)
     {
-        $deleted = Client::destroy($id);
+        $deleted = DB::table('clients')->where('id','=',$id)->Update(['etat'=>1]);
         return response()->json(['deleted' => $deleted]);
     }
 }
