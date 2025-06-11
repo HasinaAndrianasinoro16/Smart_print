@@ -7,18 +7,20 @@ use Illuminate\Http\Request;
 
 class Facture_controller extends Controller
 {
-    //controller pour la liste des factures
+    // Liste des factures (avec le client)
     public function get_All_Factures()
     {
         try {
-            $factures = Facture::where('statut','=',0)->get();
+            $factures = Facture::where('statut', 0)
+                ->with('clientRelation')
+                ->get();
             return response()->json($factures);
-        }catch (\Exception $e){
-            return response()->json(['error'=>$e->getMessage()],500);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    //controller pour ajouter les factures
+    // Ajouter une facture
     public function Form_add_facture(Request $request)
     {
         try {
@@ -28,46 +30,57 @@ class Facture_controller extends Controller
                 'date_echeance' => 'required',
                 'condition_paiement' => 'required',
             ]);
-            $facture = Facture::create_facture(\request('client'),\request('date_emission'),\request('date_echeance'),\request('condition_paiement'));
+
+            $facture = Facture::create_facture(
+                $request->input('client'),
+                $request->input('date_emission'),
+                $request->input('date_echeance'),
+                $request->input('condition_paiement')
+            );
 
             return response()->json($facture);
-        }catch (\Exception $e){
-            return response()->json(['error'=>$e->getMessage()],500);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    //controller pour afficher une facture par son id
-    public function get_facture($id){
+    // Récupérer les factures d'un client
+    public function get_facture($id)
+    {
         try {
             $facture = Facture::get_factures($id);
             return response()->json($facture);
-        }catch (\Exception $e){
-            return response()->json(['error'=>$e->getMessage()],500);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    //controller pour supprimer une facture
+    // Supprimer une facture (logique)
     public function delte_facture($id)
     {
         try {
             $facture = Facture::delete_factures($id);
             return response()->json($facture);
-        }catch (\Exception $exception){
-            return response()->json(['error'=>$exception->getMessage()],500);
+        } catch (\Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
         }
     }
 
-    //controller pour modifier une facture
-    public function update_facture(Request $request,$id)
+    // Modifier une facture
+    public function update_facture(Request $request, $id)
     {
-        $facture = Facture::update_facture(
-            $id,
-            \request('client'),
-            \request('date_emission'),
-            \request('date_echeance'),
-            \request('condition_paiement')
-        );
+        try {
+            $facture = Facture::update_facture(
+                $id,
+                $request->input('client'),
+                $request->input('date_emission'),
+                $request->input('date_echeance'),
+                $request->input('condition_paiement')
+            );
 
-        return response()->json($facture);
+            return response()->json($facture);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }
