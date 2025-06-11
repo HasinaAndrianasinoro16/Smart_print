@@ -61,8 +61,24 @@ class Facture extends Model
     //fonction pour supprimer une facture
     public static function delete_factures($id){
         try {
-            $factures = DB::table('facture')->where('id',$id)->delete();
+            $factures = DB::table('facture')->where('id',$id)->update(['statut'=>1]);
             return $factures;
+        }catch (\Exception $exception){
+            throw new \Exception($exception->getMessage());
+        }
+    }
+
+    //fonction pour modifier une facture
+    public static function update_facture($id, $client, $date_emission, $date_echeance, $condition_paiement)
+    {
+        try {
+            $factures = DB::table('facture')->where('id',$id)
+                ->update([
+                    'client' => $client,
+                    'date_emission' => $date_emission,
+                    'date_echeance' => $date_echeance,
+                    'condition_paiement' => $condition_paiement,
+                ]);
         }catch (\Exception $exception){
             throw new \Exception($exception->getMessage());
         }

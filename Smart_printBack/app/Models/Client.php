@@ -10,7 +10,7 @@ class Client extends Model
 {
     protected $table = 'client';
     protected $primaryKey = 'id';
-    protected $fillable = ['nom','adresse','nif','email','stat','telephone','rcs'];
+    protected $fillable = ['nom','adresse','nif','email','stat','telephone','rcs','etat'];
     public $timestamps = false;
 
     //fonction pour creer un nouveau client
@@ -25,6 +25,7 @@ class Client extends Model
             $client->stat = $stat;
             $client->telephone = $telephone;
             $client->rcs = $rcs;
+            $client->etat = 0;
             $client->save();
 
             return $client;
