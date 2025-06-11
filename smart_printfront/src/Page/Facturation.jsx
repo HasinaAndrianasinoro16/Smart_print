@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import Modals_Ajout_client from "../Components/Modals_Ajout_client";
 import Modals_Creation_Facture from "../Components/Modals_Creation_Facture";
 import FactureForm from "../Components/FactureForm";
+import {getApiUrl} from "../Link/URL";
 
 
 export default function Facturation(){
@@ -18,22 +19,31 @@ export default function Facturation(){
     const [visible2, setVisible2] = useState(false);
     const [visible3, setVisible3] = useState(false);
 
-    const testProducts = [
-        { code: 'P001', name: 'Imprimante HP LaserJet', category: 'Informatique', quantity: 12 },
-        { code: 'P002', name: 'Papier A4 80g', category: 'Papeterie', quantity: 200 },
-        { code: 'P003', name: 'Toner Samsung', category: 'Informatique', quantity: 8 },
-        { code: 'P004', name: 'Agrafeuse', category: 'Fournitures', quantity: 35 },
-        { code: 'P005', name: 'Clé USB 32GB', category: 'Informatique', quantity: 50 },
-        { code: 'P006', name: 'Bloc-notes', category: 'Papeterie', quantity: 120 },
-        { code: 'P007', name: 'Souris Logitech', category: 'Informatique', quantity: 15 },
-        { code: 'P008', name: 'Enveloppe kraft', category: 'Papeterie', quantity: 75 },
-        { code: 'P009', name: 'Câble HDMI', category: 'Informatique', quantity: 22 },
-        { code: 'P010', name: 'Stylo bille bleu', category: 'Papeterie', quantity: 300 },
-    ];
+    const [factures, setFactures] = useState([]);
+
+    const Liste_facture = async () =>{
+      try {
+          const reponse = await fetch(getApiUrl('factures'));
+          if (!reponse.ok){
+              throw new Error("Erreur lors de la recuperation des factures");
+          }
+          const data = await reponse.json();
+          setFactures(data);
+
+      }  catch (e) {
+          console.error(e.message);
+      }
+    };
+
+    useEffect(() => {
+       Liste_facture();
+    },[]);
+
+
 
     const date_emission_echeance = (rowData) => {
-        const echeance = rowData.name;
-        const emission = rowData.code;
+        const echeance = rowData.date_echeance;
+        const emission = rowData.date_emission;
         const date =emission +' - '+ echeance;
         return(
             <>
@@ -111,7 +121,7 @@ export default function Facturation(){
                                 </div>
 
                                 <DataTable
-                                    value={testProducts}
+                                    value={factures}
                                     removableSort
                                     paginator
                                     rows={5}
@@ -120,8 +130,8 @@ export default function Facturation(){
                                     tableStyle={{minWidth: '50rem'}}
                                     header="Liste des Factures en cours"
                                 >
-                                    <Column field="code" header="Code" sortable filter></Column>
-                                    <Column field="name" header="Client" sortable filter></Column>
+                                    <Column field="id" header="Code" sortable filter></Column>
+                                    <Column field="client.nom" header="Client" sortable filter></Column>
                                     <Column header="Date d'emission - date d'echeance" body={date_emission_echeance} sortable filter></Column>
                                     <Column header="Action" body={actionBodyTemplate} />
                                 </DataTable>
