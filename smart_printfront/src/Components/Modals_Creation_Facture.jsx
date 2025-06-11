@@ -36,10 +36,11 @@ export default function Modals_Creation_Facture() {
 
         const factureData = {
             client: client.id,
-            creation: creation.toISOString().split('T')[0],
-            echeance: echeance.toISOString().split('T')[0],
-            condition
+            date_emission: creation.toISOString().split('T')[0],
+            date_echeance: echeance.toISOString().split('T')[0],
+            condition_paiement: condition
         }
+
 
         try {
             const reponse = await fetch(getApiUrl('factures/add'), {
