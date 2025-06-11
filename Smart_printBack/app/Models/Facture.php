@@ -32,7 +32,7 @@ class Facture extends Model
     }
 
     //fonction pour creer une facture
-    public static function create_facture($client,$date_emission,$date_echeance,$condition_paiement,$statut)
+    public static function create_facture($client,$date_emission,$date_echeance,$condition_paiement)
     {
         try {
             $facture = new Facture();
