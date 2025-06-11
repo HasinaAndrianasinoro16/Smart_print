@@ -12,7 +12,7 @@ import FactureForm from "../Components/FactureForm";
 
 
 export default function Facturation(){
-    const [products, setProducts] = useState([]);
+    // const [products, setProducts] = useState([]);
     const [globalFilter, setGlobalFilter] = useState('');
     const [visible1, setVisible1] = useState(false);
     const [visible2, setVisible2] = useState(false);
