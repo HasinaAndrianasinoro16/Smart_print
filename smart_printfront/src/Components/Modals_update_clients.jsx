@@ -125,8 +125,8 @@ export default function Modals_update_clients({ idClients, onClose }){
             </div>
 
             <div className="text-center">
-                <button className="w-50 btn btn-success" onClick={UpdateCLients}>
-                    Ajouter <i className="fas fa-plus" />
+                <button className="w-50 btn btn-warning" onClick={UpdateCLients}>
+                    modifier <i className="fas fa-pen" />
                 </button>
             </div>
         </div>
