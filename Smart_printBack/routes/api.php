@@ -33,3 +33,9 @@ Route::prefix('factures')->group(function () {
     Route::put('/update/{id}', [\App\Http\Controllers\Facture_controller::class, 'update_facture']);
     Route::put('/delete/{id}', [\App\Http\Controllers\Facture_controller::class, 'delte_facture']);
 });
+
+Route::prefix('sousfactures')->group(function () {
+    Route::get('/',[\App\Http\Controllers\Sousfacture_controller::class,'get_All_Sous_Factures']);
+    Route::get('/{id_facture}',[\App\Http\Controllers\Sousfacture_controller::class,'get_sous_facture_with_facture']);
+    Route::post('/add',[\App\Http\Controllers\Sousfacture_controller::class,'Form_add_Sous_Facture']);
+});
