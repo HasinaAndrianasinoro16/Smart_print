@@ -131,7 +131,7 @@ export default function Facturation(){
                                     header="Liste des Factures en cours"
                                 >
                                     <Column field="id" header="Code" sortable filter></Column>
-                                    <Column field="client.nom" header="Client" sortable filter></Column>
+                                    <Column field="client_relation.nom" header="Client" sortable filter></Column>
                                     <Column header="Date d'emission - date d'echeance" body={date_emission_echeance} sortable filter></Column>
                                     <Column header="Action" body={actionBodyTemplate} />
                                 </DataTable>
