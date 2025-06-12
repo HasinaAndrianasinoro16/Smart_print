@@ -13,6 +13,12 @@ class Sousfacture extends Model
     protected $fillable = ['facture','description','quantite','prix_unitaire'];
     public $timestamps = false;
 
+    //relation avec facture
+    public function FactureRelation()
+    {
+        return $this->belongsTo(Facture::class,'facture');
+    }
+
     //fonction pour creer une sous_facture
     public static function create_sous_facture($facture,$description,$quantite,$prix_unitaire)
     {
