@@ -8,9 +8,8 @@ export default function Info_facture() {
     const queryParams = new URLSearchParams(location.search);
     const factureId = queryParams.get("id");
 
-    const [facture, setFacture] = useState(null);
+    const [facture, setFacture] = useState({});
     const [sousFactures, setSousFactures] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (factureId) {
@@ -23,9 +22,10 @@ export default function Info_facture() {
         try {
             const response = await fetch(getApiUrl(`factures/self/${id}`));
             const data = await response.json();
-            setFacture(data);
+            setFacture(data || {});  // On protège même si data est vide
         } catch (error) {
             console.error(error);
+            setFacture({});  // Si erreur on évite de planter l'affichage
         }
     };
 
@@ -33,16 +33,12 @@ export default function Info_facture() {
         try {
             const response = await fetch(getApiUrl(`sousfactures/details/${id}`));
             const data = await response.json();
-            setSousFactures(data);
-            setLoading(false);
+            setSousFactures(data || []);
         } catch (error) {
             console.error(error);
+            setSousFactures([]); // Pareil, on protège
         }
     };
-
-    if (loading || !facture) {
-        return <div className="text-center my-5">Chargement des données...</div>;
-    }
 
     const totalHT = sousFactures.reduce((sum, item) => sum + (item.quantite * item.prix_unitaire), 0);
     const tva = totalHT * 0.20;
@@ -51,7 +47,7 @@ export default function Info_facture() {
     return (
         <div className="container-lg my-4">
             <div className="mb-4">
-                <h4 className="text-start">Détail de la facture : <strong>{facture.id}</strong></h4>
+                <h4 className="text-start">Détail de la facture : <strong>FACT{facture?.id || ''}</strong></h4>
             </div>
 
             <div className="card p-4">
@@ -61,10 +57,13 @@ export default function Info_facture() {
                     </div>
 
                     <div className="col-md-6 text-end">
-                        <h5 className="mb-1"><i className="fas fa-user text-primary"/> Client : <strong>{facture.client_relation.nom}</strong></h5>
-                        <p className="mb-0"><i className="fas fa-map-pin text-danger"/> Adresse : {facture.client_relation.adresse}</p>
-                        <p className="mb-0"><i className="fas fa-phone-alt text-dark"/> Téléphone : {facture.client_relation.telephone}</p>
-                        <p className="mb-0"><i className="fas fa-envelope text-success"/> Email : {facture.client_relation.email}</p>
+                        <h5 className="mb-1">
+                            <i className="fas fa-user text-primary"/> Client :
+                            <strong>{facture?.client_relation?.nom || '-'}</strong>
+                        </h5>
+                        <p className="mb-0"><i className="fas fa-map-pin text-danger"/> Adresse : {facture?.client_relation?.adresse || '-'}</p>
+                        <p className="mb-0"><i className="fas fa-phone-alt text-dark"/> Téléphone : {facture?.client_relation?.telephone || '-'}</p>
+                        <p className="mb-0"><i className="fas fa-envelope text-success"/> Email : {facture?.client_relation?.email || '-'}</p>
                     </div>
                 </div>
 
@@ -72,12 +71,12 @@ export default function Info_facture() {
 
                 <div className="row mb-4">
                     <div className="col-md-6">
-                        <p><strong><i className="fas fa-calendar text-success"/> Date d’émission :</strong> {facture.date_emission}</p>
-                        <p><strong><i className="fas fa-calendar text-success"/> Date d’échéance :</strong> {facture.date_echeance}</p>
+                        <p><strong><i className="fas fa-calendar text-success"/> Date d’émission :</strong> {facture?.date_emission || '-'}</p>
+                        <p><strong><i className="fas fa-calendar text-success"/> Date d’échéance :</strong> {facture?.date_echeance || '-'}</p>
                         <p><strong><i className="fas fa-money-check"/> Conditions de paiement :</strong> Paiement à 10 jours</p>
                     </div>
                     <div className="col-md-6 text-end">
-                        <p><strong>N° Facture :</strong> FACT{facture.id}</p>
+                        <p><strong>N° Facture :</strong> FACT{facture?.id || ''}</p>
                         <p><strong>Statut :</strong> En attente</p>
                     </div>
                 </div>
@@ -93,15 +92,21 @@ export default function Info_facture() {
                     </tr>
                     </thead>
                     <tbody>
-                    {sousFactures.map((item, index) => (
-                        <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>{item.description}</td>
-                            <td>{item.quantite}</td>
-                            <td>{item.prix_unitaire.toLocaleString("fr-FR")}</td>
-                            <td>{(item.quantite * item.prix_unitaire).toLocaleString("fr-FR")}</td>
+                    {sousFactures.length > 0 ? (
+                        sousFactures.map((item, index) => (
+                            <tr key={index}>
+                                <td>{index + 1}</td>
+                                <td>{item.description}</td>
+                                <td>{item.quantite}</td>
+                                <td>{item.prix_unitaire.toLocaleString("fr-FR")}</td>
+                                <td>{(item.quantite * item.prix_unitaire).toLocaleString("fr-FR")}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="5" className="text-center">Aucune ligne de sous-facture</td>
                         </tr>
-                    ))}
+                    )}
                     </tbody>
                     <tfoot>
                     <tr>
