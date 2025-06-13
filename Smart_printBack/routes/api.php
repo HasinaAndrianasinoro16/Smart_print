@@ -29,6 +29,7 @@ Route::prefix('clients')->group(function () {
 Route::prefix('factures')->group(function () {
     Route::get('/',[\App\Http\Controllers\Facture_controller::class,'get_all_Factures']);
     Route::get('/{id}',[\App\Http\Controllers\Facture_controller::class,'get_facture']);
+    Route::get('/self/{id}',[\App\Http\Controllers\Facture_controller::class,'get_factures_by_id']);
     Route::post('/add',[\App\Http\Controllers\Facture_controller::class,'Form_add_facture']);
     Route::put('/update/{id}', [\App\Http\Controllers\Facture_controller::class, 'update_facture']);
     Route::put('/delete/{id}', [\App\Http\Controllers\Facture_controller::class, 'delte_facture']);

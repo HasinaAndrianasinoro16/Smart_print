@@ -83,4 +83,15 @@ class Facture_controller extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    //Controller pour afficher les factures par leur propre id
+    public function get_factures_by_id($id)
+    {
+        try {
+            $factures = Facture::get_facture_by_id($id);
+            return response()->json($factures);
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
+    }
 }

@@ -89,4 +89,15 @@ class Facture extends Model
             throw new \Exception($exception->getMessage());
         }
     }
+
+    //fonction pour recuperer les factures par leur id
+    public static function get_facture_by_id($id)
+    {
+        try {
+            $factures = DB::table('facture')->where('id', $id)->first();
+            return $factures;
+        }catch (\Exception $exception){
+            throw new \Exception($exception->getMessage());
+        }
+    }
 }

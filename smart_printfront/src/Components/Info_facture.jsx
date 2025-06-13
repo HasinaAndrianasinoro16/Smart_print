@@ -51,7 +51,7 @@ export default function Info_facture() {
     return (
         <div className="container-lg my-4">
             <div className="mb-4">
-                <h4 className="text-start">Détail de la facture : <strong>FACT{facture.id}</strong></h4>
+                <h4 className="text-start">Détail de la facture : <strong>{facture.id}</strong></h4>
             </div>
 
             <div className="card p-4">
