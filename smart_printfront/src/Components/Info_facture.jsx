@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MyLogo from "../assets/img/Smart Print-logo/vector/default-monochrome-black.svg";
 import { useLocation } from "react-router-dom";
-import { getApiUrl } from "../Link/URL"; 
+import { getApiUrl } from "../Link/URL";
 
 export default function Info_facture() {
     const location = useLocation();

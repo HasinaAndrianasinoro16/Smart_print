@@ -55,7 +55,7 @@ export default function Facturation(){
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="d-flex gap-3 mb-3 text-center">
-                <Link to='/info?id=1'
+                <Link to={`/info?id=${encodeURIComponent(rowData.id)}`}
                     className="btn btn-info btn-sm"
                     // onClick={() => handleInfo(rowData)}
                 >
