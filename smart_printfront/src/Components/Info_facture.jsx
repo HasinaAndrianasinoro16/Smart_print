@@ -47,7 +47,7 @@ export default function Info_facture() {
     return (
         <div className="container-lg my-4">
             <div className="mb-4">
-                <h4 className="text-start">Détail de la facture : <strong>FACT{facture?.id || ''}</strong></h4>
+                <h4 className="text-start">Détail de la facture : <strong>{facture?.id || ''}</strong></h4>
             </div>
 
             <div className="card p-4">
@@ -76,7 +76,7 @@ export default function Info_facture() {
                         <p><strong><i className="fas fa-money-check"/> Conditions de paiement :</strong> Paiement à 10 jours</p>
                     </div>
                     <div className="col-md-6 text-end">
-                        <p><strong>N° Facture :</strong> FACT{facture?.id || ''}</p>
+                        <p><strong>N° Facture :</strong> {facture?.id || ''}</p>
                         <p><strong>Statut :</strong> En attente</p>
                     </div>
                 </div>
