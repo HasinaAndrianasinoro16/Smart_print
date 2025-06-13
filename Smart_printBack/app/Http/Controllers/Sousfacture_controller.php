@@ -29,6 +29,7 @@ class Sousfacture_controller extends Controller
         }
     }
 
+    //controller pour le formulaire d'ajout de sous facture
     public function Form_add_Sous_Facture(Request $request)
     {
         try {
@@ -48,6 +49,17 @@ class Sousfacture_controller extends Controller
 
             return response()->json($sousfacture);
 
+        }catch (\Exception $e){
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    //controller pour recuperer les details des sous fature d'une facture
+    public function get_detail_sousfacture_by_facture($facture_id)
+    {
+        try {
+            $detail = Sousfacture::get_vue_detail_facture($facture_id);
+            return response()->json($detail);
         }catch (\Exception $e){
             return response()->json(['error' => $e->getMessage()], 500);
         }
