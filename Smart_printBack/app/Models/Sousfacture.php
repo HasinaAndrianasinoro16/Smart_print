@@ -58,5 +58,16 @@ class Sousfacture extends Model
         }
     }
 
+    //fonction pour recuperer les details sous factures avec une facture
+    public static function get_vue_detail_facture($facture)
+    {
+        try {
+            $detail = DB::table('vue_detail_facture')->where('facture_id',$facture)->get();
+            return $detail;
+        }catch (\Exception $exception){
+            throw new \Exception($exception->getMessage());
+        }
+    }
+
     use HasFactory;
 }
