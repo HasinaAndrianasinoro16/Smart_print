@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
 import { Button } from 'primereact/button';
+import { getApiUrl } from "../Link/URL";
 
-export default function FactureForm() {
+export default function FactureForm({ facture }) {
     const [lignes, setLignes] = useState([
         { description: '', quantite: 1, prixUnitaire: 0 }
     ]);
@@ -26,14 +27,42 @@ export default function FactureForm() {
     const calculTotalHT = () =>
         lignes.reduce((total, ligne) => total + (ligne.quantite * ligne.prixUnitaire), 0);
 
-    const tauxTVA = 20; // TVA en pourcentage
+    const tauxTVA = 20;
     const totalHT = calculTotalHT();
     const totalTVA = totalHT * (tauxTVA / 100);
     const totalTTC = totalHT + totalTVA;
 
+    const submitForm = async () => {
+        try {
+            for (let ligne of lignes) {
+                const payload = {
+                    facture: facture,
+                    description: ligne.description,
+                    quantite: ligne.quantite,
+                    prix_unitaire: ligne.prixUnitaire
+                };
+
+                const reponse = await fetch(getApiUrl('sousfactures/add'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!reponse.ok) {
+                    throw new Error("Erreur lors de l'ajout");
+                }
+            }
+            alert("Sous-factures ajoutées avec succès !");
+            setLignes([{ description: '', quantite: 1, prixUnitaire: 0 }]);
+        } catch (error) {
+            console.error(error);
+            alert("Erreur lors de l'ajout des sous-factures");
+        }
+    };
+
     return (
         <div className="p-4">
-            <h3 className="mb-4">Facture : FACT000123</h3>
+            <h3 className="mb-4">Facture : {facture ? `${facture}` : ''}</h3>
             <table className="table w-full">
                 <thead>
                 <tr>
@@ -111,10 +140,9 @@ export default function FactureForm() {
                     </table>
                 </div>
             </div>
-            <div className="text-center">
-                <button className="w-50 btn btn-success">
-                    Creer la facture <i className="fas fa-plus"/>
-                </button>
+
+            <div className="text-center mt-4">
+                <Button className="p-button-success" label="Créer la facture" onClick={submitForm} />
             </div>
         </div>
     );

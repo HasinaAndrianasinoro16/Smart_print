@@ -20,6 +20,7 @@ export default function Facturation(){
     const [visible3, setVisible3] = useState(false);
 
     const [factures, setFactures] = useState([]);
+    const [selectedFactureId, setSelectedFactureId] = useState(null);
 
     const Liste_facture = async () =>{
       try {
@@ -58,13 +59,16 @@ export default function Facturation(){
                     className="btn btn-info btn-sm"
                     // onClick={() => handleInfo(rowData)}
                 >
-                    <i className="fas fa-info-circle"/> Info
+                    <i className="fas fa-info-circle"/>
                 </Link>
                 <button
                     className="btn btn-outline-dark btn-sm"
-                    onClick={() => setVisible3(true)}
+                    onClick={() => {
+                        setVisible3(true);
+                        setSelectedFactureId(rowData.id);
+                    }}
                 >
-                    <i className="fas fas fas fa-money-check"/> Facture
+                    <i className="fas fas fas fa-money-check"/>
                 </button>
             </div>
         );
@@ -91,7 +95,7 @@ export default function Facturation(){
 
             <Dialog header="Creation facture" visible={visible3} style={{width: '90vw'}}
                     onHide={() => setVisible3(false)}>
-                <FactureForm/>
+                <FactureForm facture={selectedFactureId}  />
             </Dialog>
 
             <div className="container-lg">

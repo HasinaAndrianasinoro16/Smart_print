@@ -11,7 +11,7 @@ export default function Liste_Client() {
     const [globalFilter, setGlobalFilter] = useState('');
     const [Clients, setClients] = useState([]);
     const [visible, setVisible] = useState(false);
-    const [selectedClientId, setSelectedClientId] = useState(null);  // <- Ici on stocke l'id du client à modifier
+    const [selectedClientId, setSelectedClientId] = useState(null);
 
     const Liste_clients = async () => {
         try {
@@ -68,7 +68,7 @@ export default function Liste_Client() {
                 <i className="fas fa-trash" />
             </button>
             <button className="btn btn-warning" onClick={() => {
-                setSelectedClientId(rowData.id); // <-- on sélectionne l'id du client
+                setSelectedClientId(rowData.id);
                 setVisible(true);
             }}>
                 <i className="fas fa-pencil-alt" />
