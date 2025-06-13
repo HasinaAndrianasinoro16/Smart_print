@@ -21,7 +21,7 @@ export default function Info_facture() {
 
     const fetchFactureDetail = async (id) => {
         try {
-            const response = await fetch(getApiUrl(`factures/${id}`));
+            const response = await fetch(getApiUrl(`factures/self/${id}`));
             const data = await response.json();
             setFacture(data);
         } catch (error) {

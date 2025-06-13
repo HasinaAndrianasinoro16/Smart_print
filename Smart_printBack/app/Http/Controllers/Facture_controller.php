@@ -88,9 +88,9 @@ class Facture_controller extends Controller
     public function get_factures_by_id($id)
     {
         try {
-            $factures = Facture::get_facture_by_id($id);
-            return response()->json($factures);
-        }catch (\Exception $exception){
+            $facture = Facture::with('clientRelation')->find($id);
+            return response()->json($facture);
+        } catch (\Exception $exception) {
             return response()->json(['error' => $exception->getMessage()], 500);
         }
     }
