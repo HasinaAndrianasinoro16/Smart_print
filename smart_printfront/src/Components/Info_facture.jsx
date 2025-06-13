@@ -31,7 +31,7 @@ export default function Info_facture() {
 
     const fetchSousFactures = async (id) => {
         try {
-            const response = await fetch(getApiUrl(`sousfactures/detail/${id}`));
+            const response = await fetch(getApiUrl(`sousfactures/details/${id}`));
             const data = await response.json();
             setSousFactures(data);
             setLoading(false);

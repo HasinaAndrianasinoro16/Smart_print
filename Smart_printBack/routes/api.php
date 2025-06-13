@@ -38,5 +38,5 @@ Route::prefix('sousfactures')->group(function () {
     Route::get('/',[\App\Http\Controllers\Sousfacture_controller::class,'get_All_Sous_Factures']);
     Route::get('/{id_facture}',[\App\Http\Controllers\Sousfacture_controller::class,'get_sous_facture_with_facture']);
     Route::post('/add',[\App\Http\Controllers\Sousfacture_controller::class,'Form_add_Sous_Facture']);
-    Route::get('details/{facture_id}',[\App\Http\Controllers\Sousfacture_controller::class,'get_detail_sousfacture_by_facture']);
+    Route::get('/details/{facture_id}',[\App\Http\Controllers\Sousfacture_controller::class,'get_detail_sousfacture_by_facture']);
 });
