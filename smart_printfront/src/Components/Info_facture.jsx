@@ -77,7 +77,15 @@ export default function Info_facture() {
                     </div>
                     <div className="col-md-6 text-end">
                         <p><strong>N° Facture :</strong> {facture?.id || ''}</p>
-                        <p><strong>Statut :</strong> En attente</p>
+                        <p><strong>Statut :</strong>
+                            {facture.statut === 0
+                                ? 'En Attente'
+                                : facture.statut === 1
+                                    ? 'Payée'
+                                    : facture.statut === 2
+                                        ? 'Annulée'
+                                        : 'Inconnu'}
+                        </p>
                     </div>
                 </div>
 
