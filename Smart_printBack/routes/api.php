@@ -33,6 +33,7 @@ Route::prefix('factures')->group(function () {
     Route::post('/add',[\App\Http\Controllers\Facture_controller::class,'Form_add_facture']);
     Route::put('/update/{id}', [\App\Http\Controllers\Facture_controller::class, 'update_facture']);
     Route::put('/delete/{id}', [\App\Http\Controllers\Facture_controller::class, 'delte_facture']);
+    Route::get('/payer',[\App\Http\Controllers\Facture_controller::class,'get_all_facture_payer']);
 });
 
 Route::prefix('sousfactures')->group(function () {
