@@ -81,9 +81,11 @@ export default function Info_facture() {
                             {facture.statut === 0
                                 ? 'En Attente'
                                 : facture.statut === 1
-                                    ? 'Payée'
+                                    ? 'envoyer'
                                     : facture.statut === 2
-                                        ? 'Annulée'
+                                        ? 'payer'
+                                        : facture.statut === 3
+                                            ? 'Annuler'
                                         : 'Inconnu'}
                         </p>
                     </div>
