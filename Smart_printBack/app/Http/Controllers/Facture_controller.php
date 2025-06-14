@@ -20,6 +20,19 @@ class Facture_controller extends Controller
         }
     }
 
+    //Liste des fatcure paye(historique)
+    public function get_all_facture_payer()
+    {
+        try {
+            $factures = Facture::where('statut', 2)
+                ->with('clientRelation')
+                ->get();
+            return response()->json($factures);
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
+    }
+
     // Ajouter une facture
     public function Form_add_facture(Request $request)
     {
