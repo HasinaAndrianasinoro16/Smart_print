@@ -32,6 +32,24 @@ create table sousfacture(
     prix_unitaire numeric(10,2)
 );
 
+--creation de la table details facture denormaliser
+create table factureD(
+    facture_id varchar(255) references facture(id),
+    client_id int references Client(id),
+    date_emission date,
+    date_echeance date,
+    condition_paiement varchar(55),
+    statut int,
+    sousfacture_id int references sousfacture(id),
+    description varchar(255),
+    quantite int,
+    prix_unitaire numeric(10,2),
+    tva numeric(10,2),
+    prix_total_ht numeric(10,2),
+    prix_total_tva numeric(10,2),
+    prix_total_ttc numeric(10,2)
+);
+
 -- VIEW et FUNCTION
 CREATE OR REPLACE VIEW vue_detail_facture AS
 SELECT
