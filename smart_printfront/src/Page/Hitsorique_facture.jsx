@@ -3,25 +3,15 @@ import {Link} from "react-router-dom";
 import {InputText} from "primereact/inputtext";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
+import {getApiUrl} from "../Link/URL";
 
 export default function Hitsorique_facture(){
     const [globalFilter, setGlobalFilter] = useState('');
-    const testProducts = [
-        { code: 'P001', name: 'Imprimante HP LaserJet', category: 'Informatique', quantity: 12 },
-        { code: 'P002', name: 'Papier A4 80g', category: 'Papeterie', quantity: 200 },
-        { code: 'P003', name: 'Toner Samsung', category: 'Informatique', quantity: 8 },
-        { code: 'P004', name: 'Agrafeuse', category: 'Fournitures', quantity: 35 },
-        { code: 'P005', name: 'Clé USB 32GB', category: 'Informatique', quantity: 50 },
-        { code: 'P006', name: 'Bloc-notes', category: 'Papeterie', quantity: 120 },
-        { code: 'P007', name: 'Souris Logitech', category: 'Informatique', quantity: 15 },
-        { code: 'P008', name: 'Enveloppe kraft', category: 'Papeterie', quantity: 75 },
-        { code: 'P009', name: 'Câble HDMI', category: 'Informatique', quantity: 22 },
-        { code: 'P010', name: 'Stylo bille bleu', category: 'Papeterie', quantity: 300 },
-    ];
+    const [facturePayer, setFacturePayer] = useState([])
 
     const date_emission_echeance = (rowData) => {
-        const echeance = rowData.name;
-        const emission = rowData.code;
+        const echeance = rowData.date_echeance;
+        const emission = rowData.date_emission;
         const date =emission +' - '+ echeance;
         return(
             <>
@@ -29,10 +19,24 @@ export default function Hitsorique_facture(){
             </>
         );
     }
+
+    const Liste_facture_payer = async () => {
+        try {
+            const reponse = await fetch(getApiUrl('factures/payer'));
+            if(!reponse.ok){
+                throw new Error("Erreur lors de la recuperation des factures payer");
+            }
+            const data = await reponse.json();
+            setFacturePayer(data)
+        }catch (e) {
+            console.error(e.message);
+        }
+    }
+
     const actionBodyTemplate = (rowData) => {
         return (
             <div className="d-flex gap-3 mb-3 text-center">
-                <Link to='/info?id=1'
+                <Link to={`/info?id=${encodeURIComponent(rowData.id)}`}
                       className="btn btn-info btn-sm"
                     // onClick={() => handleInfo(rowData)}
                 >
@@ -61,7 +65,7 @@ export default function Hitsorique_facture(){
                     </div>
 
                     <DataTable
-                        value={testProducts}
+                        value={facturePayer}
                         removableSort
                         paginator
                         rows={5}
@@ -70,8 +74,8 @@ export default function Hitsorique_facture(){
                         tableStyle={{minWidth: '50rem'}}
                         header="Liste des Factures en cours"
                     >
-                        <Column field="code" header="Code" sortable filter></Column>
-                        <Column field="name" header="Client" sortable filter></Column>
+                        <Column field="id" header="Code" sortable filter></Column>
+                        <Column field="client_relation.nom" header="Client" sortable filter></Column>
                         <Column header="Date d'emission - date d'echeance" body={date_emission_echeance} sortable filter></Column>
                         <Column header="Action" body={actionBodyTemplate} />
                     </DataTable>
