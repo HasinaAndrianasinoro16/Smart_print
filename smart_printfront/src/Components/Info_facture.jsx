@@ -41,13 +41,14 @@ export default function Info_facture() {
     };
 
     const totalHT = sousFactures.reduce((sum, item) => sum + (item.quantite * item.prix_unitaire), 0);
-    const tva = totalHT * 0.20;
-    const totalTTC = totalHT + tva;
+    const totalTTC = totalHT;
+    // const tva = totalHT * 0.20;
+    // const totalTTC = totalHT + tva;
 
     const date = new Date(facture?.created_at);
     const jour = String(date.getDate()).padStart(2, '0');
     const mois = String(date.getMonth() + 1).padStart(2, '0');
-    const annee = String(date.getFullYear()).slice(2); 
+    const annee = String(date.getFullYear()).slice(2);
     const codeClient = facture?.client_relation?.code?.toLowerCase().replace(/\s+/g, '-'); // vitagaz → vitagaz (ou "Smart Print" → smart-print)
 
     const factureCode = `${jour}/${mois}-${annee}/${codeClient}`;
@@ -134,14 +135,14 @@ export default function Info_facture() {
                     )}
                     </tbody>
                     <tfoot>
-                    <tr>
-                        <th colSpan="4" className="text-end">Total HT</th>
-                        <th>{totalHT.toLocaleString("fr-FR")} Ar</th>
-                    </tr>
-                    <tr>
-                        <th colSpan="4" className="text-end">TVA (20%)</th>
-                        <th>{tva.toLocaleString("fr-FR")} Ar</th>
-                    </tr>
+                    {/*<tr>*/}
+                    {/*    <th colSpan="4" className="text-end">Total HT</th>*/}
+                    {/*    <th>{totalHT.toLocaleString("fr-FR")} Ar</th>*/}
+                    {/*</tr>*/}
+                    {/*<tr>*/}
+                    {/*    <th colSpan="4" className="text-end">TVA (20%)</th>*/}
+                    {/*    <th>{tva.toLocaleString("fr-FR")} Ar</th>*/}
+                    {/*</tr>*/}
                     <tr>
                         <th colSpan="4" className="text-end">Total TTC</th>
                         <th><strong>{totalTTC.toLocaleString("fr-FR")} Ar</strong></th>
