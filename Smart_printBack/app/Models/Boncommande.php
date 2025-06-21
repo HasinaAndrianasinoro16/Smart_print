@@ -28,13 +28,16 @@ class Boncommande extends Model
             $reqvalue = DB::select("SELECT nextval('seq_boncommande')");
             if (!empty($reqvalue)){
                 $id = $reqvalue[0]->nextval;
-            }else{
+            } else {
                 throw new \Exception("jereo tsara rah misy le sequence na diso ilay anarana sequence");
             }
-        }catch (\Exception $exception){
+
+            return "BC-" . str_pad($id, 5, "0", STR_PAD_LEFT); // Exemple de format : BC-00001
+        } catch (\Exception $exception) {
             throw new \Exception($exception->getMessage());
         }
     }
+
 
     //creation du bon de commande
     public static function create_Boncommande($facture, $commande)

@@ -109,7 +109,7 @@ export default function Facturation(){
                 <FactureForm facture={selectedFactureId}  />
             </Dialog>
 
-            <Dialog header="Creation facture" visible={visible4} style={{width: '90vw'}}
+            <Dialog header="Creation Bon de commande" visible={visible4} style={{width: '50vw'}}
                     onHide={() => setVisible4(false)}>
                 <Modals_create_BonCommande facture={selectedFactureId}/>
             </Dialog>

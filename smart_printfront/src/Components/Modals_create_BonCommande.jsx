@@ -12,8 +12,9 @@ export default function Modals_create_BonCommande({ facture }) {
         }
 
         const formData = new FormData();
-        formData.append("fichier", file);
+        formData.append("commande", file); // ✅ ici le nom est corrigé
         formData.append("facture", facture);
+
         try {
             const response = await fetch(getApiUrl('boncommandes/add'), {
                 method: "POST",
@@ -25,7 +26,7 @@ export default function Modals_create_BonCommande({ facture }) {
                 alert("Fichier envoyé avec succès !");
                 console.log(data);
             } else {
-                alert("Erreur : " + data.message);
+                alert("Erreur : " + (data.message || "Erreur inconnue"));
             }
         } catch (error) {
             console.error("Erreur lors de l’envoi :", error);
@@ -33,18 +34,19 @@ export default function Modals_create_BonCommande({ facture }) {
         }
     };
 
+
     return (
         <div>
             <div className="mb-3">
                 <label>Numéro de Facture :</label>
-                <InputText value={facture} disabled={true} />
+                <InputText value={facture} className="w-100" />
             </div>
 
             <div className="mb-3">
                 <label>Fichier Bon de Commande :</label>
                 <input
                     type="file"
-                    className="form-control"
+                    className="w-100"
                     onChange={(e) => setFile(e.target.files[0])}
                 />
             </div>
