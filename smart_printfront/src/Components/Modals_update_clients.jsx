@@ -11,6 +11,7 @@ export default function Modals_update_clients({ idClients, onClose }){
     const [nif, setNif] = useState(null);
     const [stat, setStat] = useState(null);
     const [rcs, setRcs] = useState('');
+    const [code, setCode] = useState('')
 
     const [clients, setClients] = useState([])
 
@@ -31,6 +32,7 @@ export default function Modals_update_clients({ idClients, onClose }){
             setNif(data.nif);
             setStat(data.stat);
             setRcs(data.rcs);
+            setCode(data.code);
 
         } catch (e) {
             console.error(e.message);
@@ -45,7 +47,8 @@ export default function Modals_update_clients({ idClients, onClose }){
     const UpdateCLients = async () => {
         if (
             nom.trim() === "" || adresse.trim() === "" || email.trim() === "" ||
-            telephone.trim() === "" || nif === null || stat === null || rcs.trim() === ""
+            telephone.trim() === "" || nif === null || stat === null || rcs.trim() === "" ||
+            code.trim() === ""
         ) {
             alert("Veuillez remplir tous les champs.");
             return;
@@ -58,7 +61,8 @@ export default function Modals_update_clients({ idClients, onClose }){
             telephone: telephone.trim(),
             nif,
             stat,
-            rcs: rcs.trim()
+            rcs: rcs.trim(),
+            code: code.trim()
         };
 
         try {
@@ -88,13 +92,14 @@ export default function Modals_update_clients({ idClients, onClose }){
 
     return (
         <div>
-            <div className="form-group mb-4">
-                <label htmlFor="nom" className="form-label">Nom du client / Entreprise / Société :</label>
-                <InputText id="nom" value={nom} onChange={(e) => setNom(e.target.value)} className="w-100" required />
-            </div>
 
             <div className="row">
                 <div className="col-md-6">
+                    <div className="mb-3">
+                        <label htmlFor="nom" className="form-label">Nom du client / Entreprise / Société :</label>
+                        <InputText id="nom" value={nom} onChange={(e) => setNom(e.target.value)} className="w-100"
+                                   required/>
+                    </div>
                     <div className="mb-3">
                         <label htmlFor="adresse">Adresse :</label>
                         <InputText id="adresse" value={adresse} onChange={(e) => setAdresse(e.target.value)} className="w-100" required />
@@ -110,23 +115,31 @@ export default function Modals_update_clients({ idClients, onClose }){
                 </div>
                 <div className="col-md-6">
                     <div className="mb-3">
+                        <label htmlFor="nom" className="form-label">Code du client / Entreprise / Société :</label>
+                        <InputText id="nom" value={code} onChange={(e) => setCode(e.target.value)} className="w-100"
+                                   required/>
+                    </div>
+                    <div className="mb-3">
                         <label htmlFor="nif" className="font-bold">NIF :</label>
-                        <InputNumber inputId="nif" value={nif} onValueChange={(e) => setNif(e.value)} useGrouping={false} className="w-100" />
+                        <InputNumber inputId="nif" value={nif} onValueChange={(e) => setNif(e.value)}
+                                     useGrouping={false} className="w-100"/>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="stat" className="font-bold">STAT :</label>
-                        <InputNumber inputId="stat" value={stat} onValueChange={(e) => setStat(e.value)} useGrouping={false} className="w-100" />
+                        <InputNumber inputId="stat" value={stat} onValueChange={(e) => setStat(e.value)}
+                                     useGrouping={false} className="w-100"/>
                     </div>
                     <div className="mb-3">
                         <label htmlFor="rcs" className="font-bold">RCS :</label>
-                        <InputText id="rcs" value={rcs} onChange={(e) => setRcs(e.target.value)} className="w-100" required />
+                        <InputText id="rcs" value={rcs} onChange={(e) => setRcs(e.target.value)} className="w-100"
+                                   required/>
                     </div>
                 </div>
             </div>
 
             <div className="text-center">
                 <button className="w-50 btn btn-warning" onClick={UpdateCLients}>
-                    modifier <i className="fas fa-pen" />
+                    modifier <i className="fas fa-pen"/>
                 </button>
             </div>
         </div>
