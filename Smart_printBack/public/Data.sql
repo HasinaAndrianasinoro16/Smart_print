@@ -13,6 +13,7 @@ create table Client(
     rcs varchar(50)
 );
 alter table client add column etat int; --0 si creer 1 si supprimer
+alter table client add column code varchar(50) unique ;
 
 create sequence seq_facture increment by 1;
 create table facture(
