@@ -56,7 +56,7 @@ export default function Facturation(){
         return (
             <div className="d-flex gap-3 mb-3 text-center">
                 <Link to={`/info?id=${encodeURIComponent(rowData.id)}`}
-                    className="btn btn-info btn-sm"
+                      className="btn btn-info btn-sm"
                     // onClick={() => handleInfo(rowData)}
                 >
                     <i className="fas fa-info-circle"/>
@@ -68,7 +68,16 @@ export default function Facturation(){
                         setSelectedFactureId(rowData.id);
                     }}
                 >
-                    <i className="fas fas fas fa-money-check"/>
+                    <i className="fas fa-money-check"/>
+                </button>
+                <button
+                    className="btn btn-outline-dark btn-sm"
+                    onClick={() => {
+                        setVisible3(true);
+                        setSelectedFactureId(rowData.id);
+                    }}
+                >
+                    <i className="fas fa-file-alt"/>
                 </button>
             </div>
         );
@@ -81,7 +90,7 @@ export default function Facturation(){
 
     return (
         <>
-         {/*modal pour afficher le formualire d_ajout des clients*/}
+            {/*modal pour afficher le formualire d_ajout des clients*/}
             <Dialog header="Ajout de Client" visible={visible1} style={{width: '70vw'}}
                     onHide={() => setVisible1(false)}>
                 <Modals_Ajout_client/>
