@@ -44,6 +44,14 @@ export default function Info_facture() {
     const tva = totalHT * 0.20;
     const totalTTC = totalHT + tva;
 
+    const date = new Date(facture?.created_at);
+    const jour = String(date.getDate()).padStart(2, '0');
+    const mois = String(date.getMonth() + 1).padStart(2, '0');
+    const annee = String(date.getFullYear()).slice(2); 
+    const codeClient = facture?.client_relation?.code?.toLowerCase().replace(/\s+/g, '-'); // vitagaz → vitagaz (ou "Smart Print" → smart-print)
+
+    const factureCode = `${jour}/${mois}-${annee}/${codeClient}`;
+
     return (
         <div className="container-lg my-4">
             <div className="mb-4">
@@ -61,13 +69,20 @@ export default function Info_facture() {
                             <i className="fas fa-user text-primary"/> Client :
                             <strong>{facture?.client_relation?.nom || '-'}</strong>
                         </h5>
-                        <p className="mb-0"><i className="fas fa-map-pin text-danger"/> Adresse : {facture?.client_relation?.adresse || '-'}</p>
-                        <p className="mb-0"><i className="fas fa-phone-alt text-dark"/> Téléphone : {facture?.client_relation?.telephone || '-'}</p>
-                        <p className="mb-0"><i className="fas fa-envelope text-success"/> Email : {facture?.client_relation?.email || '-'}</p>
+                        <p className="mb-0"><i className="fas fa-map-pin text-danger"/> Adresse
+                            : {facture?.client_relation?.adresse || '-'}</p>
+                        <p className="mb-0"><i className="fas fa-phone-alt text-dark"/> Téléphone
+                            : {facture?.client_relation?.telephone || '-'}</p>
+                        <p className="mb-0"><i className="fas fa-envelope text-success"/> Email
+                            : {facture?.client_relation?.email || '-'}</p>
+                        <p className="mb-0"> NIF
+                            : {facture?.client_relation?.nif || '-'}</p>
+                        <p className="mb-0"> STAT
+                            : {facture?.client_relation?.stat || '-'}</p>
                     </div>
                 </div>
 
-                <hr />
+                <hr/>
 
                 <div className="row mb-4">
                     <div className="col-md-6">
@@ -76,7 +91,7 @@ export default function Info_facture() {
                         <p><strong><i className="fas fa-money-check"/> Conditions de paiement :</strong> Paiement à 10 jours</p>
                     </div>
                     <div className="col-md-6 text-end">
-                        <p><strong>N° Facture :</strong> {facture?.id || ''}</p>
+                        <p><strong>N° Facture :</strong> {factureCode || ''}</p>
                         <p><strong>Statut :</strong>
                             {facture.statut === 0
                                 ? 'En Attente'
