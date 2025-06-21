@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +14,7 @@ class Facture extends Model
     protected $table = 'facture';
     protected $primaryKey = 'id';
     protected $keyType = 'string';
-    protected $fillable = ['id','client','date_emission','date_echeance','condition_paiement','statut'];
+    protected $fillable = ['id','client','date_emission','date_echeance','condition_paiement','statut','created_at'];
     public $timestamps = false;
 
     // Relation avec le client
@@ -48,6 +49,7 @@ class Facture extends Model
             $facture->date_echeance = $date_echeance;
             $facture->condition_paiement = $condition_paiement;
             $facture->statut = 0;
+            $facture->created_at = Carbon::now();
             $facture->save();
             return $facture;
         } catch (\Exception $exception) {
