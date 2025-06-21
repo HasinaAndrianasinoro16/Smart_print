@@ -125,17 +125,17 @@ export default function FactureForm({ facture }) {
                     <table>
                         <tbody>
                         <tr>
-                            <td><strong>Total HT :</strong></td>
+                            <td><strong>Total TTC :</strong></td>
                             <td>{totalHT.toFixed(2)} Ar</td>
                         </tr>
-                        <tr>
-                            <td><strong>TVA ({tauxTVA}%) :</strong></td>
-                            <td>{totalTVA.toFixed(2)} Ar</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Total TTC :</strong></td>
-                            <td><strong>{totalTTC.toFixed(2)} Ar</strong></td>
-                        </tr>
+                        {/*<tr>*/}
+                        {/*    <td><strong>TVA ({tauxTVA}%) :</strong></td>*/}
+                        {/*    <td>{totalTVA.toFixed(2)} Ar</td>*/}
+                        {/*</tr>*/}
+                        {/*<tr>*/}
+                        {/*    <td><strong>Total TTC :</strong></td>*/}
+                        {/*    <td><strong>{totalTTC.toFixed(2)} Ar</strong></td>*/}
+                        {/*</tr>*/}
                         </tbody>
                     </table>
                 </div>
