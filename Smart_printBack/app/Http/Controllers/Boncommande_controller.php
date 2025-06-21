@@ -8,22 +8,35 @@ use Illuminate\Http\Request;
 class Boncommande_controller extends Controller
 {
     //fcontroller pour creer une bon de commande
-    public function form_BonCommande($request)
+    public function form_BonCommande(Request $request)
     {
         try {
             $request->validate([
-                'facture' => 'required',
-                'commande' => 'required',
+                'facture' => 'required|string',
+                'commande' => 'required|file'
             ]);
+
+            $file = $request->file('commande');
+            $filename = $request->facture . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $filePath = $file->move(public_path('file_upload'), $filename);
+
+            // Enregistrement en base (chemin relatif pour la BDD)
             $boncommande = Boncommande::create_Boncommande(
                 $request->facture,
-                $request->commande,
+                'file_upload/' . $filename
             );
-            return response()->json($boncommande);
-        }catch (\Exception $exception){
-            throw new \Exception($exception->getMessage());
+
+            return response()->json([
+                'message' => 'Bon de commande ajouté avec succès',
+                'data' => $boncommande
+            ]);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => $exception->getMessage()
+            ], 500);
         }
     }
+
 
     //controller pour recuperer une/des bon de commande via une facture
     public function get_BonCommande_by_facture($facture)

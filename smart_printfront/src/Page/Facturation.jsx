@@ -10,6 +10,7 @@ import Modals_Ajout_client from "../Components/Modals_Ajout_client";
 import Modals_Creation_Facture from "../Components/Modals_Creation_Facture";
 import FactureForm from "../Components/FactureForm";
 import {getApiUrl} from "../Link/URL";
+import Modals_create_BonCommande from "../Components/Modals_create_BonCommande";
 
 
 export default function Facturation(){
@@ -18,6 +19,7 @@ export default function Facturation(){
     const [visible1, setVisible1] = useState(false);
     const [visible2, setVisible2] = useState(false);
     const [visible3, setVisible3] = useState(false);
+    const [visible4, setVisible4] = useState(false);
 
     const [factures, setFactures] = useState([]);
     const [selectedFactureId, setSelectedFactureId] = useState(null);
@@ -73,7 +75,7 @@ export default function Facturation(){
                 <button
                     className="btn btn-outline-dark btn-sm"
                     onClick={() => {
-                        setVisible3(true);
+                        setVisible4(true);
                         setSelectedFactureId(rowData.id);
                     }}
                 >
@@ -105,6 +107,11 @@ export default function Facturation(){
             <Dialog header="Creation facture" visible={visible3} style={{width: '90vw'}}
                     onHide={() => setVisible3(false)}>
                 <FactureForm facture={selectedFactureId}  />
+            </Dialog>
+
+            <Dialog header="Creation facture" visible={visible4} style={{width: '90vw'}}
+                    onHide={() => setVisible4(false)}>
+                <Modals_create_BonCommande facture={selectedFactureId}/>
             </Dialog>
 
             <div className="container-lg">
