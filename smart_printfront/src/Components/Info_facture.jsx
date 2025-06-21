@@ -51,7 +51,7 @@ export default function Info_facture() {
     const annee = String(date.getFullYear()).slice(2);
     const codeClient = facture?.client_relation?.code?.toLowerCase().replace(/\s+/g, '-'); // vitagaz → vitagaz (ou "Smart Print" → smart-print)
 
-    const factureCode = `${jour}/${mois}-${annee}/${codeClient}`;
+    const factureCode = `${factureId}/${jour}/${mois}-${annee}/${codeClient}`;
 
     return (
         <div className="container-lg my-4">

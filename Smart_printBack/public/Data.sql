@@ -34,6 +34,15 @@ create table sousfacture(
     prix_unitaire numeric(10,2)
 );
 
+create sequence seq_boncommande increment by 1;
+create table boncommande(
+  id varchar(255) primary key ,
+  date_creation date,
+  facture varchar(255) references facture(id),
+  commande varchar(255)
+);
+alter table boncommande add column etat int;
+
 --creation de la table details facture denormaliser
 create table factureD(
     facture_id varchar(255) references facture(id),
