@@ -31,8 +31,9 @@ class Client_controller extends Controller
                 'stat'=> 'required|max:255',
                 'telephone' =>'required|max:255',
                 'rcs' =>'required|max:255',
+                'code' => 'required|max:255',
             ]);
-            $clients = Client::Save_Client(\request('nom'),\request('adresse'),\request('nif'),\request('email'),\request('stat'),\request('telephone'),\request('rcs'));
+            $clients = Client::Save_Client(\request('nom'),\request('adresse'),\request('nif'),\request('email'),\request('stat'),\request('telephone'),\request('rcs'),\request('code'));
 
             return response()->json($clients);
         }catch (\Exception $e){
@@ -61,7 +62,8 @@ class Client_controller extends Controller
             $request->email,
             $request->stat,
             $request->telephone,
-            $request->rcs
+            $request->rcs,
+            $request->code,
         );
 
         return response()->json(['updated' => $updated]);

@@ -10,11 +10,11 @@ class Client extends Model
 {
     protected $table = 'client';
     protected $primaryKey = 'id';
-    protected $fillable = ['nom','adresse','nif','email','stat','telephone','rcs','etat'];
+    protected $fillable = ['nom','adresse','nif','email','stat','telephone','rcs','etat','code'];
     public $timestamps = false;
 
     //fonction pour creer un nouveau client
-    public static function Save_Client($nom, $adresse, $nif, $email, $stat, $telephone, $rcs)
+    public static function Save_Client($nom, $adresse, $nif, $email, $stat, $telephone, $rcs, $code)
     {
         try {
             $client = new Client();
@@ -26,6 +26,7 @@ class Client extends Model
             $client->telephone = $telephone;
             $client->rcs = $rcs;
             $client->etat = 0;
+            $client->code = $code;
             $client->save();
 
             return $client;
@@ -35,7 +36,7 @@ class Client extends Model
     }
 
     //(optionel)fonction pour modifier les infos clients
-    public static function update_client($id,$nom, $adresse, $nif, $email, $stat, $telephone, $rcs)
+    public static function update_client($id,$nom, $adresse, $nif, $email, $stat, $telephone, $rcs, $code)
     {
         try {
             $update = DB::table('client')->where('id',$id)
@@ -47,6 +48,7 @@ class Client extends Model
                     'stat' => $stat,
                     'telephone' => $telephone,
                     'rcs' => $rcs,
+                    'code' => $code,
                 ]);
             return $update;
         }catch (\Exception $exception){

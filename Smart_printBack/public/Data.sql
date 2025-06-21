@@ -24,6 +24,7 @@ create table facture(
     condition_paiement varchar(255),
     statut int  -- 0 si en attent, 1 si livrer, 2 si reffuser
 );
+alter table facture add column created_at date;
 
 create table sousfacture(
     id serial primary key,
