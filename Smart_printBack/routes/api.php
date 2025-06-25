@@ -29,7 +29,7 @@ Route::prefix('clients')->group(function () {
 
 //API factures
 Route::prefix('factures')->group(function () {
-    Route::get('/',[\App\Http\Controllers\Facture_controller::class,'get_all_Factures']);
+    Route::get('/',[\App\Http\Controllers\Facture_controller::class,'get_All_Factures']);
     Route::get('/{id}',[\App\Http\Controllers\Facture_controller::class,'get_facture']);
     Route::get('/self/{id}',[\App\Http\Controllers\Facture_controller::class,'get_factures_by_id']);
     Route::post('/add',[\App\Http\Controllers\Facture_controller::class,'Form_add_facture']);
