@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import MyLogo from "../assets/img/Smart Print-logo/vector/default-monochrome-black.svg";
 import { useLocation } from "react-router-dom";
 import { getApiUrl } from "../Link/URL";
+import html2pdf from "html2pdf.js";
 
 export default function Info_facture() {
     const location = useLocation();
@@ -68,16 +69,35 @@ export default function Info_facture() {
 
     const factureCode = `${factureId}/${jour}/${mois}-${annee}/${codeClient}`;
 
+    const generatePDF = () => {
+        const element = document.getElementById("facture-pdf");
+
+        const opt = {
+            margin:       0.5,
+            filename:     `facture_${factureId}.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save();
+    };
+
     return (
         <div className="container-lg my-4">
             <div className="mb-4">
                 <h4 className="text-start">Détail de la facture : <strong>{facture?.id || ''}</strong></h4>
             </div>
+            <div className="text-end my-3">
+                <button className="btn btn-success" onClick={generatePDF}>
+                    Télécharger en PDF <i className="fas fa-file-pdf"/>
+                </button>
+            </div>
 
-            <div className="card p-4">
+            <div className="card p-4" id="facture-pdf">
                 <div className="row">
                     <div className="col-md-6 d-flex align-items-start">
-                        <img src={MyLogo} alt="Smart Print Logo" height="60" />
+                        <img src={MyLogo} alt="Smart Print Logo" height="60"/>
                     </div>
 
                     <div className="col-md-6 text-end">
@@ -102,9 +122,12 @@ export default function Info_facture() {
 
                 <div className="row mb-4">
                     <div className="col-md-6">
-                        <p><strong><i className="fas fa-calendar text-success"/> Date d’émission :</strong> {facture?.date_emission || '-'}</p>
-                        <p><strong><i className="fas fa-calendar text-success"/> Date d’échéance :</strong> {facture?.date_echeance || '-'}</p>
-                        <p><strong><i className="fas fa-money-check"/> Conditions de paiement :</strong> Paiement à 10 jours</p>
+                        <p><strong><i className="fas fa-calendar text-success"/> Date d’émission
+                            :</strong> {facture?.date_emission || '-'}</p>
+                        <p><strong><i className="fas fa-calendar text-success"/> Date d’échéance
+                            :</strong> {facture?.date_echeance || '-'}</p>
+                        <p><strong><i className="fas fa-money-check"/> Conditions de paiement :</strong> Paiement à 10
+                            jours</p>
                     </div>
                     <div className="col-md-6 text-end">
                         <p><strong>N° Facture :</strong> {factureCode || ''}</p>
@@ -117,7 +140,7 @@ export default function Info_facture() {
                                         ? 'payer'
                                         : facture.statut === 3
                                             ? 'Annuler'
-                                        : 'Inconnu'}
+                                            : 'Inconnu'}
                         </p>
                     </div>
                 </div>
@@ -167,7 +190,9 @@ export default function Info_facture() {
 
                 <div className="mt-4">
                     <p className="small text-muted">
-                        <i className="fas fa-pin"/> <strong>Mentions légales :</strong> Cette facture est émise par Smart Print SARL – NIF : 123456789 – STAT : 987654321. Tout retard de paiement peut entraîner des pénalités selon l’article L441-6 du Code du commerce.
+                        <i className="fas fa-pin"/> <strong>Mentions légales :</strong> Cette facture est émise par
+                        Smart Print SARL – NIF : 123456789 – STAT : 987654321. Tout retard de paiement peut entraîner
+                        des pénalités selon l’article L441-6 du Code du commerce.
                     </p>
                 </div>
             </div>
