@@ -10,11 +10,14 @@ export default function Info_facture() {
 
     const [facture, setFacture] = useState({});
     const [sousFactures, setSousFactures] = useState([]);
+    const [bonsCommande, setBonsCommande] = useState([]);
+
 
     useEffect(() => {
         if (factureId) {
             fetchFactureDetail(factureId);
             fetchSousFactures(factureId);
+            fetchBonsCommande(factureId);
         }
     }, [factureId]);
 
@@ -28,6 +31,18 @@ export default function Info_facture() {
             setFacture({});  // Si erreur on évite de planter l'affichage
         }
     };
+
+    const fetchBonsCommande = async (id) => {
+        try {
+            const response = await fetch(getApiUrl(`boncommandes/${id}`));
+            const data = await response.json();
+            setBonsCommande(data || []);
+        } catch (error) {
+            console.error("Erreur lors de la récupération des bons de commande :", error);
+            setBonsCommande([]);
+        }
+    };
+
 
     const fetchSousFactures = async (id) => {
         try {
@@ -156,6 +171,29 @@ export default function Info_facture() {
                     </p>
                 </div>
             </div>
+            {bonsCommande.length > 0 && (
+                <div className="mt-4">
+                    <h5 className="text-primary">Bon(s) de commande associé(s)</h5>
+                    <ul className="list-group">
+                        {bonsCommande.map((bc, idx) => (
+                            <li className="list-group-item d-flex justify-content-between align-items-center" key={idx}>
+                                <span>Bon du {new Date(bc.date_creation).toLocaleDateString("fr-FR")}</span>
+                                <span> {bc.commande} </span>
+                                <span> {bc.id} </span>
+                                <a
+                                    href={`http://localhost:8000/${bc.commande}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="btn btn-outline-info btn-sm"
+                                >
+                                    Voir le fichier
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
         </div>
     );
 }

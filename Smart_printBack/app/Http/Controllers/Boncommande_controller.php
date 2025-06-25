@@ -13,7 +13,7 @@ class Boncommande_controller extends Controller
         try {
             $request->validate([
                 'facture' => 'required|string',
-                'commande' => 'required|file'
+                'commande' => 'required|file|mimes:pdf,png,jpg,jpeg|max:7120'
             ]);
 
             $file = $request->file('commande');
@@ -32,7 +32,10 @@ class Boncommande_controller extends Controller
             ]);
         } catch (\Exception $exception) {
             return response()->json([
-                'error' => $exception->getMessage()
+                'error' => $exception->getMessage(),
+                'file' => $file ?? null,
+                'mime_type' => $file ? $file->getMimeType() : null,
+                'extension' => $file ? $file->getClientOriginalExtension() : null,
             ], 500);
         }
     }

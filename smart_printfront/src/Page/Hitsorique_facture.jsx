@@ -8,6 +8,8 @@ import {getApiUrl} from "../Link/URL";
 export default function Hitsorique_facture(){
     const [globalFilter, setGlobalFilter] = useState('');
     const [facturePayer, setFacturePayer] = useState([])
+    const [factureSupprimer, setFactureSupprimer] = useState([]);
+    const [factureImpayer, setFactureImpayer] = useState([]);
 
     const date_emission_echeance = (rowData) => {
         const echeance = rowData.date_echeance;
@@ -48,12 +50,12 @@ export default function Hitsorique_facture(){
 
     return(
         <>
-        <div className="container-lg">
-            <div className="text-start bold h4">Smart Print Historique Facturation:</div>
-            <div className="py-1"/>
-            <div className="row">
-                <div className="card">
-                    <div className="flex justify-content-end mb-3">
+            <div className="container-lg">
+                <div className="text-start bold h4">Smart Print Historique Factue payer:</div>
+                <div className="py-1"/>
+                <div className="row">
+                    <div className="card">
+                        <div className="flex justify-content-end mb-3">
                 <span className="p-input-icon-left">
                     <i className="pi pi-search"/>
                     <InputText
@@ -62,26 +64,99 @@ export default function Hitsorique_facture(){
                         placeholder="Rechercher..."
                     />
                 </span>
-                    </div>
+                        </div>
 
-                    <DataTable
-                        value={facturePayer}
-                        removableSort
-                        paginator
-                        rows={5}
-                        rowsPerPageOptions={[5, 10, 20]}
-                        globalFilter={globalFilter}
-                        tableStyle={{minWidth: '50rem'}}
-                        header="Liste des Factures en cours"
-                    >
-                        <Column field="id" header="Code" sortable filter></Column>
-                        <Column field="client_relation.nom" header="Client" sortable filter></Column>
-                        <Column header="Date d'emission - date d'echeance" body={date_emission_echeance} sortable filter></Column>
-                        <Column header="Action" body={actionBodyTemplate} />
-                    </DataTable>
+                        <DataTable
+                            value={facturePayer}
+                            removableSort
+                            paginator
+                            rows={5}
+                            rowsPerPageOptions={[5, 10, 20]}
+                            globalFilter={globalFilter}
+                            tableStyle={{minWidth: '50rem'}}
+                            header="Liste des Factures en cours"
+                        >
+                            <Column field="id" header="Code" sortable filter></Column>
+                            <Column field="client_relation.nom" header="Client" sortable filter></Column>
+                            <Column header="Date d'emission - date d'echeance" body={date_emission_echeance} sortable
+                                    filter></Column>
+                            <Column header="Action" body={actionBodyTemplate}/>
+                        </DataTable>
+                    </div>
+                </div>
+
+                <div className="py-4"/>
+
+                <div className="text-start bold h4">Smart Print Historique facture impayer:</div>
+                <div className="py-1"/>
+                <div className="row">
+                    <div className="card">
+                        <div className="flex justify-content-end mb-3">
+                <span className="p-input-icon-left">
+                    <i className="pi pi-search"/>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.target.value)}
+                        placeholder="Rechercher..."
+                    />
+                </span>
+                        </div>
+
+                        <DataTable
+                            value={facturePayer}
+                            removableSort
+                            paginator
+                            rows={5}
+                            rowsPerPageOptions={[5, 10, 20]}
+                            globalFilter={globalFilter}
+                            tableStyle={{minWidth: '50rem'}}
+                            header="Liste des Factures en cours"
+                        >
+                            <Column field="id" header="Code" sortable filter></Column>
+                            <Column field="client_relation.nom" header="Client" sortable filter></Column>
+                            <Column header="Date d'emission - date d'echeance" body={date_emission_echeance} sortable
+                                    filter></Column>
+                            <Column header="Action" body={actionBodyTemplate}/>
+                        </DataTable>
+                    </div>
+                </div>
+
+                <div className="py-4"/>
+
+                <div className="text-start bold h4">Smart Print Historique facture supprimer:</div>
+                <div className="py-1"/>
+                <div className="row">
+                    <div className="card">
+                        <div className="flex justify-content-end mb-3">
+                <span className="p-input-icon-left">
+                    <i className="pi pi-search"/>
+                    <InputText
+                        type="search"
+                        onInput={(e) => setGlobalFilter(e.target.value)}
+                        placeholder="Rechercher..."
+                    />
+                </span>
+                        </div>
+
+                        <DataTable
+                            value={facturePayer}
+                            removableSort
+                            paginator
+                            rows={5}
+                            rowsPerPageOptions={[5, 10, 20]}
+                            globalFilter={globalFilter}
+                            tableStyle={{minWidth: '50rem'}}
+                            header="Liste des Factures en cours"
+                        >
+                            <Column field="id" header="Code" sortable filter></Column>
+                            <Column field="client_relation.nom" header="Client" sortable filter></Column>
+                            <Column header="Date d'emission - date d'echeance" body={date_emission_echeance} sortable
+                                    filter></Column>
+                            <Column header="Action" body={actionBodyTemplate}/>
+                        </DataTable>
+                    </div>
                 </div>
             </div>
-    </div>
-</>
+        </>
     );
 }

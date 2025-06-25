@@ -22,11 +22,13 @@ export default function Modals_create_BonCommande({ facture }) {
             });
 
             const data = await response.json();
+            console.log("Réponse du serveur :", data);
             if (response.ok) {
                 alert("Fichier envoyé avec succès !");
                 console.log(data);
             } else {
-                alert("Erreur : " + (data.message || "Erreur inconnue"));
+                console.error("Erreur complète :", data);
+                alert("Erreur : " + (data.error || data.message || "Erreur inconnue"));
             }
         } catch (error) {
             console.error("Erreur lors de l’envoi :", error);
@@ -46,7 +48,7 @@ export default function Modals_create_BonCommande({ facture }) {
                 <label>Fichier Bon de Commande :</label>
                 <input
                     type="file"
-                    className="w-100"
+                    accept=".pdf,.jpg,.jpeg,.png"
                     onChange={(e) => setFile(e.target.files[0])}
                 />
             </div>
