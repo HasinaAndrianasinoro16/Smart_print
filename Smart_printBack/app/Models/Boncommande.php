@@ -42,17 +42,30 @@ class Boncommande extends Model
     //creation du bon de commande
     public static function create_Boncommande($facture, $commande)
     {
+        DB::beginTransaction();
         try {
             $boncommande = new Boncommande();
             $boncommande->id = self::getId();
             $boncommande->date_creation = Carbon::now();
             $boncommande->facture = $facture;
-            $boncommande->commande =  $commande;
+            $boncommande->commande = $commande;
             $boncommande->etat = 0;
-            $boncommande->save();
+
+            if (!$boncommande->save()) {
+                throw new \Exception("Failed to save bon de commande");
+            }
+
+            DB::commit();
             return $boncommande;
-        }catch (\Exception $exception){
-            throw new \Exception($exception->getMessage());
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            Log::error('Failed to create boncommande', [
+                'error' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString(),
+                'facture' => $facture,
+                'commande_path' => $commande
+            ]);
+            throw new \Exception("Failed to create bon de commande: " . $exception->getMessage());
         }
     }
 
