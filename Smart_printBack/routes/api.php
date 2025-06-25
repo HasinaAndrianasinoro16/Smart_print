@@ -38,6 +38,7 @@ Route::prefix('factures')->group(function () {
     Route::get('/get_payer',[\App\Http\Controllers\Facture_controller::class,'get_all_facture_payer']);
     Route::get('/get_facture_statut/{statut}',[\App\Http\Controllers\Facture_controller::class,'get_facture_by_statut']);
     Route::get('/count_facture_statut/{statut}',[\App\Http\Controllers\Facture_controller::class,'count_facture_by_statut']);
+    Route::put('/undo/{id}',[\App\Http\Controllers\Facture_controller::class,'undo_facture']);
 });
 
 //API sous facture

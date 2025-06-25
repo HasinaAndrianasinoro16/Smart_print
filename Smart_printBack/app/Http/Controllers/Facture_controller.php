@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Facture;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class Facture_controller extends Controller
 {
@@ -125,10 +126,22 @@ class Facture_controller extends Controller
     public function count_facture_by_statut($statut)
     {
         try {
-            $facture = Facture::with('clientRelation')
-                ->where('statut', $statut)
-                ->count();
+            $facture = DB::table('facture')->where('statut', $statut)->count();
             return  response()->json($facture);
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
+    }
+
+    //remettre les factures supprimer en non-supprimer
+    public function undo_facture($id)
+    {
+        try {
+            $facture = DB::table('facture')
+                ->where('statut', '=',1)
+                ->where('id', '=',$id)
+                ->update(['statut' => 0]);
+            return response()->json($facture);
         }catch (\Exception $exception){
             return response()->json(['error' => $exception->getMessage()], 500);
         }
