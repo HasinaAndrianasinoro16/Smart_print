@@ -107,4 +107,30 @@ class Facture_controller extends Controller
             return response()->json(['error' => $exception->getMessage()], 500);
         }
     }
+
+    //recuperer les factures par statut
+    public function get_facture_by_statut($statut)
+    {
+        try {
+            $facture = Facture::with('clientRelation')
+                ->where('statut', $statut)
+                ->get();
+            return $facture;
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
+    }
+
+    //compter les factures par statut
+    public function count_facture_by_statut($statut)
+    {
+        try {
+            $facture = Facture::with('clientRelation')
+                ->where('statut', $statut)
+                ->count();
+            return  response()->json($facture);
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
+    }
 }
