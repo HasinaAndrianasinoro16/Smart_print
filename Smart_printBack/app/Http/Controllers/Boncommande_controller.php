@@ -85,21 +85,19 @@ class Boncommande_controller extends Controller
         }
     }
 
-    //controller pour recuperer les bon de commande
+    //controller pour recuperer les bon de commande par etat
 
-    public function get_bon_commande_supprimer()
-    {
-        try {
-            $boncommande = Boncommande::where("etat", 1)->get(); // sans with()
-
-            return response()->json($boncommande, 200);
-        } catch (\Exception $exception) {
-            return response()->json([
-                'error' => 'Erreur lors de la récupération des bons de commande',
-                'details' => $exception->getMessage()
-            ], 500);
-        }
-    }
+   public function get_bon_commande_by_etat($etat)
+   {
+       try {
+           $boncommande = Boncommande::with('factureRelation')
+               ->where('etat', '=', $etat)
+               ->get();
+           return response()->json($boncommande);
+       }catch (\Exception $exception){
+           throw new \Exception($exception->getMessage());
+       }
+   }
 
 
     //controller pour restaurer une bon de commande
