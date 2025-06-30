@@ -86,7 +86,6 @@ class Boncommande_controller extends Controller
     }
 
     //controller pour recuperer les bon de commande par etat
-
    public function get_bon_commande_by_etat($etat)
    {
        try {
@@ -98,6 +97,19 @@ class Boncommande_controller extends Controller
            throw new \Exception($exception->getMessage());
        }
    }
+
+   //controller pour compter les bons de commande par etat
+    public function count_bon_commande_by_etat($etat)
+    {
+        try {
+            $boncommande = DB::table('boncommandes')
+                ->where('etat', '=', $etat)
+                ->count();
+            return response()->json($boncommande);
+        }catch (\Exception $exception){
+            throw new \Exception($exception->getMessage());
+        }
+    }
 
 
     //controller pour restaurer une bon de commande

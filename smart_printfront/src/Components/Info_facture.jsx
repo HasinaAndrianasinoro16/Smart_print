@@ -3,6 +3,7 @@ import MyLogo from "../assets/img/Smart Print-logo/vector/default-monochrome-bla
 import { useLocation } from "react-router-dom";
 import { getApiUrl } from "../Link/URL";
 import html2pdf from "html2pdf.js";
+import {ConfirmPopup, confirmPopup} from "primereact/confirmpopup";
 
 export default function Info_facture() {
     const location = useLocation();
@@ -56,6 +57,39 @@ export default function Info_facture() {
         }
     };
 
+    const delete_bon_commande = async (idBonCommande) => {
+        try {
+            const url = 'boncommandes/Delete/'+idBonCommande;
+            const reponse = await fetch(getApiUrl(url), {
+                method:'PUT',
+                headers: {'Content-Type': 'application/json'}
+            });
+
+            if (!reponse.ok){
+                throw new Error("Erreur lors de la suppression du bon de commande");
+            }
+
+            const result = await reponse.json();
+            console.log("Bon de commande supprimé:", result);
+            alert("Bon de commande supprimé avec succès !");
+            await fetchBonsCommande(factureId);
+
+        }catch (e) {
+            console.error(e);
+            alert("Erreur lors de la suppression !");
+        }
+    }
+
+    const confirm = (event, id) => {
+        confirmPopup({
+            target: event.currentTarget,
+            message: "Voulez-vous vraiment supprimer ce Bon de commande ?",
+            acceptLabel: "Confirmer",
+            rejectLabel: "Annuler",
+            accept: () => delete_bon_commande(id)
+        });
+    };
+
     const totalHT = sousFactures.reduce((sum, item) => sum + (item.quantite * item.prix_unitaire), 0);
     const totalTTC = totalHT;
     // const tva = totalHT * 0.20;
@@ -84,6 +118,8 @@ export default function Info_facture() {
     };
 
     return (
+        <>
+    <ConfirmPopup />
         <div className="container-lg my-4">
             <div className="mb-4">
                 <h4 className="text-start">Détail de la facture : <strong>{facture?.id || ''}</strong></h4>
@@ -209,10 +245,17 @@ export default function Info_facture() {
                                     href={`http://localhost:8000/${bc.commande}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="btn btn-outline-info btn-sm"
+                                    className="btn btn-info btn-sm"
                                 >
-                                    Voir le fichier
+                                    <i className="fas fa-eye"/> voir le fichier
                                 </a>
+                                <span>
+                                    <button className="btn btn-danger btn-sm"
+                                        onClick={(e) => {e.preventDefault(); confirm(e, bc.id)}}
+                                    >
+                                        <i className="fas fa-trash-alt"/> supprimer
+                                    </button>
+                                </span>
                             </li>
                         ))}
                     </ul>
@@ -220,5 +263,6 @@ export default function Info_facture() {
             )}
 
         </div>
+        </>
     );
 }
