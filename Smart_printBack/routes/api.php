@@ -52,7 +52,7 @@ Route::prefix('sousfactures')->group(function () {
 //API bon de commande
 Route::prefix('boncommandes')->group(function () {
     Route::get('/{facture}',[\App\Http\Controllers\Boncommande_controller::class,'get_BonCommande_by_facture']);
-    Route::get('get_supprimer/{etat}',[\App\Http\Controllers\Boncommande_controller::class,'get_bon_commande_by_etat']);
+    Route::get('get_by_etat/{etat}',[\App\Http\Controllers\Boncommande_controller::class,'get_bon_commande_by_etat']);
     Route::post('/add',[\App\Http\Controllers\Boncommande_controller::class,'form_BonCommande']);
     Route::put('Delete/{id}',[\App\Http\Controllers\Boncommande_controller::class,'Delete_BonCommande']);
     Route::put('/restore/{id}',[\App\Http\Controllers\Boncommande_controller::class,'restore_bon_commande']);
