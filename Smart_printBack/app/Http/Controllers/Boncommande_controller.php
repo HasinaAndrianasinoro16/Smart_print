@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Boncommande;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class Boncommande_controller extends Controller
@@ -67,6 +68,45 @@ class Boncommande_controller extends Controller
     {
         try {
             $boncommande = Boncommande::get_BonCommande_by_facture($facture);
+            return response()->json($boncommande);
+        }catch (\Exception $exception){
+            throw new \Exception($exception->getMessage());
+        }
+    }
+
+    //controller pour supprimer un bon de commande
+    public function Delete_BonCommande($id)
+    {
+        try {
+            $boncommande = Boncommande::delete_bon_commande($id);
+            return response()->json($boncommande);
+        }catch (\Exception $exception){
+            throw new \Exception($exception->getMessage());
+        }
+    }
+
+    //controller pour recuperer les bon de commande
+
+    public function get_bon_commande_supprimer()
+    {
+        try {
+            $boncommande = Boncommande::where("etat", 1)->get(); // sans with()
+
+            return response()->json($boncommande, 200);
+        } catch (\Exception $exception) {
+            return response()->json([
+                'error' => 'Erreur lors de la récupération des bons de commande',
+                'details' => $exception->getMessage()
+            ], 500);
+        }
+    }
+
+
+    //controller pour restaurer une bon de commande
+    public function restore_bon_commande($id)
+    {
+        try {
+            $boncommande = Boncommande::restaure_bon_commande($id);
             return response()->json($boncommande);
         }catch (\Exception $exception){
             throw new \Exception($exception->getMessage());

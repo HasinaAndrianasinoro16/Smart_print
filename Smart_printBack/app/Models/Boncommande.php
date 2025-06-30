@@ -16,10 +16,15 @@ class Boncommande extends Model
     public $timestamps = false;
 
     //relation avec facture
-    public function FactureRelation()
+    public function factureRelation()
     {
-        return $this->belongsTo(Facture::class,'facture');
+        return $this->belongsTo(Facture::class, 'facture', 'id');
     }
+//    public function factureRelation()
+//    {
+//        return $this->belongsTo(Facture::class, 'facture');
+//    }
+
 
     //generation de l'ID
     public static function getId()
@@ -77,6 +82,45 @@ class Boncommande extends Model
                 ->where("facture", $facture)
                 ->where("etat", 0)
                 ->get();
+            return $boncommande;
+        }catch (\Exception $exception){
+            throw new \Exception($exception->getMessage());
+        }
+    }
+    //supprimer un bon de commande
+    public static function delete_bon_commande($id)
+    {
+        try {
+            $boncommande = DB::table("boncommande")
+                ->where("id",'=', $id)
+                ->update(['etat' => 1]);
+            return $boncommande;
+        }catch (\Exception $exception){
+            throw new \Exception($exception->getMessage());
+        }
+    }
+
+    //recuperer les bon de commande supprimer
+//    public static function get_bon_commande_supprimer()
+//    {
+//        try {
+//            $boncommande = DB::table("boncommande")
+//                ->with("")
+//                ->where("etat","=",1)
+//                ->get();
+//            return $boncommande;
+//        }catch (\Exception $exception){
+//            throw new \Exception($exception->getMessage());
+//        }
+//    }
+
+    //restaurer un bon de commande supprimer
+    public static function restaure_bon_commande($id)
+    {
+        try {
+            $boncommande = DB::table("boncommande")
+                ->where("id",'=', $id)
+                ->update(['etat' => 0]);
             return $boncommande;
         }catch (\Exception $exception){
             throw new \Exception($exception->getMessage());
