@@ -28,7 +28,8 @@ class Boncommande_controller extends Controller
             }
 
             $file = $request->file('commande');
-            $filename = $request->facture . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $bon = DB::table('boncommande')->where('facture','=',$request->facture)->get('id');
+            $filename = $bon. '_' . time() . '.' . $file->getClientOriginalExtension();
 
             $filePath = $file->move($uploadPath, $filename);
 
