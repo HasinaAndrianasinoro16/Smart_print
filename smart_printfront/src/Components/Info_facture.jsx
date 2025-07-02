@@ -14,6 +14,8 @@ export default function Info_facture() {
     const [sousFactures, setSousFactures] = useState([]);
     const [bonsCommande, setBonsCommande] = useState([]);
 
+    const [loading, setLoading] = useState(false);
+
 
     useEffect(() => {
         if (factureId) {
@@ -91,6 +93,8 @@ export default function Info_facture() {
     };
 
     const envoyerParEmail = async () => {
+        setLoading(true);
+
         const element = document.getElementById("facture-pdf");
 
         const opt = {
@@ -130,6 +134,8 @@ export default function Info_facture() {
             } catch (error) {
                 console.error("Erreur :", error);
                 alert("Erreur lors de l'envoi de l'email !");
+            }finally {
+                setLoading(false);
             }
         });
     };
@@ -173,9 +179,20 @@ export default function Info_facture() {
                 <button className="btn btn-warning" onClick={generatePDF}>
                     Télécharger en PDF <i className="fas fa-file-pdf"/>
                 </button>
-                <button className="btn btn-success" onClick={envoyerParEmail}>
-                    Envoyer par email <i className="fas fa-paper-plane"/>
+                <button className="btn btn-success" onClick={envoyerParEmail} disabled={loading}>
+                    {loading ? (
+                        <>
+                            <span className="spinner-border spinner-border-sm me-2" role="status"
+                                  aria-hidden="true"></span>
+                            Envoi en cours...
+                        </>
+                    ) : (
+                        <>
+                            Envoyer par email <i className="fas fa-paper-plane"/>
+                        </>
+                    )}
                 </button>
+
 
             </div>
 
@@ -187,7 +204,7 @@ export default function Info_facture() {
 
                     <div className="col-md-6 text-end">
                         <h5 className="mb-1">
-                            <i className="fas fa-user text-primary"/> Client :
+                        <i className="fas fa-user text-primary"/> Client :
                             <strong>{facture?.client_relation?.nom || '-'}</strong>
                         </h5>
                         <p className="mb-0"><i className="fas fa-map-pin text-danger"/> Adresse
