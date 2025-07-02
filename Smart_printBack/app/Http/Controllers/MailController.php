@@ -22,7 +22,9 @@ class MailController extends Controller
         );
 
         $facture = Facture::with('clientRelation')->findOrFail($request->facture);
-        $bons = Boncommande::where('facture', $facture->id)->get();
+        $bons = Boncommande::where('facture', $facture->id)
+            ->where('etat', 0)
+            ->get();
 
         $bonPaths = [];
         foreach ($bons as $bon) {
