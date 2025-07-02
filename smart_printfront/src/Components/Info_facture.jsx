@@ -90,6 +90,39 @@ export default function Info_facture() {
         });
     };
 
+    const envoyerParEmail = async () => {
+        const element = document.getElementById("facture-pdf");
+
+        const opt = {
+            margin: 0.5,
+            filename: `facture_${factureId}.pdf`,
+            image: { type: "jpeg", quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
+        };
+
+        html2pdf().set(opt).from(element).outputPdf("blob").then(async (pdfBlob) => {
+            const formData = new FormData();
+            formData.append("facture", factureId);
+            formData.append("pdf", pdfBlob, `facture_${factureId}.pdf`);
+
+            try {
+                const response = await fetch(getApiUrl("email/send-facture-mail"), {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await response.json();
+                alert("Email envoyé avec succès !");
+                console.log(data);
+            } catch (error) {
+                console.error("Erreur :", error);
+                alert("Erreur lors de l'envoi de l'email !");
+            }
+        });
+    };
+
+
     const totalHT = sousFactures.reduce((sum, item) => sum + (item.quantite * item.prix_unitaire), 0);
     const totalTTC = totalHT;
     // const tva = totalHT * 0.20;
@@ -124,10 +157,14 @@ export default function Info_facture() {
             <div className="mb-4">
                 <h4 className="text-start">Détail de la facture : <strong>{facture?.id || ''}</strong></h4>
             </div>
-            <div className="text-end my-3">
-                <button className="btn btn-success" onClick={generatePDF}>
+            <div className="d-flex justify-content-end my-3 gap-3">
+                <button className="btn btn-warning" onClick={generatePDF}>
                     Télécharger en PDF <i className="fas fa-file-pdf"/>
                 </button>
+                <button className="btn btn-success" onClick={envoyerParEmail}>
+                    Envoyer par email <i className="fas fa-paper-plane"/>
+                </button>
+
             </div>
 
             <div className="card p-4" id="facture-pdf">

@@ -58,3 +58,7 @@ Route::prefix('boncommandes')->group(function () {
     Route::put('/restore/{id}',[\App\Http\Controllers\Boncommande_controller::class,'restore_bon_commande']);
 });
 
+//API pour l'email
+Route::prefix('email')->group(function (){
+    Route::post('/send-facture-mail', [\App\Http\Controllers\MailController::class, 'sendFactureMail']);
+});
