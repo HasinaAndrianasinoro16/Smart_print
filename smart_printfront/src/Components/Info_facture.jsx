@@ -102,9 +102,11 @@ export default function Info_facture() {
         };
 
         html2pdf().set(opt).from(element).outputPdf("blob").then(async (pdfBlob) => {
+            const pdfFile = new File([pdfBlob], `facture_${factureId}.pdf`, { type: 'application/pdf' });
+
             const formData = new FormData();
             formData.append("facture", factureId);
-            formData.append("pdf", pdfBlob, `facture_${factureId}.pdf`);
+            formData.append("pdf", pdfFile);
 
             try {
                 const response = await fetch(getApiUrl("email/send-facture-mail"), {
@@ -112,9 +114,19 @@ export default function Info_facture() {
                     body: formData
                 });
 
+                const contentType = response.headers.get("content-type");
+
+                if (!response.ok) {
+                    const text = await response.text();
+                    console.error("Erreur serveur :", text);
+                    alert("Erreur lors de l'envoi : " + text);
+                    return;
+                }
+
                 const data = await response.json();
                 alert("Email envoyé avec succès !");
                 console.log(data);
+
             } catch (error) {
                 console.error("Erreur :", error);
                 alert("Erreur lors de l'envoi de l'email !");
