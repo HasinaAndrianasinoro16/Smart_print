@@ -124,8 +124,15 @@ export default function Facturation(){
                 <Modals_Ajout_client/>
             </Dialog>
 
-            <Dialog header="Creation facture" visible={visible2} style={{width: '70vw'}}
-                    onHide={() => setVisible2(false)}>
+            <Dialog
+                header="Creation facture"
+                visible={visible2}
+                style={{ width: '70vw' }}
+                onHide={async () => {
+                    setVisible2(false);
+                    await Liste_facture();
+                }}
+            >
                 <Modals_Creation_Facture/>
             </Dialog>
 
