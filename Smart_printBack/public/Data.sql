@@ -2,6 +2,10 @@ create database smartprint;
 \c smartprint
 
 -- TABLE
+--cette commande ne fonctionne que quand laravel breeze a ete
+-- installer et que les tables on migrer (laravel breeze cree lui meme la table user)
+
+
 create table Client(
     id serial primary key,
     nom varchar(50),
