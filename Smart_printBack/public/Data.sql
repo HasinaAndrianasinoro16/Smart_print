@@ -5,6 +5,12 @@ create database smartprint;
 --cette commande ne fonctionne que quand laravel breeze a ete
 -- installer et que les tables on migrer (laravel breeze cree lui meme la table user)
 
+create sequence seq_produit increment by 1;
+create table produit(
+    id varchar(255) primary key ,
+    designation varchar(255),
+    prix_unitaire numeric(10,2)
+);
 
 create table Client(
     id serial primary key,
