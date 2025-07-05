@@ -228,8 +228,8 @@ export default function Info_facture() {
                             :</strong> {facture?.date_emission || '-'}</p>
                         <p><strong><i className="fas fa-calendar text-success"/> Date d’échéance
                             :</strong> {facture?.date_echeance || '-'}</p>
-                        <p><strong><i className="fas fa-money-check"/> Conditions de paiement :</strong> Paiement à 10
-                            jours</p>
+                        <p><strong><i className="fas fa-money-check"/> Conditions de paiement :</strong>
+                            {facture?.condition_paiement}</p>
                     </div>
                     <div className="col-md-6 text-end">
                         <p><strong>N° Facture :</strong> {factureCode || ''}</p>
