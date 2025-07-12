@@ -96,7 +96,7 @@ export default function Liste_produit(){
             </Dialog>
 
             <Dialog
-                header="Modifier un Produit"
+                header="Ajouter un Produit"
                 visible={visible2}
                 style={{width: '50vw'}}
                 onHide={() => setVisible2(false)}
