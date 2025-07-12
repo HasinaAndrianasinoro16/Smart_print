@@ -11,6 +11,7 @@ create table produit(
     designation varchar(255),
     prix_unitaire numeric(10,2)
 );
+alter table produit add column etat int;
 
 create table Client(
     id serial primary key,

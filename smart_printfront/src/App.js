@@ -10,6 +10,7 @@ import Facturation from "./Page/Facturation";
 import Info_facture from "./Components/Info_facture";
 import Histoique_facture from "./Page/Hitsorique_facture";
 import Liste_Client from "./Page/Liste_Client";
+import Liste_produit from "./Page/Liste_produit";
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path='/info' element={<Info_facture/>}/>
           <Route path='/Historique' element={<Histoique_facture/>}/>
           <Route path='/liste_client' element={<Liste_Client/>}/>
+          <Route path='/liste_produit' element={<Liste_produit/>}/>
       </Routes>
     </Router>
   );

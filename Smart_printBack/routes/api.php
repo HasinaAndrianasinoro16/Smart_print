@@ -62,3 +62,12 @@ Route::prefix('boncommandes')->group(function () {
 Route::prefix('email')->group(function (){
     Route::post('/send-facture-mail', [\App\Http\Controllers\MailController::class, 'sendFactureMail']);
 });
+
+//API pour produits
+Route::prefix('produits')->group(function (){
+    Route::get('/',[\App\Http\Controllers\Produit_controller::class,'get_produits']);
+    Route::get('/{id}',[\App\Http\Controllers\Produit_controller::class,'get_produit_by_id']);
+    Route::post('/add',[\App\Http\Controllers\Produit_controller::class,'save_produit']);
+    Route::put('/update/{id}', [\App\Http\Controllers\Produit_controller::class, 'update_produit']);
+    Route::put('/delete/{id}', [\App\Http\Controllers\Produit_controller::class, 'delete_produit']);
+});
