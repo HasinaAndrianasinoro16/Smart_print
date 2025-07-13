@@ -71,3 +71,12 @@ Route::prefix('produits')->group(function (){
     Route::put('/update/{id}', [\App\Http\Controllers\Produit_controller::class, 'update_produit']);
     Route::put('/delete/{id}', [\App\Http\Controllers\Produit_controller::class, 'delete_produit']);
 });
+
+//API pour service
+Route::prefix('services')->group(function (){
+   Route::get('/',[\App\Http\Controllers\Service_controller::class,'get_service']);
+   Route::get('/{id}',[\App\Http\Controllers\Service_controller::class,'get_service_by_id']);
+   Route::post('/add',[\App\Http\Controllers\Service_controller::class,'save_service']);
+   Route::put('/update/{id}', [\App\Http\Controllers\Service_controller::class, 'update_service']);
+   Route::put('/delete/{id}', [\App\Http\Controllers\Service_controller::class, 'delete_service']);
+});

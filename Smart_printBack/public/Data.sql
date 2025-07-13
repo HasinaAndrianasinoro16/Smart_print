@@ -13,6 +13,12 @@ create table produit(
 );
 alter table produit add column etat int;
 
+create table service(
+    id serial primary key,
+    designation varchar(255),
+    etat int
+);
+
 create table Client(
     id serial primary key,
     nom varchar(50),
