@@ -7,6 +7,7 @@ import {Column} from "primereact/column";
 import { Dialog } from "primereact/dialog";
 import Modals_Create_Service from "../Components/Modals_Create_Service";
 import Modal_update_service from "../Components/Modlal_update_service";
+import Headers from "../Body/Headers";
 
 export default function Liste_service(){
     const [globalFilter, setGlobalFilter] = useState('');
@@ -82,7 +83,7 @@ export default function Liste_service(){
 
     return (
         <>
-
+            <Headers/>
             <ConfirmPopup/>
             <Dialog
                 header="Creer un Produit"

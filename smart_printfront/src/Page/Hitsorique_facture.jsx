@@ -5,6 +5,7 @@ import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {Card} from 'primereact/card';
 import {getApiUrl} from "../Link/URL";
+import Headers from "../Body/Headers";
 
 export default function HistoriqueFacture() {
     const [globalFilter, setGlobalFilter] = useState('');
@@ -149,6 +150,8 @@ export default function HistoriqueFacture() {
     };
 
     return (
+        <>
+        <Headers/>
         <div className="container-lg">
             {/* Tableau de bord */}
             <div className="row">
@@ -292,5 +295,6 @@ export default function HistoriqueFacture() {
                 </div>
             </div>
         </div>
+        </>
     );
 }

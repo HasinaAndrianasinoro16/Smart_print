@@ -7,6 +7,7 @@ import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { Dialog } from "primereact/dialog";
 import Modals_update_produits from "../Components/Modals_update_produits";
 import Modals_Create_produits from "../Components/Modals_Create_produits";
+import Headers from "../Body/Headers";
 export default function Liste_produit(){
     const [globalFilter, setGlobalFilter] = useState('');
     const [visible, setVisible] = useState(false);
@@ -80,6 +81,7 @@ export default function Liste_produit(){
 
     return (
         <>
+            <Headers/>
             <ConfirmPopup />
             <Dialog
                 header="Modifier un Produit"

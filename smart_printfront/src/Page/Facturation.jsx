@@ -11,6 +11,7 @@ import FactureForm from "../Components/FactureForm";
 import {getApiUrl} from "../Link/URL";
 import Modals_create_BonCommande from "../Components/Modals_create_BonCommande";
 import ServiceForm from "../Components/ServiceForm";
+import Headers from "../Body/Headers";
 
 export default function Facturation(){
     const [globalFilter, setGlobalFilter] = useState('');
@@ -126,6 +127,7 @@ export default function Facturation(){
 
     return (
         <>
+            <Headers/>
             {/* Modal dialogs */}
             <Dialog header="Ajout de Client" visible={visible1} style={{width: '70vw'}}
                     onHide={() => setVisible1(false)}>

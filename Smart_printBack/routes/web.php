@@ -35,4 +35,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware('auth:sanctum')->get('/api/user', function () {
+    return \Illuminate\Support\Facades\Auth::user();
+});
+
+Route::post('/logout', function () {
+    \Illuminate\Support\Facades\Auth::logout();
+    return response()->json(['message' => 'Déconnecté avec succès']);
+});
+
 require __DIR__.'/auth.php';

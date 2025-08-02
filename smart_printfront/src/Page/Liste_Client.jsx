@@ -6,6 +6,7 @@ import { getApiUrl } from "../Link/URL";
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { Dialog } from "primereact/dialog";
 import Modals_update_clients from "../Components/Modals_update_clients";
+ import Headers from "../Body/Headers";
 
 export default function Liste_Client() {
     const [globalFilter, setGlobalFilter] = useState('');
@@ -78,6 +79,7 @@ export default function Liste_Client() {
 
     return (
         <>
+            <Headers/>
             <ConfirmPopup />
             <Dialog
                 header="Modifier un Client"

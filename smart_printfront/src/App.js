@@ -12,13 +12,14 @@ import Histoique_facture from "./Page/Hitsorique_facture";
 import Liste_Client from "./Page/Liste_Client";
 import Liste_produit from "./Page/Liste_produit";
 import Liste_service from "./Page/Liste_service";
+import Login from "./Page/Login";
 
 
 
 function App() {
   return (
     <Router>
-      <Headers/>
+      {/*<Headers/>*/}
       <Routes>
           <Route path='/' element={<Facturation/>}/>
           <Route path='/info' element={<Info_facture/>}/>
@@ -26,6 +27,7 @@ function App() {
           <Route path='/liste_client' element={<Liste_Client/>}/>
           <Route path='/liste_produit' element={<Liste_produit/>}/>
           <Route path='/liste_service' element={<Liste_service/>}/>
+          <Route path='/login' element={<Login/>}/>
       </Routes>
     </Router>
   );
