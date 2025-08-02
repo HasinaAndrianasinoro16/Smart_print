@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import MyLogo from "../assets/img/upscalemedia-transformed.jpeg";
 
 export default function Login({ setUser }) {
     const [email, setEmail] = useState('');
@@ -44,7 +45,7 @@ export default function Login({ setUser }) {
         <div className="flex items-center justify-center min-h-screen bg-white">
             <div className="w-full max-w-md p-6 bg-white shadow-2xl rounded-xl border">
                 <div className="text-center mb-6">
-                    <img src="/logo.png" alt="Logo" className="h-20 mx-auto mb-2" />
+                    <img src={MyLogo} alt="Logo" className="h-20 mx-auto mb-2" />
                     <h1 className="text-2xl font-semibold text-gray-700">Connexion</h1>
                 </div>
                 {error && <div className="text-red-600 text-sm mb-4">{error}</div>}
