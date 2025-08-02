@@ -139,7 +139,7 @@ export default function Liste_service(){
                         >
                             <Column field="id" header="code" sortable filter/>
                             <Column field="designation" header="designation" sortable filter/>
-                            {/*<Column field="prix_unitaire" header="prix unitaire (Ar)" sortable filter/>*/}
+                            <Column field="prix" header="prix unitaire (Ar)" sortable filter/>
                             <Column header="Action" body={actionBodyTemplate}/>
                         </DataTable>
                     </div>

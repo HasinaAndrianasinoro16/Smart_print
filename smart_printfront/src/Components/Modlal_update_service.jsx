@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { getApiUrl } from "../Link/URL";
 import { InputText } from "primereact/inputtext";
+import { InputNumber } from "primereact/inputnumber";
 
 export default function Modal_update_service({ idService, onClose }) {
     const [designation, setDesignation] = useState('');
+    const [prix, setPrix] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -16,12 +19,17 @@ export default function Modal_update_service({ idService, onClose }) {
                 const data = await response.json();
                 const service = Array.isArray(data) ? data[0] : data;
 
-                if (service && service.designation) {
+                if (service && service.designation && service.prix !== undefined) {
                     setDesignation(service.designation);
+                    setPrix(service.prix);
+                } else {
+                    throw new Error("Données de service invalides");
                 }
             } catch (e) {
                 console.error("Erreur:", e.message);
                 alert("Erreur lors du chargement des données du service.");
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -29,13 +37,14 @@ export default function Modal_update_service({ idService, onClose }) {
     }, [idService]);
 
     const update_service = async () => {
-        if (designation.trim() === "") {
-            alert("Veuillez remplir le champ de désignation.");
+        if (designation.trim() === "" || prix === null) {
+            alert("Veuillez remplir tous les champs.");
             return;
         }
 
         const serviceData = {
             designation: designation.trim(),
+            prix,
         };
 
         try {
@@ -55,6 +64,8 @@ export default function Modal_update_service({ idService, onClose }) {
         }
     };
 
+    if (loading) return <div className="text-center py-5">Chargement en cours...</div>;
+
     return (
         <div>
             <div className="row">
@@ -66,7 +77,17 @@ export default function Modal_update_service({ idService, onClose }) {
                             value={designation}
                             onChange={(e) => setDesignation(e.target.value)}
                             className="w-100"
-                            required
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="prix" className="form-label">Prix unitaire :</label>
+                        <InputNumber
+                            inputId="prix"
+                            value={prix}
+                            onValueChange={(e) => setPrix(e.value)}
+                            useGrouping={true}
+                            locale="fr-FR"
+                            className="w-100"
                         />
                     </div>
                 </div>

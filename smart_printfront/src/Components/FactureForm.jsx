@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Dropdown } from 'primereact/dropdown';
 import { InputNumber } from 'primereact/inputnumber';
 import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
 import { getApiUrl } from "../Link/URL";
 
 export default function FactureForm({ facture }) {
     const [lignes, setLignes] = useState([
-        { produit: null, quantite: 1, prixUnitaire: 0 }
+        { produit: null, quantite: 1, prixUnitaire: 0, format: '' }
     ]);
     const [produits, setProduits] = useState([]);
 
@@ -36,7 +37,7 @@ export default function FactureForm({ facture }) {
     };
 
     const addLigne = () => {
-        setLignes([...lignes, { produit: null, quantite: 1, prixUnitaire: 0 }]);
+        setLignes([...lignes, { produit: null, quantite: 1, prixUnitaire: 0, format: '' }]);
     };
 
     const removeLigne = (index) => {
@@ -52,9 +53,15 @@ export default function FactureForm({ facture }) {
             for (let ligne of lignes) {
                 if (!ligne.produit) continue;
 
+                // 🧠 Construction dynamique de la description
+                let description = ligne.produit.designation;
+                if (ligne.format?.trim()) {
+                    description += ` (${ligne.format})`;
+                }
+
                 const payload = {
                     facture: facture,
-                    description: ligne.produit.designation,
+                    description: description,
                     quantite: ligne.quantite,
                     prix_unitaire: ligne.prixUnitaire
                 };
@@ -69,8 +76,9 @@ export default function FactureForm({ facture }) {
                     throw new Error("Erreur lors de l'ajout");
                 }
             }
+
             alert("Sous-factures ajoutées avec succès !");
-            setLignes([{ produit: null, quantite: 1, prixUnitaire: 0 }]);
+            setLignes([{ produit: null, quantite: 1, prixUnitaire: 0, format: '' }]);
         } catch (error) {
             console.error(error);
             alert("Erreur lors de l'ajout des sous-factures");
@@ -84,6 +92,7 @@ export default function FactureForm({ facture }) {
                 <thead>
                 <tr>
                     <th>Produit</th>
+                    <th>Format (optionnel)</th>
                     <th>Quantité</th>
                     <th>Prix unitaire HT</th>
                     <th>Prix total HT</th>
@@ -100,6 +109,14 @@ export default function FactureForm({ facture }) {
                                 onChange={(e) => handleChange(index, 'produit', e.value)}
                                 optionLabel="designation"
                                 placeholder="Sélectionner un produit"
+                                className="w-full"
+                            />
+                        </td>
+                        <td>
+                            <InputText
+                                value={ligne.format}
+                                onChange={(e) => handleChange(index, 'format', e.target.value)}
+                                placeholder="Ex: 500x500"
                                 className="w-full"
                             />
                         </td>
@@ -137,7 +154,7 @@ export default function FactureForm({ facture }) {
             </table>
 
             <div className="mt-3">
-                <Button icon="pi pi-plus" label="Ajouter une ligne" onClick={addLigne} />
+                <Button icon="fas fa-plus" label="Ajouter une ligne" onClick={addLigne} />
             </div>
 
             <div className="mt-5 flex justify-content-end">
@@ -157,7 +174,6 @@ export default function FactureForm({ facture }) {
         </div>
     );
 }
-
 
 
 // import React, { useState } from 'react';

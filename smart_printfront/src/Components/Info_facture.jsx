@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import MyLogo from "../assets/img/Smart Print-logo/vector/default-monochrome-black.svg";
+import MyLogo from "../assets/img/upscalemedia-transformed.jpeg";
 import { useLocation } from "react-router-dom";
 import { getApiUrl } from "../Link/URL";
 import html2pdf from "html2pdf.js";
@@ -13,6 +13,7 @@ export default function Info_facture() {
     const [facture, setFacture] = useState({});
     const [sousFactures, setSousFactures] = useState([]);
     const [bonsCommande, setBonsCommande] = useState([]);
+    const [services, setServices] = useState([])
 
     const [loading, setLoading] = useState(false);
 
@@ -22,17 +23,30 @@ export default function Info_facture() {
             fetchFactureDetail(factureId);
             fetchSousFactures(factureId);
             fetchBonsCommande(factureId);
+            fetchServiceFacture(factureId);
         }
     }, [factureId]);
+
+    const fetchServiceFacture = async (id) => {
+        try {
+            const url = 'services/service-facture/' + id;
+            const reponse = await fetch(getApiUrl(url));
+            const data = await reponse.json();
+            setServices(data || {});
+        }catch (e) {
+            console.error(e);
+            setServices({});
+        }
+    }
 
     const fetchFactureDetail = async (id) => {
         try {
             const response = await fetch(getApiUrl(`factures/self/${id}`));
             const data = await response.json();
-            setFacture(data || {});  // On protège même si data est vide
+            setFacture(data || {});
         } catch (error) {
             console.error(error);
-            setFacture({});  // Si erreur on évite de planter l'affichage
+            setFacture({});
         }
     };
 
@@ -143,6 +157,13 @@ export default function Info_facture() {
 
     const totalHT = sousFactures.reduce((sum, item) => sum + (item.quantite * item.prix_unitaire), 0);
     const totalTTC = totalHT;
+
+    const totalTTCServices = services.reduce((sum, item) => {
+        const prix = parseFloat(item.prix_unitaire) || 0;
+        return sum + prix;
+    }, 0);
+
+    const PrixTotalTTC = totalTTC + totalTTCServices;
     // const tva = totalHT * 0.20;
     // const totalTTC = totalHT + tva;
 
@@ -172,39 +193,39 @@ export default function Info_facture() {
         <>
     <ConfirmPopup />
         <div className="container-lg my-4">
-            <div className="mb-4">
-                <h4 className="text-start">Détail de la facture : <strong>{facture?.id || ''}</strong></h4>
-            </div>
-            <div className="d-flex justify-content-end my-3 gap-3">
-                <button className="btn btn-warning" onClick={generatePDF}>
-                    Télécharger en PDF <i className="fas fa-file-pdf"/>
-                </button>
-                <button className="btn btn-success" onClick={envoyerParEmail} disabled={loading}>
-                    {loading ? (
-                        <>
+            <div className="row">
+                <div className="col-md-6 d-flex justify-content-start my-3 gap-3">
+                    <h4 className="text-start">Détail de la facture : <strong>{facture?.id || ''}</strong></h4>
+                </div>
+                <div className="col-md-6 d-flex justify-content-end my-3 gap-3">
+                    <button className="btn btn-warning" onClick={generatePDF}>
+                        Télécharger en PDF <i className="fas fa-file-pdf"/>
+                    </button>
+                    <button className="btn btn-success" onClick={envoyerParEmail} disabled={loading}>
+                        {loading ? (
+                            <>
                             <span className="spinner-border spinner-border-sm me-2" role="status"
                                   aria-hidden="true"></span>
-                            Envoi en cours...
-                        </>
-                    ) : (
-                        <>
-                            Envoyer par email <i className="fas fa-paper-plane"/>
-                        </>
-                    )}
-                </button>
-
-
+                                Envoi en cours...
+                            </>
+                        ) : (
+                            <>
+                                Envoyer par email <i className="fas fa-paper-plane"/>
+                            </>
+                        )}
+                    </button>
+                </div>
             </div>
 
             <div className="card p-4" id="facture-pdf">
                 <div className="row">
                     <div className="col-md-6 d-flex align-items-start">
-                        <img src={MyLogo} alt="Smart Print Logo" height="60"/>
+                        <img src={MyLogo} alt="Smart Print Logo" height="160"/>
                     </div>
 
                     <div className="col-md-6 text-end">
                         <h5 className="mb-1">
-                        <i className="fas fa-user text-primary"/> Client :
+                            <i className="fas fa-user text-primary"/> Client :
                             <strong>{facture?.client_relation?.nom || '-'}</strong>
                         </h5>
                         <p className="mb-0"><i className="fas fa-map-pin text-danger"/> Adresse
@@ -246,6 +267,9 @@ export default function Info_facture() {
                         </p>
                     </div>
                 </div>
+
+                <div className="text-start h4">Produits:</div>
+                <div className="py-1"/>
 
                 <table className="table table-bordered">
                     <thead className="table-light">
@@ -290,6 +314,52 @@ export default function Info_facture() {
                     </tfoot>
                 </table>
 
+                <div className="py-1"/>
+                <div className="text-start h4">Services:</div>
+                <div className="py-1"/>
+
+                <table className="table table-bordered">
+                    <thead className="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Désignation</th>
+                        <th>Total (Ar)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {services.length > 0 ? (
+                        services.map((item, index) => (
+                            <tr key={index}>
+                                <td>{index + 1}</td>
+                                <td>{item.description}</td>
+                                <td>{item.prix_unitaire.toLocaleString("fr-FR")}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="5" className="text-center">Aucune ligne de sous-facture</td>
+                        </tr>
+                    )}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th colSpan="4" className="text-end">Total TTC</th>
+                        <th><strong>{totalTTCServices.toLocaleString("fr-FR")} Ar</strong></th>
+                    </tr>
+                    </tfoot>
+                </table>
+
+                <div className="py-2"/>
+
+                <table className="table table-bordered">
+                    <tfoot>
+                    <tr>
+                        <th colSpan="4" className="text-start">Cout Total TTC</th>
+                        <th><strong>{PrixTotalTTC.toLocaleString("fr-FR")} Ar</strong></th>
+                    </tr>
+                    </tfoot>
+                </table>
+
                 <div className="mt-4">
                     <p className="small text-muted">
                         <i className="fas fa-pin"/> <strong>Mentions légales :</strong> Cette facture est émise par
@@ -317,7 +387,10 @@ export default function Info_facture() {
                                 </a>
                                 <span>
                                     <button className="btn btn-danger btn-sm"
-                                        onClick={(e) => {e.preventDefault(); confirm(e, bc.id)}}
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                confirm(e, bc.id)
+                                            }}
                                     >
                                         <i className="fas fa-trash-alt"/> supprimer
                                     </button>

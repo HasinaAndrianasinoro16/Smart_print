@@ -18,6 +18,7 @@ create table service(
     designation varchar(255),
     etat int
 );
+alter table service add column prix numeric(10,2);
 
 create table Client(
     id serial primary key,
@@ -48,6 +49,13 @@ create table sousfacture(
     facture varchar(255) references facture(id),
     description varchar(50),
     quantite int,
+    prix_unitaire numeric(10,2)
+);
+
+create table servicefacture(
+    id serial primary key,
+    facture varchar(255) references facture(id),
+    description varchar(50),
     prix_unitaire numeric(10,2)
 );
 

@@ -10,6 +10,7 @@ import Modals_Creation_Facture from "../Components/Modals_Creation_Facture";
 import FactureForm from "../Components/FactureForm";
 import {getApiUrl} from "../Link/URL";
 import Modals_create_BonCommande from "../Components/Modals_create_BonCommande";
+import ServiceForm from "../Components/ServiceForm";
 
 export default function Facturation(){
     const [globalFilter, setGlobalFilter] = useState('');
@@ -17,6 +18,7 @@ export default function Facturation(){
     const [visible2, setVisible2] = useState(false);
     const [visible3, setVisible3] = useState(false);
     const [visible4, setVisible4] = useState(false);
+    const [visible5, setVisible5] = useState(false);
     const [factures, setFactures] = useState([]);
     const [selectedFactureId, setSelectedFactureId] = useState(null);
 
@@ -105,6 +107,12 @@ export default function Facturation(){
                 >
                     <i className="fas fa-file-alt"/>
                 </button>
+                <button className="btn btn-success btn-sm" onClick={() => {
+                    setVisible5(true);
+                    setSelectedFactureId(rowData.id);
+                }}>
+                    <i className="fas fa-plus"/><i className="fas fa-tools"/>
+                </button>
                 <button
                     className="btn btn-danger btn-sm"
                     onClick={(e) => confirmDelete(e, rowData.id)}
@@ -144,6 +152,10 @@ export default function Facturation(){
             <Dialog header="Creation Bon de commande" visible={visible4} style={{width: '50vw'}}
                     onHide={() => setVisible4(false)}>
                 <Modals_create_BonCommande facture={selectedFactureId}/>
+            </Dialog>
+            <Dialog header="Formulaire ajout de service a une facture" visible={visible5} style={{width: '120W'}}
+                    onHide={() => setVisible5(false)}>
+                <ServiceForm facture={selectedFactureId}/>
             </Dialog>
 
             <div className="container-lg">
