@@ -95,3 +95,9 @@ Route::prefix('services')->group(function (){
    Route::post('/service-facture',[\App\Http\Controllers\Service_controller::class,'insert_servicefacture']);
    Route::get('/service-facture/{id}',[\App\Http\Controllers\Service_controller::class,'servicefacture_by_idFacture']);
 });
+
+//API pour utilisateurs
+Route::prefix('users')->group(function (){
+   Route::post('/add',[\App\Http\Controllers\Utilisateur_controller::class,'save_user']);
+   Route::get('/',[\App\Http\Controllers\Utilisateur_controller::class,'get_all_users']);
+});
