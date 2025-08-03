@@ -94,7 +94,7 @@ export default function Liste_service(){
                 <Modals_Create_Service onClose={() => {setVisible(false); Liste_service();}} />
             </Dialog>
             <Dialog
-                header="Modifier un Service"
+                header="Modifier un Produit"
                 visible={visible}
                 style={{ width: '50vw' }}
                 onHide={() => setVisible(false)}

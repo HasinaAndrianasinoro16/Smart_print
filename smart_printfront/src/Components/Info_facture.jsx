@@ -252,7 +252,7 @@ export default function Info_facture() {
                         <p><strong><i className="fas fa-money-check"/> Conditions de paiement :</strong>
                             {facture?.condition_paiement}</p>
                     </div>
-                    <div className="col-md-6 text-end">
+                    <div className="col-md-6 text-end ">
                         <p><strong>N° Facture :</strong> {factureCode || ''}</p>
                         <p><strong>Statut :</strong>
                             {facture.statut === 0

@@ -38,12 +38,19 @@ export default function Headers({ setUser }) {
                     <span className="text-white fw-bold fs-5">Smart Print & Design</span>
                 </Link>
 
-                <ul className="nav align-items-center ms-auto me-3" style={{ gap: '15px' }}>
-                    <li><Link to="/" className="nav-link text-white"><i className="fas fa-money-check-alt"></i> Facturation</Link></li>
-                    <li><Link to="/liste_client" className="nav-link text-white"><i className="fas fa-users"></i> Clients</Link></li>
-                    <li><Link to="/liste_produit" className="nav-link text-white"><i className="fas fa-box-open"></i> Produits</Link></li>
-                    <li><Link to="/liste_service" className="nav-link text-white"><i className="fas fa-tools"></i> Services</Link></li>
-                    <li><Link to="/Historique" className="nav-link text-white"><i className="fas fa-folder-open"></i> Historique</Link></li>
+                <ul className="nav align-items-center ms-auto me-3" style={{gap: '15px'}}>
+                    <li><Link to="/" className="nav-link text-white"><i
+                        className="fas fa-money-check-alt"></i> Facturation</Link></li>
+                    <li><Link to="/liste_client" className="nav-link text-white"><i
+                        className="fas fa-users"></i> Clients</Link></li>
+                    <li><Link to="/liste_produit" className="nav-link text-white"><i
+                        className="fas fa-box-open"></i> Produits</Link></li>
+                    <li><Link to="/liste_service" className="nav-link text-white"><i
+                        className="fas fa-tools"></i> Services</Link></li>
+                    <li><Link to="/liste_utilisateur" className="nav-link text-white"><i
+                        className="fas fa-user-friends"></i> Utilisateurs</Link></li>
+                    <li><Link to="/Historique" className="nav-link text-white"><i
+                        className="fas fa-folder-open"></i> Historique</Link></li>
                 </ul>
 
                 {/* Logout Button */}

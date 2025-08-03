@@ -13,6 +13,7 @@ import Liste_Client from "./Page/Liste_Client";
 import Liste_produit from "./Page/Liste_produit";
 import Liste_service from "./Page/Liste_service";
 import Login from "./Page/Login";
+import List_users from "./Page/List_users";
 
 
 
@@ -28,6 +29,7 @@ function App() {
           <Route path='/liste_produit' element={<Liste_produit/>}/>
           <Route path='/liste_service' element={<Liste_service/>}/>
           <Route path='/login' element={<Login/>}/>
+          <Route path='/liste_utilisateur' element={<List_users/>}/>
       </Routes>
     </Router>
   );
