@@ -81,7 +81,7 @@ export default function Liste_produit(){
 
     return (
         <>
-            <Headers/>
+            {/*<Headers/>*/}
             <ConfirmPopup />
             <Dialog
                 header="Modifier un Produit"

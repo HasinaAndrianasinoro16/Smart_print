@@ -1,101 +1,206 @@
 import React, { useEffect, useState } from "react";
-import { getApiUrl } from "../Link/URL";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { getApiUrl } from "../Link/URL";
 
 export default function Modal_update_service({ idService, onClose }) {
-    const [designation, setDesignation] = useState('');
-    const [prix, setPrix] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [formData, setFormData] = useState({
+        designation: '',
+        prix: null
+    });
+    const [loading, setLoading] = useState({
+        fetch: true,
+        submit: false
+    });
+    const [error, setError] = useState('');
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch(getApiUrl('services/' + idService));
-                if (!response.ok) {
-                    throw new Error("Erreur lors de la récupération du service");
-                }
-
-                const data = await response.json();
-                const service = Array.isArray(data) ? data[0] : data;
-
-                if (service && service.designation && service.prix !== undefined) {
-                    setDesignation(service.designation);
-                    setPrix(service.prix);
-                } else {
-                    throw new Error("Données de service invalides");
-                }
-            } catch (e) {
-                console.error("Erreur:", e.message);
-                alert("Erreur lors du chargement des données du service.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, [idService]);
-
-    const update_service = async () => {
-        if (designation.trim() === "" || prix === null) {
-            alert("Veuillez remplir tous les champs.");
-            return;
-        }
-
-        const serviceData = {
-            designation: designation.trim(),
-            prix,
-        };
-
+    const getCsrfToken = async () => {
         try {
-            const response = await fetch(getApiUrl('services/update/' + idService), {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(serviceData),
+            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
             });
 
-            if (!response.ok) throw new Error("Erreur lors de la modification");
+            const cookieValue = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('XSRF-TOKEN='))
+                ?.split('=')[1];
 
-            alert("Service modifié avec succès !");
-            onClose();
-        } catch (e) {
-            console.error("Erreur:", e.message);
-            alert("Erreur lors de la modification du service.");
+            return decodeURIComponent(cookieValue || '');
+        } catch (error) {
+            console.error("Erreur CSRF token:", error);
+            throw error;
         }
     };
 
-    if (loading) return <div className="text-center py-5">Chargement en cours...</div>;
+    const fetchServiceInfo = async () => {
+        try {
+            const response = await fetch(getApiUrl(`services/${idService}`), {
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error("Erreur lors de la récupération du service");
+            }
+
+            const data = await response.json();
+            const service = Array.isArray(data) ? data[0] : data;
+
+            if (!service?.designation || service?.prix === undefined) {
+                throw new Error("Données de service invalides");
+            }
+
+            setFormData({
+                designation: service.designation,
+                prix: service.prix
+            });
+        } catch (error) {
+            console.error("Erreur:", error);
+            setError("Impossible de charger les informations du service");
+        } finally {
+            setLoading(prev => ({ ...prev, fetch: false }));
+        }
+    };
+
+    useEffect(() => {
+        fetchServiceInfo();
+    }, [idService]);
+
+    const handleInputChange = (e) => {
+        const { id, value } = e.target;
+        setFormData(prev => ({ ...prev, [id]: value }));
+        setError('');
+    };
+
+    const handleNumberChange = (value) => {
+        setFormData(prev => ({ ...prev, prix: value }));
+        setError('');
+    };
+
+    const updateService = async () => {
+        if (!formData.designation.trim() || formData.prix === null) {
+            setError("Veuillez remplir tous les champs");
+            return;
+        }
+
+        setLoading(prev => ({ ...prev, submit: true }));
+        setError('');
+
+        try {
+            const csrfToken = await getCsrfToken();
+
+            const response = await fetch(getApiUrl(`services/update/${idService}`), {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    designation: formData.designation.trim(),
+                    prix: formData.prix
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Erreur lors de la modification du service");
+            }
+
+            alert("Service modifié avec succès ✅");
+            if (onClose) onClose();
+
+        } catch (error) {
+            console.error("Erreur:", error);
+            setError(error.message || "Une erreur est survenue");
+        } finally {
+            setLoading(prev => ({ ...prev, submit: false }));
+        }
+    };
+
+    if (loading.fetch) {
+        return (
+            <div className="flex justify-center items-center p-8">
+                <ProgressSpinner />
+            </div>
+        );
+    }
 
     return (
-        <div>
+        <div className="p-4">
+            {error && (
+                <div className="p-3 mb-4 bg-red-100 text-red-700 rounded-md flex items-center">
+                    <i className="fas fa-exclamation-circle mr-2"></i>
+                    {error}
+                </div>
+            )}
+
             <div className="row">
                 <div className="col-md-12">
-                    <div className="mb-3">
-                        <label htmlFor="designation" className="form-label">Désignation :</label>
+                    <div className="mb-4">
+                        <label htmlFor="designation" className="block text-sm font-medium text-gray-700 mb-1">
+                            Désignation :
+                        </label>
                         <InputText
                             id="designation"
-                            value={designation}
-                            onChange={(e) => setDesignation(e.target.value)}
-                            className="w-100"
+                            value={formData.designation}
+                            onChange={handleInputChange}
+                            className="w-full"
+                            required
+                            disabled={loading.submit}
                         />
                     </div>
-                    <div className="mb-3">
-                        <label htmlFor="prix" className="form-label">Prix unitaire :</label>
+
+                    <div className="mb-4">
+                        <label htmlFor="prix" className="block text-sm font-medium text-gray-700 mb-1">
+                            Prix unitaire (MGA) :
+                        </label>
                         <InputNumber
                             inputId="prix"
-                            value={prix}
-                            onValueChange={(e) => setPrix(e.value)}
-                            useGrouping={true}
+                            value={formData.prix}
+                            onValueChange={(e) => handleNumberChange(e.value)}
+                            mode="currency"
+                            currency="MGA"
                             locale="fr-FR"
-                            className="w-100"
+                            className="w-full"
+                            disabled={loading.submit}
                         />
                     </div>
                 </div>
             </div>
 
-            <div className="text-center">
-                <button className="w-50 btn btn-warning" onClick={update_service}>
-                    Modifier <i className="fas fa-pen" />
+            <div className="flex justify-center mt-6">
+                <button
+                    onClick={updateService}
+                    disabled={loading.submit}
+                    className={`px-4 py-2 rounded-md text-white font-medium flex items-center
+                              ${loading.submit ? 'bg-warning' : 'bg-warning hover:bg-warning'} 
+                              transition-colors duration-200`}
+                >
+                    {loading.submit ? (
+                        <>
+                            <ProgressSpinner
+                                style={{ width: '20px', height: '20px' }}
+                                strokeWidth="6"
+                                className="mr-2"
+                            />
+                            Enregistrement...
+                        </>
+                    ) : (
+                        <>
+                            <i className="fas fa-save mr-2"></i>
+                            Enregistrer les modifications
+                        </>
+                    )}
                 </button>
             </div>
         </div>

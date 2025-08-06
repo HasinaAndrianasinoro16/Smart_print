@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import {getApiUrl} from "../Link/URL";
 import {InputText} from "primereact/inputtext";
-import {InputNumber} from "primereact/inputnumber";
 import {Dropdown} from "primereact/dropdown";
 
 export default function Modal_Create_Users({onClose}){
@@ -9,6 +8,7 @@ export default function Modal_Create_Users({onClose}){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     const RoleStatic = [
         { id: 1, nom: 'Facturier' },
@@ -16,83 +16,147 @@ export default function Modal_Create_Users({onClose}){
         { id: 0, nom: 'Administrateur' },
     ];
 
+    const getCsrfToken = async () => {
+        try {
+            // Récupérer le cookie CSRF
+            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            // Extraire le token des cookies
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; XSRF-TOKEN=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        } catch (error) {
+            console.error("Erreur CSRF token:", error);
+            throw error;
+        }
+    };
+
     const save_users = async () => {
-        if (nom.trim() === "" || email.trim() === "" || password.trim() === "" ||role === null){
-            alert("Veuiller remplir tous les champs");
+        if (nom.trim() === "" || email.trim() === "" || password.trim() === "" || role === null){
+            alert("Veuillez remplir tous les champs");
             return;
         }
 
-        const userData = {
-            name: nom.trim(),
-            email: email.trim(),
-            password: password.trim(),
-            role: role,
-        }
+        setLoading(true);
 
         try {
-            const reponse = await fetch(getApiUrl('users/add'), {
+            // 1. Récupérer le token CSRF
+            const csrfToken = await getCsrfToken();
+
+            // 2. Préparer les données
+            const userData = {
+                name: nom.trim(),
+                email: email.trim(),
+                password: password.trim(),
+                role: role,
+            };
+
+            // 3. Envoyer la requête
+            const response = await fetch(getApiUrl('users/add'), {
                 method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify(userData),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken ? decodeURIComponent(csrfToken) : '',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'include',
+                body: JSON.stringify(userData)
             });
 
-            if (!reponse.ok) throw new Error("erreur lors de l'ajout du produits");
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Erreur lors de l'ajout de l'utilisateur");
+            }
 
-            alert("Utilisateur ajouter avec succes");
+            alert("Utilisateur ajouté avec succès");
             setNom("");
             setEmail("");
             setPassword("");
             setRole(null);
             onClose();
 
-        }catch (e) {
-            console.error(e.message);
+        } catch (error) {
+            console.error("Erreur:", error.message);
+            alert(error.message || "Une erreur est survenue");
+        } finally {
+            setLoading(false);
         }
-
     };
+
     return (
         <div>
             <div className="row">
                 <div className="col-md-12">
                     <div className="mb-3">
                         <label htmlFor="nom" className="form-label">Nom utilisateur :</label>
-                        <InputText id="nom" value={nom} onChange={(e) => setNom(e.target.value)}
-                                   className="w-100"
-                                   required/>
+                        <InputText
+                            id="nom"
+                            value={nom}
+                            onChange={(e) => setNom(e.target.value)}
+                            className="w-100"
+                            required
+                        />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="nom" className="form-label">Email :</label>
-                        <InputText id="nom" value={email} onChange={(e) => setEmail(e.target.value)}
-                                   className="w-100"
-                                   required/>
+                        <label htmlFor="email" className="form-label">Email :</label>
+                        <InputText
+                            id="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-100"
+                            required
+                        />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="nom" className="form-label">Mot de passe :</label>
-                        <InputText id="nom" value={password} onChange={(e) => setPassword(e.target.value)}
-                                   className="w-100"
-                                   required/>
+                        <label htmlFor="password" className="form-label">Mot de passe :</label>
+                        <InputText
+                            id="password"
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-100"
+                            required
+                        />
                     </div>
-
 
                     <div className="form-group mb-4">
-                        <label htmlFor="Client" className="form-label">Role :</label>
+                        <label htmlFor="role" className="form-label">Role :</label>
                         <Dropdown
                             value={role}
                             onChange={(e) => setRole(e.value)}
                             options={RoleStatic}
                             optionLabel="nom"
                             optionValue="id"
-                            placeholder="Sélectionner un client"
-                            filter
-                            style={{width: '100%'}}
+                            placeholder="Sélectionner un rôle"
+                            className="w-100"
                         />
                     </div>
                 </div>
             </div>
 
             <div className="text-center">
-                <button className="w-50 btn btn-success" onClick={save_users}>
-                    Ajouter <i className="fas fa-plus"/>
+                <button
+                    className="w-50 btn btn-success"
+                    onClick={save_users}
+                    disabled={loading}
+                >
+                    {loading ? (
+                        <span>
+                            <i className="fas fa-spinner fa-spin me-2"></i>
+                            En cours...
+                        </span>
+                    ) : (
+                        <span>
+                            Ajouter <i className="fas fa-plus"/>
+                        </span>
+                    )}
                 </button>
             </div>
         </div>

@@ -1,145 +1,259 @@
-import React, {useEffect, useState} from "react";
-import {getApiUrl} from "../Link/URL";
-import {InputText} from "primereact/inputtext";
-import {InputNumber} from "primereact/inputnumber";
+import React, { useEffect, useState } from "react";
+import { InputText } from "primereact/inputtext";
+import { InputNumber } from "primereact/inputnumber";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { getApiUrl } from "../Link/URL";
 
-export default function Modals_update_clients({ idClients, onClose }){
-    const [nom, setNom] = useState('');
-    const [adresse, setAdresse] = useState('');
-    const [email, setEmail] = useState('');
-    const [telephone, setTelephone] = useState('');
-    const [nif, setNif] = useState(null);
-    const [stat, setStat] = useState(null);
-    const [rcs, setRcs] = useState('');
-    const [code, setCode] = useState('')
+export default function Modals_update_clients({ idClients, onClose }) {
+    const [formData, setFormData] = useState({
+        nom: '',
+        adresse: '',
+        email: '',
+        telephone: '',
+        nif: null,
+        stat: null,
+        rcs: '',
+        code: ''
+    });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
-    const [clients, setClients] = useState([])
-
-    const infoClient = async () => {
+    const getCsrfToken = async () => {
         try {
-            const url = 'clients/' + idClients;
-            const reponse = await fetch(getApiUrl(url));
-            if (!reponse.ok) {
-                throw new Error("Erreur lors de la recuperation des clients");
-            }
-            const data = await reponse.json();
-            setClients(data);
+            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
 
-            setNom(data.nom);
-            setAdresse(data.adresse);
-            setEmail(data.email);
-            setTelephone(data.telephone);
-            setNif(data.nif);
-            setStat(data.stat);
-            setRcs(data.rcs);
-            setCode(data.code);
+            const cookieValue = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('XSRF-TOKEN='))
+                ?.split('=')[1];
 
-        } catch (e) {
-            console.error(e.message);
+            return decodeURIComponent(cookieValue || '');
+        } catch (error) {
+            console.error("Erreur CSRF token:", error);
+            throw error;
         }
     };
 
+    const fetchClientInfo = async () => {
+        try {
+            const response = await fetch(getApiUrl(`clients/${idClients}`), {
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error("Erreur lors de la récupération du client");
+            }
+
+            const data = await response.json();
+            setFormData({
+                nom: data.nom || '',
+                adresse: data.adresse || '',
+                email: data.email || '',
+                telephone: data.telephone || '',
+                nif: data.nif || null,
+                stat: data.stat || null,
+                rcs: data.rcs || '',
+                code: data.code || ''
+            });
+        } catch (error) {
+            console.error("Erreur:", error);
+            setError("Impossible de charger les informations du client");
+        }
+    };
 
     useEffect(() => {
-        infoClient();
-    }, []);
+        fetchClientInfo();
+    }, [idClients]);
 
-    const UpdateCLients = async () => {
-        if (
-            nom.trim() === "" || adresse.trim() === "" || email.trim() === "" ||
-            telephone.trim() === "" || nif === null || stat === null || rcs.trim() === "" ||
-            code.trim() === ""
-        ) {
-            alert("Veuillez remplir tous les champs.");
+    const handleInputChange = (e) => {
+        const { id, value } = e.target;
+        setFormData(prev => ({ ...prev, [id]: value }));
+        setError('');
+    };
+
+    const handleNumberChange = (field, value) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+        setError('');
+    };
+
+    const updateClient = async () => {
+        // Validation
+        if (Object.values(formData).some(val => val === '' || val === null)) {
+            setError("Veuillez remplir tous les champs obligatoires");
             return;
         }
 
-        const clientData = {
-            nom: nom.trim(),
-            adresse: adresse.trim(),
-            email: email.trim(),
-            telephone: telephone.trim(),
-            nif,
-            stat,
-            rcs: rcs.trim(),
-            code: code.trim()
-        };
+        setLoading(true);
+        setError('');
 
         try {
-            const url = 'clients/update/'+idClients
-            const response = await fetch(getApiUrl(url), {
+            const csrfToken = await getCsrfToken();
+
+            const response = await fetch(getApiUrl(`clients/update/${idClients}`), {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(clientData),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'include',
+                body: JSON.stringify(formData)
             });
 
-            if (!response.ok) throw new Error("Erreur lors de l'ajout du client");
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Erreur lors de la modification du client");
+            }
 
-            alert("Client modifié avec succès !");
-            onClose();
-            // setNom("");
-            // setAdresse("");
-            // setEmail("");
-            // setTelephone("");
-            // setNif(null);
-            // setStat(null);
-            // setRcs("");
+            alert("Client modifié avec succès ✅");
+            if (onClose) onClose();
 
         } catch (error) {
-            console.error("Erreur :", error.message);
+            console.error("Erreur:", error);
+            setError(error.message || "Une erreur est survenue");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div>
+        <div className="p-4">
+            {error && (
+                <div className="p-3 mb-4 bg-red-100 text-red-700 rounded-md flex items-center">
+                    <i className="fas fa-exclamation-circle mr-2"></i>
+                    {error}
+                </div>
+            )}
 
             <div className="row">
                 <div className="col-md-6">
                     <div className="mb-3">
-                        <label htmlFor="nom" className="form-label">Nom du client / Entreprise / Société :</label>
-                        <InputText id="nom" value={nom} onChange={(e) => setNom(e.target.value)} className="w-100"
-                                   required/>
+                        <label htmlFor="nom" className="form-label">Nom du client :</label>
+                        <InputText
+                            id="nom"
+                            value={formData.nom}
+                            onChange={handleInputChange}
+                            className="w-100"
+                            required
+                            disabled={loading}
+                        />
                     </div>
                     <div className="mb-3">
                         <label htmlFor="adresse">Adresse :</label>
-                        <InputText id="adresse" value={adresse} onChange={(e) => setAdresse(e.target.value)} className="w-100" required />
+                        <InputText
+                            id="adresse"
+                            value={formData.adresse}
+                            onChange={handleInputChange}
+                            className="w-100"
+                            required
+                            disabled={loading}
+                        />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="email" className="font-bold">Adresse Email :</label>
-                        <InputText id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-100" required />
+                        <label htmlFor="email">Email :</label>
+                        <InputText
+                            id="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            className="w-100"
+                            required
+                            disabled={loading}
+                        />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="telephone" className="font-bold">Numéro de téléphone :</label>
-                        <InputText id="telephone" value={telephone} onChange={(e) => setTelephone(e.target.value)} className="w-100" required />
+                        <label htmlFor="telephone">Téléphone :</label>
+                        <InputText
+                            id="telephone"
+                            value={formData.telephone}
+                            onChange={handleInputChange}
+                            className="w-100"
+                            required
+                            disabled={loading}
+                        />
                     </div>
                 </div>
+
                 <div className="col-md-6">
                     <div className="mb-3">
-                        <label htmlFor="nom" className="form-label">Code du client / Entreprise / Société :</label>
-                        <InputText id="nom" value={code} onChange={(e) => setCode(e.target.value)} className="w-100"
-                                   required/>
+                        <label htmlFor="code">Code client :</label>
+                        <InputText
+                            id="code"
+                            value={formData.code}
+                            onChange={handleInputChange}
+                            className="w-100"
+                            required
+                            disabled={loading}
+                        />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="nif" className="font-bold">NIF :</label>
-                        <InputNumber inputId="nif" value={nif} onValueChange={(e) => setNif(e.value)}
-                                     useGrouping={false} className="w-100"/>
+                        <label htmlFor="nif">NIF :</label>
+                        <InputNumber
+                            inputId="nif"
+                            value={formData.nif}
+                            onValueChange={(e) => handleNumberChange('nif', e.value)}
+                            mode="decimal"
+                            useGrouping={false}
+                            className="w-100"
+                            disabled={loading}
+                        />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="stat" className="font-bold">STAT :</label>
-                        <InputNumber inputId="stat" value={stat} onValueChange={(e) => setStat(e.value)}
-                                     useGrouping={false} className="w-100"/>
+                        <label htmlFor="stat">STAT :</label>
+                        <InputNumber
+                            inputId="stat"
+                            value={formData.stat}
+                            onValueChange={(e) => handleNumberChange('stat', e.value)}
+                            mode="decimal"
+                            useGrouping={false}
+                            className="w-100"
+                            disabled={loading}
+                        />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="rcs" className="font-bold">RCS :</label>
-                        <InputText id="rcs" value={rcs} onChange={(e) => setRcs(e.target.value)} className="w-100"
-                                   required/>
+                        <label htmlFor="rcs">RCS :</label>
+                        <InputText
+                            id="rcs"
+                            value={formData.rcs}
+                            onChange={handleInputChange}
+                            className="w-100"
+                            required
+                            disabled={loading}
+                        />
                     </div>
                 </div>
             </div>
 
-            <div className="text-center">
-                <button className="w-50 btn btn-warning" onClick={UpdateCLients}>
-                    modifier <i className="fas fa-pen"/>
+            <div className="text-center mt-4">
+                <button
+                    className={`px-4 py-2 rounded-md text-white font-medium
+                              ${loading ? 'bg-warning' : 'bg-warning hover:bg-warning'}
+                              transition-colors duration-200`}
+                    onClick={updateClient}
+                    disabled={loading}
+                >
+                    {loading ? (
+                        <>
+                            <ProgressSpinner
+                                style={{ width: '20px', height: '20px' }}
+                                strokeWidth="6"
+                                className="mr-2"
+                            />
+                            Enregistrement...
+                        </>
+                    ) : (
+                        <>
+                            <i className="fas fa-save mr-2"></i>
+                            Modifier le client
+                        </>
+                    )}
                 </button>
             </div>
         </div>

@@ -83,7 +83,7 @@ export default function Liste_service(){
 
     return (
         <>
-            <Headers/>
+            {/*<Headers/>*/}
             <ConfirmPopup/>
             <Dialog
                 header="Creer un Produit"

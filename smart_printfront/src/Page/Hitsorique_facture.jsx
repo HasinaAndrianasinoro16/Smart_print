@@ -15,9 +15,31 @@ export default function HistoriqueFacture() {
     const [stats, setStats] = useState({
         total: 0,
         supprimees: 0,
-        // boncommande: 0,
         payees: 0
     });
+
+    // Fonction pour récupérer le token CSRF
+    const getCsrfToken = async () => {
+        try {
+            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            const cookieValue = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('XSRF-TOKEN='))
+                ?.split('=')[1];
+
+            return decodeURIComponent(cookieValue || '');
+        } catch (error) {
+            console.error("Erreur CSRF token:", error);
+            throw error;
+        }
+    };
 
     const date_emission_echeance = (rowData) => {
         return `${rowData.date_emission} - ${rowData.date_echeance}`;
@@ -26,14 +48,21 @@ export default function HistoriqueFacture() {
     // Charger toutes les données
     const loadData = useCallback(async () => {
         try {
+            const csrfToken = getCsrfToken();
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-XSRF-TOKEN': csrfToken
+            };
+
             // Chargement en parallèle
             const [payerData, supprimerData, totalCount, supprimerCount, payerCount, bonCommandeData] = await Promise.all([
-                fetch(getApiUrl('factures/get_facture_statut/2')).then(res => res.json()),
-                fetch(getApiUrl('factures/get_facture_statut/1')).then(res => res.json()),
-                fetch(getApiUrl('factures/count_facture_statut/0')).then(res => res.json()),
-                fetch(getApiUrl('factures/count_facture_statut/1')).then(res => res.json()),
-                fetch(getApiUrl('factures/count_facture_statut/2')).then(res => res.json()),
-                fetch(getApiUrl('boncommandes/get_by_etat/1')).then(res => res.json()),
+                fetch(getApiUrl('factures/get_facture_statut/2'), { headers }).then(res => res.json()),
+                fetch(getApiUrl('factures/get_facture_statut/1'), { headers }).then(res => res.json()),
+                fetch(getApiUrl('factures/count_facture_statut/0'), { headers }).then(res => res.json()),
+                fetch(getApiUrl('factures/count_facture_statut/1'), { headers }).then(res => res.json()),
+                fetch(getApiUrl('factures/count_facture_statut/2'), { headers }).then(res => res.json()),
+                fetch(getApiUrl('boncommandes/get_by_etat/1'), { headers }).then(res => res.json()),
             ]);
 
             setFacturePayer(payerData || []);
@@ -44,7 +73,6 @@ export default function HistoriqueFacture() {
                 total: totalCount || 0,
                 supprimees: supprimerCount || 0,
                 payees: payerCount || 0
-                // boncommande: bonCommandeCount || 0
             });
         } catch (e) {
             console.error("Erreur de chargement:", e.message);
@@ -108,11 +136,15 @@ export default function HistoriqueFacture() {
 
     const undo_bon_commande = async (idBonCommande) => {
         try {
+            const csrfToken = getCsrfToken();
             const url = 'boncommandes/restore/'+idBonCommande;
             const response = await fetch(getApiUrl(url),{
                 method:'PUT',
-                headers: {'Content-Type': 'application/json'}
-                });
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken
+                }
+            });
 
             if (!response.ok){
                 throw new Error("Erreur lors de la modification de la facture");
@@ -130,9 +162,13 @@ export default function HistoriqueFacture() {
 
     const undo_facture = async (idFacture) => {
         try {
+            const csrfToken = getCsrfToken();
             const response = await fetch(getApiUrl(`factures/undo/${idFacture}`), {
                 method: 'PUT',
-                headers: {'Content-Type': 'application/json'}
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken
+                }
             });
 
             if (!response.ok) {
@@ -141,7 +177,7 @@ export default function HistoriqueFacture() {
 
             const result = await response.json();
             alert("Facture restituée avec succès");
-            await loadData(); // Recharger les données après modification
+            await loadData();
 
         } catch (e) {
             console.error(e.message);
@@ -151,150 +187,150 @@ export default function HistoriqueFacture() {
 
     return (
         <>
-        <Headers/>
-        <div className="container-lg">
-            {/* Tableau de bord */}
-            <div className="row">
-                <div className="col-md-6 mb-4">
-                    <Card className="shadow-sm border-0" style={{borderRadius: '12px'}}>
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                            <h5 className="card-title text-muted mb-0">Factures payées</h5>
-                            <span className="badge bg-success text-white">
+            {/*<Headers/>*/}
+            <div className="container-lg">
+                {/* Tableau de bord */}
+                <div className="row">
+                    <div className="col-md-6 mb-4">
+                        <Card className="shadow-sm border-0" style={{borderRadius: '12px'}}>
+                            <div className="d-flex justify-content-between align-items-center mb-3">
+                                <h5 className="card-title text-muted mb-0">Factures payées</h5>
+                                <span className="badge bg-success text-white">
                                 <i className="fas fa-check-circle me-2"></i>
-                                {stats.payees}
+                                    {stats.payees}
                             </span>
-                        </div>
-                        <div className="d-flex justify-content-between mt-2">
-                            <small className="text-muted">{pourcentPayer}% du total</small>
-                            <small className="text-muted">{stats.payees}/{stats.total}</small>
-                        </div>
-                    </Card>
-                </div>
-                <div className="col-md-6 mb-4">
-                    <Card className="shadow-sm border-0" style={{borderRadius: '12px'}}>
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                            <h5 className="card-title text-muted mb-0">Factures supprimées</h5>
-                            <span className="badge bg-danger text-white">
+                            </div>
+                            <div className="d-flex justify-content-between mt-2">
+                                <small className="text-muted">{pourcentPayer}% du total</small>
+                                <small className="text-muted">{stats.payees}/{stats.total}</small>
+                            </div>
+                        </Card>
+                    </div>
+                    <div className="col-md-6 mb-4">
+                        <Card className="shadow-sm border-0" style={{borderRadius: '12px'}}>
+                            <div className="d-flex justify-content-between align-items-center mb-3">
+                                <h5 className="card-title text-muted mb-0">Factures supprimées</h5>
+                                <span className="badge bg-danger text-white">
                                 <i className="fas fa-trash me-2"></i>
-                                {stats.supprimees}
+                                    {stats.supprimees}
                             </span>
+                            </div>
+                            <div className="d-flex justify-content-between mt-2">
+                                <small className="text-muted">{pourcentSupprimer}% du total</small>
+                                <small className="text-muted">{stats.supprimees}/{stats.total}</small>
+                            </div>
+                        </Card>
+                    </div>
+                </div>
+
+                {/* Tableau des factures payées */}
+                <div className="text-start bold h4">Smart Print Historique Factures payées:</div>
+                <div className="py-1"/>
+                <div className="row">
+                    <div className="card">
+                        <div className="flex justify-content-end mb-3">
+                                <span className="p-input-icon-left">
+                                    <i className="pi pi-search"/>
+                                    <InputText
+                                        type="search"
+                                        onInput={(e) => setGlobalFilter(e.target.value)}
+                                        placeholder="Rechercher..."
+                                    />
+                                </span>
                         </div>
-                        <div className="d-flex justify-content-between mt-2">
-                            <small className="text-muted">{pourcentSupprimer}% du total</small>
-                            <small className="text-muted">{stats.supprimees}/{stats.total}</small>
+                        <DataTable
+                            value={facturePayer}
+                            removableSort
+                            paginator
+                            rows={5}
+                            rowsPerPageOptions={[5, 10, 20]}
+                            globalFilter={globalFilter}
+                            tableStyle={{minWidth: '50rem'}}
+                            header="Liste des Factures payées"
+                            emptyMessage="Aucune facture payée trouvée"
+                        >
+                            <Column field="id" header="Code" sortable filter/>
+                            <Column field="client_relation.nom" header="Client" sortable filter/>
+                            <Column header="Date d'emission - date d'echeance"
+                                    body={date_emission_echeance}
+                                    sortable filter/>
+                            <Column header="Action" body={actionBodyTemplate}/>
+                        </DataTable>
+                    </div>
+                </div>
+
+                {/* Tableau des factures supprimées */}
+                <div className="text-start bold h4 mt-4">Smart Print Historique supprimées:</div>
+                <div className="py-1"/>
+                <div className="row">
+                    <div className="card">
+                        <div className="flex justify-content-end mb-3">
+                                <span className="p-input-icon-left">
+                                    <i className="pi pi-search"/>
+                                    <InputText
+                                        type="search"
+                                        onInput={(e) => setGlobalFilter(e.target.value)}
+                                        placeholder="Rechercher..."
+                                    />
+                                </span>
                         </div>
-                    </Card>
+                        <DataTable
+                            value={factureSupprimer}
+                            removableSort
+                            paginator
+                            rows={5}
+                            rowsPerPageOptions={[5, 10, 20]}
+                            globalFilter={globalFilter}
+                            tableStyle={{minWidth: '50rem'}}
+                            header="Liste des Factures supprimées"
+                            emptyMessage="Aucune facture supprimée trouvée"
+                        >
+                            <Column field="id" header="Code" sortable filter/>
+                            <Column field="client_relation.nom" header="Client" sortable filter/>
+                            <Column header="Date d'emission - date d'echeance"
+                                    body={date_emission_echeance}
+                                    sortable filter/>
+                            <Column header="Action" body={actionBodyTemplateDelete}/>
+                        </DataTable>
+                    </div>
+                </div>
+
+
+                {/* Tableau des Bon de commande supprimées */}
+                <div className="text-start bold h4 mt-4">Smart Print Historique Bon de commande supprimées:</div>
+                <div className="py-1"/>
+                <div className="row">
+                    <div className="card">
+                        <div className="flex justify-content-end mb-3">
+                                <span className="p-input-icon-left">
+                                    <i className="pi pi-search"/>
+                                    <InputText
+                                        type="search"
+                                        onInput={(e) => setGlobalFilter(e.target.value)}
+                                        placeholder="Rechercher..."
+                                    />
+                                </span>
+                        </div>
+                        <DataTable
+                            value={bonCommandeSupprimer}
+                            removableSort
+                            paginator
+                            rows={5}
+                            rowsPerPageOptions={[5, 10, 20]}
+                            globalFilter={globalFilter}
+                            tableStyle={{minWidth: '50rem'}}
+                            header="Liste des Factures supprimées"
+                            emptyMessage="Aucune facture supprimée trouvée"
+                        >
+                            <Column field="id" header="Code" sortable filter/>
+                            <Column field="date_creation" header="date de creation" sortable filter/>
+                            <Column field="commande" header="chemin/fichier" sortable filter/>
+                            <Column field="facture_relation.id" header="Facture" sortable filter/>
+                            <Column header="Action" body={actionBodyTemplateBonCommande}/>
+                        </DataTable>
+                    </div>
                 </div>
             </div>
-
-            {/* Tableau des factures payées */}
-                    <div className="text-start bold h4">Smart Print Historique Factures payées:</div>
-                    <div className="py-1"/>
-                    <div className="row">
-                        <div className="card">
-                            <div className="flex justify-content-end mb-3">
-                                <span className="p-input-icon-left">
-                                    <i className="pi pi-search"/>
-                                    <InputText
-                                        type="search"
-                                        onInput={(e) => setGlobalFilter(e.target.value)}
-                                        placeholder="Rechercher..."
-                                    />
-                                </span>
-                            </div>
-                            <DataTable
-                                value={facturePayer}
-                                removableSort
-                                paginator
-                                rows={5}
-                                rowsPerPageOptions={[5, 10, 20]}
-                                globalFilter={globalFilter}
-                                tableStyle={{minWidth: '50rem'}}
-                                header="Liste des Factures payées"
-                                emptyMessage="Aucune facture payée trouvée"
-                            >
-                                <Column field="id" header="Code" sortable filter/>
-                                <Column field="client_relation.nom" header="Client" sortable filter/>
-                                <Column header="Date d'emission - date d'echeance"
-                                        body={date_emission_echeance}
-                                        sortable filter/>
-                                <Column header="Action" body={actionBodyTemplate}/>
-                            </DataTable>
-                        </div>
-                    </div>
-
-            {/* Tableau des factures supprimées */}
-                    <div className="text-start bold h4 mt-4">Smart Print Historique supprimées:</div>
-                    <div className="py-1"/>
-                    <div className="row">
-                        <div className="card">
-                            <div className="flex justify-content-end mb-3">
-                                <span className="p-input-icon-left">
-                                    <i className="pi pi-search"/>
-                                    <InputText
-                                        type="search"
-                                        onInput={(e) => setGlobalFilter(e.target.value)}
-                                        placeholder="Rechercher..."
-                                    />
-                                </span>
-                            </div>
-                            <DataTable
-                                value={factureSupprimer}
-                                removableSort
-                                paginator
-                                rows={5}
-                                rowsPerPageOptions={[5, 10, 20]}
-                                globalFilter={globalFilter}
-                                tableStyle={{minWidth: '50rem'}}
-                                header="Liste des Factures supprimées"
-                                emptyMessage="Aucune facture supprimée trouvée"
-                            >
-                                <Column field="id" header="Code" sortable filter/>
-                                <Column field="client_relation.nom" header="Client" sortable filter/>
-                                <Column header="Date d'emission - date d'echeance"
-                                        body={date_emission_echeance}
-                                        sortable filter/>
-                                <Column header="Action" body={actionBodyTemplateDelete}/>
-                            </DataTable>
-                        </div>
-                    </div>
-
-
-            {/* Tableau des Bon de commande supprimées */}
-            <div className="text-start bold h4 mt-4">Smart Print Historique Bon de commande supprimées:</div>
-            <div className="py-1"/>
-            <div className="row">
-                <div className="card">
-                    <div className="flex justify-content-end mb-3">
-                                <span className="p-input-icon-left">
-                                    <i className="pi pi-search"/>
-                                    <InputText
-                                        type="search"
-                                        onInput={(e) => setGlobalFilter(e.target.value)}
-                                        placeholder="Rechercher..."
-                                    />
-                                </span>
-                    </div>
-                    <DataTable
-                        value={bonCommandeSupprimer}
-                        removableSort
-                        paginator
-                        rows={5}
-                        rowsPerPageOptions={[5, 10, 20]}
-                        globalFilter={globalFilter}
-                        tableStyle={{minWidth: '50rem'}}
-                        header="Liste des Factures supprimées"
-                        emptyMessage="Aucune facture supprimée trouvée"
-                    >
-                        <Column field="id" header="Code" sortable filter/>
-                        <Column field="date_creation" header="date de creation" sortable filter/>
-                        <Column field="commande" header="chemin/fichier" sortable filter/>
-                        <Column field="facture_relation.id" header="Facture" sortable filter/>
-                        <Column header="Action" body={actionBodyTemplateBonCommande}/>
-                    </DataTable>
-                </div>
-            </div>
-        </div>
         </>
     );
 }

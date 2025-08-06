@@ -46,7 +46,7 @@ export default function List_users(){
 
     return(
         <>
-            <Headers/>
+            {/*<Headers/>*/}
             <Dialog
                 header="Creer un utilisateur"
                 visible={visible}

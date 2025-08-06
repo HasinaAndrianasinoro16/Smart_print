@@ -3,30 +3,66 @@ import { getApiUrl } from "../Link/URL";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
+import { ProgressSpinner } from "primereact/progressspinner";
 
-export default function ServiceForm({ facture }) {
-    const [lignes, setLignes] = useState([
-        { service: null, prixUnitaire: 0 }
-    ]);
+export default function ServiceForm({ facture, onSuccess }) {
+    const [lignes, setLignes] = useState([{ service: null, prixUnitaire: 0 }]);
     const [services, setServices] = useState([]);
+    const [loading, setLoading] = useState({
+        fetch: true,
+        submit: false
+    });
+    const [error, setError] = useState('');
+
+    const getCsrfToken = async () => {
+        try {
+            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            const cookieValue = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('XSRF-TOKEN='))
+                ?.split('=')[1];
+
+            return decodeURIComponent(cookieValue || '');
+        } catch (error) {
+            console.error("Erreur CSRF token:", error);
+            throw error;
+        }
+    };
+
+    const fetchServices = async () => {
+        try {
+            const response = await fetch(getApiUrl('services'), {
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) throw new Error("Erreur lors de la récupération des services");
+
+            const data = await response.json();
+            const formattedServices = data.map(service => ({
+                ...service,
+                prix: parseFloat(service.prix) || 0
+            }));
+
+            setServices(formattedServices);
+        } catch (error) {
+            console.error("Erreur:", error);
+            setError("Impossible de charger la liste des services");
+        } finally {
+            setLoading(prev => ({ ...prev, fetch: false }));
+        }
+    };
 
     useEffect(() => {
-        const fetchServices = async () => {
-            try {
-                const response = await fetch(getApiUrl('services'));
-                if (!response.ok) throw new Error("Erreur lors de la récupération des services");
-                const data = await response.json();
-
-                const formattedServices = data.map(service => ({
-                    ...service,
-                    prix: parseFloat(service.prix)
-                }));
-
-                setServices(formattedServices);
-            } catch (e) {
-                console.error(e);
-            }
-        };
         fetchServices();
     }, []);
 
@@ -39,6 +75,7 @@ export default function ServiceForm({ facture }) {
         }
 
         setLignes(updated);
+        setError('');
     };
 
     const addLigne = () => {
@@ -46,6 +83,7 @@ export default function ServiceForm({ facture }) {
     };
 
     const removeLigne = (index) => {
+        if (lignes.length <= 1) return;
         const updated = lignes.filter((_, i) => i !== index);
         setLignes(updated);
     };
@@ -58,10 +96,25 @@ export default function ServiceForm({ facture }) {
             return total + prix;
         }, 0);
 
+    const validateForm = () => {
+        const hasEmptyService = lignes.some(ligne => !ligne.service);
+        if (hasEmptyService) {
+            setError("Veuillez sélectionner un service pour chaque ligne");
+            return false;
+        }
+        return true;
+    };
+
     const submitForm = async () => {
+        if (!validateForm()) return;
+
+        setLoading(prev => ({ ...prev, submit: true }));
+        setError('');
+
         try {
-            for (let ligne of lignes) {
-                if (!ligne.service) continue;
+            const csrfToken = await getCsrfToken();
+            const promises = lignes.map(ligne => {
+                if (!ligne.service) return Promise.resolve();
 
                 const payload = {
                     facture: facture,
@@ -69,97 +122,147 @@ export default function ServiceForm({ facture }) {
                     prix: ligne.prixUnitaire
                 };
 
-
-                const response = await fetch(getApiUrl('services/service-facture'), {
+                return fetch(getApiUrl('services/service-facture'), {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-XSRF-TOKEN': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    credentials: 'include',
                     body: JSON.stringify(payload)
                 });
+            });
 
-                if (!response.ok) {
-                    throw new Error("Erreur lors de l'ajout");
-                }
+            const results = await Promise.all(promises);
+            const allSuccess = results.every(res => !res || res.ok);
+
+            if (!allSuccess) {
+                throw new Error("Certains services n'ont pas pu être ajoutés");
             }
 
-            alert("Services ajoutés avec succès !");
+            alert("Services ajoutés avec succès ✅");
             setLignes([{ service: null, prixUnitaire: 0 }]);
+            if (onSuccess) onSuccess();
 
-        } catch (e) {
-            console.error(e);
-            alert("Erreur lors de l'ajout des services");
+        } catch (error) {
+            console.error("Erreur:", error);
+            setError(error.message || "Une erreur est survenue");
+        } finally {
+            setLoading(prev => ({ ...prev, submit: false }));
         }
     };
 
+    if (loading.fetch) {
+        return (
+            <div className="flex justify-center items-center p-8">
+                <ProgressSpinner />
+            </div>
+        );
+    }
+
     return (
         <div className="p-4">
-            <h3 className="mb-4">Facture : {facture ? `${facture}` : ''}</h3>
-            <table className="table w-full">
-                <thead>
-                <tr>
-                    <th>Service</th>
-                    <th>Prix unitaire HT</th>
-                    <th>Prix total HT</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {lignes.map((ligne, index) => (
-                    <tr key={index}>
-                        <td>
-                            <Dropdown
-                                value={ligne.service}
-                                options={services}
-                                onChange={(e) => handleChange(index, 'service', e.value)}
-                                optionLabel="designation"
-                                placeholder="Sélectionner un service"
-                                className="w-full"
-                            />
-                        </td>
-                        <td>
-                            <InputNumber
-                                value={ligne.prixUnitaire}
-                                disabled
-                                mode="currency"
-                                currency="MGA"
-                                locale="fr-FR"
-                            />
-                        </td>
-                        <td>
-                            {(typeof ligne.prixUnitaire === 'number'
-                                    ? ligne.prixUnitaire
-                                    : parseFloat(ligne.prixUnitaire) || 0
-                            ).toFixed(2)} Ar
-                        </td>
-                        <td>
-                            <Button
-                                icon="fas fa-trash"
-                                className="p-button-danger"
-                                onClick={() => removeLigne(index)}
-                                disabled={lignes.length === 1}
-                            />
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+            {error && (
+                <div className="p-3 mb-4 bg-red-100 text-red-700 rounded-md flex items-center">
+                    <i className="fas fa-exclamation-circle mr-2"></i>
+                    {error}
+                </div>
+            )}
 
-            <div className="mt-3">
-                <Button icon="fas fa-plus" label="Ajouter une ligne" onClick={addLigne} />
+            <h3 className="mb-4 text-xl font-semibold">Facture : {facture || 'N/A'}</h3>
+
+            <div className="overflow-x-auto">
+                <table className="w-full border-collapse">
+                    <thead className="bg-gray-100">
+                    <tr>
+                        <th className="p-3 text-left">Service</th>
+                        <th className="p-3 text-left">Prix unitaire HT</th>
+                        <th className="p-3 text-left">Prix total HT</th>
+                        <th className="p-3 text-left">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {lignes.map((ligne, index) => (
+                        <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
+                            <td className="p-3">
+                                <Dropdown
+                                    value={ligne.service}
+                                    options={services}
+                                    onChange={(e) => handleChange(index, 'service', e.value)}
+                                    optionLabel="designation"
+                                    placeholder="Sélectionner un service"
+                                    className="w-full"
+                                    disabled={loading.submit}
+                                />
+                            </td>
+                            <td className="p-3">
+                                <InputNumber
+                                    value={ligne.prixUnitaire}
+                                    disabled
+                                    mode="currency"
+                                    currency="MGA"
+                                    locale="fr-FR"
+                                />
+                            </td>
+                            <td className="p-3">
+                                {(typeof ligne.prixUnitaire === 'number'
+                                        ? ligne.prixUnitaire
+                                        : parseFloat(ligne.prixUnitaire) || 0
+                                ).toLocaleString('fr-FR', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2
+                                })} Ar
+                            </td>
+                            <td className="p-3">
+                                <Button
+                                    icon="fas fa-trash"
+                                    className="p-button-danger p-button-sm"
+                                    onClick={() => removeLigne(index)}
+                                    disabled={lignes.length <= 1 || loading.submit}
+                                />
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
             </div>
 
-            <div className="mt-5 flex justify-content-end">
-                <table>
+            <div className="mt-3">
+                <Button
+                    icon="fas fa-plus"
+                    label="Ajouter une ligne"
+                    onClick={addLigne}
+                    disabled={loading.submit}
+                    className="p-button-secondary"
+                />
+            </div>
+
+            <div className="mt-5 flex justify-end">
+                <table className="w-auto">
                     <tbody>
                     <tr>
-                        <td><strong>Total HT:</strong></td>
-                        <td>{calculTotalHT().toFixed(2)} Ar</td>
+                        <td className="p-2"><strong>Total HT:</strong></td>
+                        <td className="p-2 text-right">
+                            {calculTotalHT().toLocaleString('fr-FR', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            })} Ar
+                        </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
 
             <div className="text-center mt-4">
-                <Button className="p-button-success" label="Ajouter le(s) service(s)" onClick={submitForm} />
+                <Button
+                    label={loading.submit ? "Enregistrement..." : "Ajouter le(s) service(s)"}
+                    icon={loading.submit ? "pi pi-spinner pi-spin" : "pi pi-check"}
+                    onClick={submitForm}
+                    disabled={loading.submit}
+                    className="btn btn-success"
+                />
             </div>
         </div>
     );

@@ -79,7 +79,7 @@ export default function Liste_Client() {
 
     return (
         <>
-            <Headers/>
+            {/*<Headers/>*/}
             <ConfirmPopup />
             <Dialog
                 header="Modifier un Client"

@@ -2,101 +2,216 @@ import React, { useEffect, useState } from "react";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from 'primereact/calendar';
 import { InputTextarea } from "primereact/inputtextarea";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { getApiUrl } from "../Link/URL";
 
-export default function Modals_Creation_Facture() {
-    const [creation, setCreation] = useState(null);
-    const [echeance, setEcheance] = useState(null);
-    const [condition, setCondition] = useState('');
+export default function Modals_Creation_Facture({ onSuccess }) {
+    const [formData, setFormData] = useState({
+        client: null,
+        date_emission: null,
+        date_echeance: null,
+        condition_paiement: ''
+    });
     const [clients, setClients] = useState([]);
-    const [client, setClient] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
-    const List_client = async () => {
+    const getCsrfToken = async () => {
         try {
-            const reponse = await fetch(getApiUrl('clients'));
-            if (!reponse.ok) {
-                throw new Error("Erreur lors de la recuperation des clients");
-            }
-            const data = await reponse.json();
-            setClients(data);
-        } catch (e) {
-            console.error(e.message);
+            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            const cookieValue = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('XSRF-TOKEN='))
+                ?.split('=')[1];
+
+            return decodeURIComponent(cookieValue || '');
+        } catch (error) {
+            console.error("Erreur CSRF token:", error);
+            throw error;
         }
-    }
+    };
+
+    const fetchClients = async () => {
+        try {
+            const response = await fetch(getApiUrl('clients'), {
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error("Erreur lors de la récupération des clients");
+            }
+
+            const data = await response.json();
+            setClients(data);
+        } catch (error) {
+            console.error("Erreur:", error);
+            setError("Impossible de charger la liste des clients");
+        }
+    };
 
     useEffect(() => {
-        List_client();
+        fetchClients();
     }, []);
 
-    const form_add_facture = async () => {
-        if (!client || !creation || !echeance) {
-            alert("Veuillez remplir tous les champs.");
+    const handleSubmit = async () => {
+        if (!formData.client || !formData.date_emission || !formData.date_echeance) {
+            setError("Veuillez remplir tous les champs obligatoires");
             return;
         }
 
-        const factureData = {
-            client: client.id,
-            date_emission: creation.toISOString().split('T')[0],
-            date_echeance: echeance.toISOString().split('T')[0],
-            condition_paiement: condition
-        }
-
+        setLoading(true);
+        setError('');
 
         try {
-            const reponse = await fetch(getApiUrl('factures/add'), {
+            const csrfToken = await getCsrfToken();
+
+            const response = await fetch(getApiUrl('factures/add'), {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(factureData),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                    client_id: formData.client.id,
+                    date_emission: formData.date_emission.toISOString().split('T')[0],
+                    date_echeance: formData.date_echeance.toISOString().split('T')[0],
+                    condition_paiement: formData.condition_paiement
+                })
             });
 
-            if (!reponse.ok) throw new Error("Erreur lors de l'ajout de facture");
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Erreur lors de la création de la facture");
+            }
 
-            alert("La facture a été créée avec succès !");
-            setClient(null);
-            setCreation(null);
-            setEcheance(null);
-            setCondition('');
-        } catch (e) {
-            console.error(e.message);
+            const newFacture = await response.json();
+            alert("Facture créée avec succès ✅");
+
+            // Réinitialiser le formulaire
+            setFormData({
+                client: null,
+                date_emission: null,
+                date_echeance: null,
+                condition_paiement: ''
+            });
+
+            // Appeler le callback de succès si fourni
+            if (onSuccess) onSuccess(newFacture);
+
+        } catch (error) {
+            console.error("Erreur:", error);
+            setError(error.message || "Une erreur est survenue");
+        } finally {
+            setLoading(false);
         }
-    }
+    };
+
+    const handleInputChange = (field, value) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+        setError('');
+    };
 
     return (
-        <div>
-            <div className="form-group mb-4">
-                <label htmlFor="Client" className="form-label">Client :</label>
+        <div className="p-4">
+            {error && (
+                <div className="p-3 mb-4 bg-red-100 text-red-700 rounded-md flex items-center">
+                    <i className="fas fa-exclamation-circle mr-2"></i>
+                    {error}
+                </div>
+            )}
+
+            <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Client <span className="text-red-500">*</span>
+                </label>
                 <Dropdown
-                    value={client}
-                    onChange={(e) => setClient(e.value)}
+                    value={formData.client}
+                    onChange={(e) => handleInputChange('client', e.value)}
                     options={clients}
                     optionLabel="nom"
                     placeholder="Sélectionner un client"
                     filter
-                    style={{ width: '100%' }}
+                    className="w-full"
+                    disabled={loading}
                 />
             </div>
 
-            <div className="mb-3">
-                <label>Date d'émission :</label>
-                <Calendar value={creation} onChange={(e) => setCreation(e.value)} showButtonBar className="w-100" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Date d'émission <span className="text-red-500">*</span>
+                    </label>
+                    <Calendar
+                        value={formData.date_emission}
+                        onChange={(e) => handleInputChange('date_emission', e.value)}
+                        dateFormat="dd/mm/yy"
+                        showButtonBar
+                        className="w-full"
+                        disabled={loading}
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Date d'échéance <span className="text-red-500">*</span>
+                    </label>
+                    <Calendar
+                        value={formData.date_echeance}
+                        onChange={(e) => handleInputChange('date_echeance', e.value)}
+                        dateFormat="dd/mm/yy"
+                        showButtonBar
+                        className="w-full"
+                        disabled={loading}
+                    />
+                </div>
             </div>
-            <div className="mb-3">
-                <label>Date d'échéance :</label>
-                <Calendar value={echeance} onChange={(e) => setEcheance(e.value)} showButtonBar className="w-100" />
-            </div>
-            <div className="mb-3">
-                <label>Condition de paiement :</label>
-                <InputTextarea value={condition}
-                               onChange={(e) => setCondition(e.target.value)}
-                               rows={2} cols={30}
-                               className="w-100"
-                               required
+
+            <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Conditions de paiement
+                </label>
+                <InputTextarea
+                    value={formData.condition_paiement}
+                    onChange={(e) => handleInputChange('condition_paiement', e.target.value)}
+                    rows={3}
+                    className="w-full"
+                    disabled={loading}
                 />
             </div>
 
-            <div className="text-center">
-                <button className="w-50 btn btn-success" onClick={form_add_facture}>
-                    Ajouter <i className="fas fa-plus" />
+            <div className="flex justify-center mt-6">
+                <button
+                    onClick={handleSubmit}
+                    disabled={loading}
+                    className={`px-4 py-2 rounded-md text-white font-medium flex items-center
+                              ${loading ? 'bg-primary' : 'bg-pimary hover:bg-primary'} 
+                              transition-colors duration-200`}
+                >
+                    {loading ? (
+                        <>
+                            <ProgressSpinner
+                                style={{ width: '20px', height: '20px' }}
+                                strokeWidth="6"
+                                className="mr-2"
+                            />
+                            Création en cours...
+                        </>
+                    ) : (
+                        <>
+                            <i className="fas fa-file-invoice mr-2"></i>
+                            Créer la facture
+                        </>
+                    )}
                 </button>
             </div>
         </div>

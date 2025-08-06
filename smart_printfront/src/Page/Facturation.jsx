@@ -112,7 +112,7 @@ export default function Facturation(){
                     setVisible5(true);
                     setSelectedFactureId(rowData.id);
                 }}>
-                    <i className="fas fa-plus"/><i className="fas fa-tools"/>
+                    <i className="fas fa-tools"/>
                 </button>
                 <button
                     className="btn btn-danger btn-sm"
@@ -127,7 +127,7 @@ export default function Facturation(){
 
     return (
         <>
-            <Headers/>
+            {/*<Headers/>*/}
             {/* Modal dialogs */}
             <Dialog header="Ajout de Client" visible={visible1} style={{width: '70vw'}}
                     onHide={() => setVisible1(false)}>
@@ -146,7 +146,7 @@ export default function Facturation(){
                 <Modals_Creation_Facture/>
             </Dialog>
 
-            <Dialog header="Creation facture" visible={visible3} style={{width: '90vw'}}
+            <Dialog header="Creation facture" visible={visible3} style={{width: '110vw'}}
                     onHide={() => setVisible3(false)}>
                 <FactureForm facture={selectedFactureId} />
             </Dialog>
