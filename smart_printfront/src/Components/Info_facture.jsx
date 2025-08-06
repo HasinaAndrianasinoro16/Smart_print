@@ -353,9 +353,9 @@ export default function Info_facture() {
                                             <p>
                                                 <strong>Statut:</strong>
                                                 {facture?.statut === 0 ? ' En Attente' :
-                                                    facture?.statut === 1 ? ' Envoyé' :
+                                                    facture?.statut === 1 ? ' Annulé' :
                                                         facture?.statut === 2 ? ' Payé' :
-                                                            facture?.statut === 3 ? ' Annulé' : ' Inconnu'}
+                                                            facture?.statut === 3 ? ' Envoyé' : ' Inconnu'}
                                             </p>
                                         </div>
                                     </div>

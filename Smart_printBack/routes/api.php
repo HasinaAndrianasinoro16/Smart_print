@@ -20,17 +20,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
 
 //Route::middleware('auth:sanctum')->get('/user', function () {
 //    return Auth::user();
 //});
-
-Route::middleware('auth:sanctum')->post('/logout', function () {
-    Auth::logout();
-    request()->session()->invalidate();
-    request()->session()->regenerateToken();
-    return response()->json(['message' => 'Déconnecté avec succès']);
-});
+//Route::middleware('auth:sanctum')->post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
+//Route::middleware('auth:sanctum')->post('/logout', function () {
+//    Auth::logout();
+//    request()->session()->invalidate();
+//    request()->session()->regenerateToken();
+//    return response()->json(['message' => 'Déconnecté avec succès']);
+//});
 
 //API Client
 Route::prefix('clients')->group(function () {

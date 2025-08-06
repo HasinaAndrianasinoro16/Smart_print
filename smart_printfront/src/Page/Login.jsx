@@ -12,11 +12,13 @@ export default function Login({ setUser }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setLoading(true);
 
         try {
             // 1. Récupérer le cookie CSRF
@@ -71,9 +73,39 @@ export default function Login({ setUser }) {
 
             const user = await userResponse.json();
             setUser(user);
-            navigate('/');
+
+            if(user.role === 0){
+                console.log('Redirecting admin to user management');
+                navigate('/liste_utilisateur');
+            }else if (user.role === 1){
+                console.log('Redirecting standard user to home');
+                navigate('/liste_facture');
+            }else if (user.role === 2){
+                console.log('Redirecting privileged user to history');
+                navigate('/Historique');
+            }else{
+                console.warn(`Unknown user role: ${user.role}`);
+                navigate('/lol');
+            }
+
+            // Redirection basée sur le rôle avec messages de debug
+            // switch(user.role) {
+            //     case 0:
+
+            //         break;
+            //     case 1:
+
+            //         break;
+            //     case 2:
+
+            //         break;
+            //     default:
+
+            // }
         } catch (err) {
             setError(err.message || "Une erreur est survenue lors de la connexion");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -104,6 +136,7 @@ export default function Login({ setUser }) {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
+                                disabled={loading}
                             />
                             <label htmlFor="floatingInput">Adresse Email</label>
                         </div>
@@ -117,12 +150,24 @@ export default function Login({ setUser }) {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
+                                disabled={loading}
                             />
                             <label htmlFor="floatingPassword">Mot de passe</label>
                         </div>
 
-                        <button className="w-100 btn btn-lg btn-success" type="submit">
-                            Connexion
+                        <button
+                            className="w-100 btn btn-lg btn-success"
+                            type="submit"
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <>
+                                    <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                                    Connexion en cours...
+                                </>
+                            ) : (
+                                'Connexion'
+                            )}
                         </button>
                     </form>
                 </div>

@@ -89,7 +89,7 @@ export default function List_users(){
                             <Column field="id" header="code" sortable filter/>
                             <Column field="name" header="Nom" sortable filter/>
                             <Column field="email" header="Email" sortable filter/>
-                            <Column header="Role" body={actionBodyTemplate}/>
+                            <Column header="Role" body={actionBodyTemplate} sortable filter/>
                         </DataTable>
                     </div>
                 </div>

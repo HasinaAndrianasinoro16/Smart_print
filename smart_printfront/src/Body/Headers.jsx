@@ -3,17 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import Mylogo from '../assets/img/upscalemedia-transformed.jpeg';
 import { getApiUrl } from "../Link/URL";
 
-import '../assets/dist/css/bootstrap.min.css';
-import '../assets/dist/js/bootstrap.bundle.min';
-import '../assets/fontawesome-5/css/all.min.css';
-import '../assets/fontawesome-5/css/all.css';
-
 export default function Headers({ user, setUser }) {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
         try {
-            // 1. Récupérer le cookie CSRF
+            // First ensure we have CSRF cookies
             await fetch("http://localhost:8000/sanctum/csrf-cookie", {
                 credentials: 'include',
                 headers: {
@@ -22,37 +17,36 @@ export default function Headers({ user, setUser }) {
                 }
             });
 
-            // 2. Extraire le token CSRF
-            const getCookie = (name) => {
-                const value = `; ${document.cookie}`;
-                const parts = value.split(`; ${name}=`);
-                if (parts.length === 2) return parts.pop().split(';').shift();
-            };
-            const csrfToken = getCookie('XSRF-TOKEN');
-
-            // 3. Faire la déconnexion
+            // Then make the logout request with proper headers
             const response = await fetch(getApiUrl("logout"), {
                 method: "POST",
                 headers: {
                     "Accept": "application/json",
-                    "X-XSRF-TOKEN": csrfToken ? decodeURIComponent(csrfToken) : '',
+                    "Content-Type": "application/json",
                     "X-Requested-With": "XMLHttpRequest"
                 },
-                credentials: "include"
+                credentials: "include" // Important for sending cookies
             });
 
-            if (response.ok) {
+            // Handle response regardless of status for logout
+            if (response.ok || response.status === 401) {
+                // 401 means already logged out, which is fine
                 setUser(null);
                 navigate("/login");
-
-                // Nettoyer les cookies côté client
-                document.cookie = 'XSRF-TOKEN=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-                document.cookie = 'laravel_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
             } else {
-                console.error("Erreur de déconnexion:", await response.text());
+                const errorText = await response.text();
+                console.error("Logout error:", errorText);
+
+                // Still redirect to login even if logout failed on server
+                setUser(null);
+                navigate("/login");
             }
         } catch (error) {
-            console.error("Erreur réseau lors de la déconnexion:", error);
+            console.error("Network error during logout:", error);
+
+            // Still redirect to login even if network error occurred
+            setUser(null);
+            navigate("/login");
         }
     };
 
@@ -62,7 +56,7 @@ export default function Headers({ user, setUser }) {
 
                 {/* Logo */}
                 <Link to="/" className="navbar-brand d-flex align-items-center gap-2">
-                    <img src={Mylogo} alt="Smart Print" style={{ height: '45px' }} />
+                    <img src={Mylogo} alt="Smart Print" style={{ height: '45px', borderRadius:'50%' }} />
                     <span className="text-white fw-bold fs-5">Smart Print & Design</span>
                 </Link>
 
@@ -70,35 +64,60 @@ export default function Headers({ user, setUser }) {
                     <>
                         <ul className="nav align-items-center ms-auto me-3" style={{gap: '15px'}}>
                             <li><Link to="/" className="nav-link text-white">
-                                <i className="fas fa-money-check-alt"></i> Facturation
+                                <i className="fas fa-eye"></i> Info
                             </Link></li>
-                            <li><Link to="/liste_client" className="nav-link text-white">
-                                <i className="fas fa-users"></i> Clients
-                            </Link></li>
-                            <li><Link to="/liste_produit" className="nav-link text-white">
-                                <i className="fas fa-box-open"></i> Produits
-                            </Link></li>
-                            <li><Link to="/liste_service" className="nav-link text-white">
-                                <i className="fas fa-tools"></i> Services
-                            </Link></li>
-                            {user.is_admin && (
-                                <li><Link to="/liste_utilisateur" className="nav-link text-white">
-                                    <i className="fas fa-user-friends"></i> Utilisateurs
-                                </Link></li>
+                            {user.role === 2 && (
+                                <>
+                                    <li><Link to="/liste_client" className="nav-link text-white">
+                                        <i className="fas fa-users"></i> Clients
+                                    </Link></li>
+                                    <li><Link to="/liste_produit" className="nav-link text-white">
+                                        <i className="fas fa-box-open"></i> Produits
+                                    </Link></li>
+                                    <li><Link to="/liste_service" className="nav-link text-white">
+                                        <i className="fas fa-tools"></i> Services
+                                    </Link></li>
+                                    <li><Link to="/Historique" className="nav-link text-white">
+                                        <i className="fas fa-folder-open"></i> Historique
+                                    </Link></li>
+                                </>
                             )}
-                            <li><Link to="/Historique" className="nav-link text-white">
-                                <i className="fas fa-folder-open"></i> Historique
-                            </Link></li>
+                            {user.role === 1 && (
+                                <>
+                                    <li><Link to="/liste_facture" className="nav-link text-white">
+                                        <i className="fas fa-money-check-alt"></i> Facturation
+                                    </Link></li>
+                                    <li><Link to="/liste_client" className="nav-link text-white">
+                                        <i className="fas fa-users"></i> Clients
+                                    </Link></li>
+                                    <li><Link to="/Historique" className="nav-link text-white">
+                                        <i className="fas fa-folder-open"></i> Historique
+                                    </Link></li>
+                                </>
+                            )}
+                            {user.role === 0 && (
+                                <>
+                                    <li><Link to="/liste_utilisateur" className="nav-link text-white">
+                                        <i className="fas fa-user-friends"></i> Utilisateurs
+                                    </Link></li>
+                                    <li><Link to="/liste_produit" className="nav-link text-white">
+                                        <i className="fas fa-box-open"></i> Produits
+                                    </Link></li>
+                                    <li><Link to="/liste_service" className="nav-link text-white">
+                                        <i className="fas fa-tools"></i> Services
+                                    </Link></li>
+                                </>
+                            )}
                         </ul>
 
                         <div className="d-flex align-items-center gap-3">
-                            <span className="text-white d-none d-md-inline">
-                                <i className="fas fa-user-circle me-2"></i>
-                                {user.name}
-                            </span>
+                            {/*<span className="text-white d-none d-md-inline">*/}
+                            {/*    <i className="fas fa-user-circle me-2"></i>*/}
+                            {/*    {user.name}*/}
+                            {/*</span>*/}
                             <button
                                 type="button"
-                                className="btn btn-success"
+                                className="btn btn-outline-success"
                                 onClick={handleLogout}
                             >
                                 <i className="fas fa-sign-out-alt me-2"></i>

@@ -14,6 +14,7 @@ import Liste_Client from "./Page/Liste_Client";
 import Liste_produit from "./Page/Liste_produit";
 import Liste_service from "./Page/Liste_service";
 import Login from "./Page/Login";
+import Home from "./Page/Home";
 import List_users from "./Page/List_users";
 import { getApiUrl } from "./Link/URL";
 
@@ -61,8 +62,9 @@ function App() {
         <Router>
             {user && <Headers user={user} setUser={setUser} />}
             <Routes>
+                <Route path="/" element={user ? <Home user={user}/> : <Navigate to="/login" /> }/>
                 <Route path="/login" element={!user ? <Login setUser={setUser} /> : <Navigate to="/" />} />
-                <Route path="/" element={user ? <Facturation /> : <Navigate to="/login" />} />
+                <Route path="/liste_facture" element={user ? <Facturation /> : <Navigate to="/login" />} />
                 <Route path="/info" element={user ? <Info_facture /> : <Navigate to="/login" />} />
                 <Route path="/Historique" element={user ? <Histoique_facture /> : <Navigate to="/login" />} />
                 <Route path="/liste_client" element={user ? <Liste_Client /> : <Navigate to="/login" />} />
