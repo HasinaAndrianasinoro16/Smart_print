@@ -89,7 +89,7 @@ export default function Headers({ user, setUser }) {
                             {user.role === 2 && (
                                 <>
                                     <li><Link to="/factures" className="nav-link text-white">
-                                        <i className="fas fa-money-check-alt"></i> Factures <sup className="badge rounded-pill bg-success">{count}</sup>
+                                        <i className="fas fa-money-check-alt"></i> Factures <sup className="badge rounded-pill bg-danger">{count}</sup>
                                     </Link></li>
                                     {/*<li><Link to="/liste_client" className="nav-link text-white">*/}
                                     {/*    <i className="fas fa-users"></i> Clients*/}
