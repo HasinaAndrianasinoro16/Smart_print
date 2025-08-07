@@ -138,11 +138,12 @@ export default function Modals_update_produits({ idProduits, onClose }) {
             )}
 
             <div className="row">
-                <div className="col-md-12">
-                    <div className="mb-4">
+                {/*<div className="col-lg-12">*/}
+                    <div className=" col-md-6 mb-4">
                         <label htmlFor="designation" className="block text-sm font-medium text-gray-700 mb-1">
                             Désignation :
                         </label>
+                        <div className="py-1"/>
                         <InputText
                             id="designation"
                             value={formData.designation}
@@ -153,10 +154,11 @@ export default function Modals_update_produits({ idProduits, onClose }) {
                         />
                     </div>
 
-                    <div className="mb-4">
+                    <div className="col-md-6 mb-4">
                         <label htmlFor="prix" className="block text-sm font-medium text-gray-700 mb-1">
                             Prix unitaire (MGA) :
                         </label>
+                        <div className="py-1"/>
                         <InputNumber
                             inputId="prix"
                             value={formData.prix_unitaire}
@@ -168,15 +170,15 @@ export default function Modals_update_produits({ idProduits, onClose }) {
                             disabled={loading.submit}
                         />
                     </div>
-                </div>
+                {/*</div>*/}
             </div>
 
-            <div className="flex justify-center mt-6">
+            <div className=" text-center flex justify-center mt-6">
                 <button
                     onClick={updateProduit}
                     disabled={loading.submit}
-                    className={`px-4 py-2 rounded-md text-white font-medium flex items-center
-                              ${loading.submit ? 'bg-warning' : 'bg-yellow-600 hover:bg-warning'} 
+                    className={`px-4 py-2 rounded-md text-white font-medium
+                              ${loading.submit ? 'bg-warning' : 'bg-warning hover:bg-warning'}
                               transition-colors duration-200`}
                 >
                     {loading.submit ? (

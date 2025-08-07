@@ -1,10 +1,11 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import Mylogo from '../assets/img/upscalemedia-transformed.jpeg';
 import { getApiUrl } from "../Link/URL";
 
 export default function Headers({ user, setUser }) {
     const navigate = useNavigate();
+    const [count, setCount] = useState(null);
 
     const handleLogout = async () => {
         try {
@@ -50,6 +51,25 @@ export default function Headers({ user, setUser }) {
         }
     };
 
+    const count_factures = async () => {
+        try {
+            const reponse = await fetch(getApiUrl('factures/count_facture_statut/0'));
+            if (!reponse.ok){
+                throw new Error("erreur lors du compte");
+            }
+            const data = await reponse.json();
+            setCount(data || 0);
+
+        }catch (e) {
+            console.error(e.message);
+            alert("on peut pas compter")
+        }
+    }
+
+    useEffect(() => {
+        count_factures();
+    }, []);
+
     return (
         <header className="navbar navbar-dark bg-dark shadow-sm px-4 mb-4" style={{ height: '70px' }}>
             <div className="container-fluid d-flex align-items-center justify-content-between h-100">
@@ -64,10 +84,13 @@ export default function Headers({ user, setUser }) {
                     <>
                         <ul className="nav align-items-center ms-auto me-3" style={{gap: '15px'}}>
                             <li><Link to="/" className="nav-link text-white">
-                                <i className="fas fa-eye"></i> Info
+                                <i className="fas fa-home"></i> Home
                             </Link></li>
                             {user.role === 2 && (
                                 <>
+                                    <li><Link to="/factures" className="nav-link text-white">
+                                        <i className="fas fa-money-check-alt"></i> Factures<sup className="badge rounded-pill bg-success">{count}</sup>
+                                    </Link></li>
                                     <li><Link to="/liste_client" className="nav-link text-white">
                                         <i className="fas fa-users"></i> Clients
                                     </Link></li>
@@ -117,7 +140,7 @@ export default function Headers({ user, setUser }) {
                             {/*</span>*/}
                             <button
                                 type="button"
-                                className="btn btn-outline-success"
+                                className="btn btn-outline-light"
                                 onClick={handleLogout}
                             >
                                 <i className="fas fa-sign-out-alt me-2"></i>

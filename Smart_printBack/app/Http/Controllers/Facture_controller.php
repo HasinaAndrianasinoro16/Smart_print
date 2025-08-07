@@ -146,4 +146,15 @@ class Facture_controller extends Controller
             return response()->json(['error' => $exception->getMessage()], 500);
         }
     }
+
+    //controller pour approuver une facture
+    public function approuver_facture($id)
+    {
+        try {
+            $facture = Facture::approuver_facture($id);
+            return response()->json($facture);
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
+    }
 }

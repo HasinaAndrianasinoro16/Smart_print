@@ -145,11 +145,12 @@ export default function Modal_update_service({ idService, onClose }) {
             )}
 
             <div className="row">
-                <div className="col-md-12">
-                    <div className="mb-4">
+                {/*<div className="col-md-12">*/}
+                    <div className="col-md-6 mb-4">
                         <label htmlFor="designation" className="block text-sm font-medium text-gray-700 mb-1">
                             Désignation :
                         </label>
+                        <div className="py-1"/>
                         <InputText
                             id="designation"
                             value={formData.designation}
@@ -160,10 +161,11 @@ export default function Modal_update_service({ idService, onClose }) {
                         />
                     </div>
 
-                    <div className="mb-4">
+                    <div className="col-md-6 mb-4">
                         <label htmlFor="prix" className="block text-sm font-medium text-gray-700 mb-1">
                             Prix unitaire (MGA) :
                         </label>
+                        <div className="py-1"/>
                         <InputNumber
                             inputId="prix"
                             value={formData.prix}
@@ -175,10 +177,10 @@ export default function Modal_update_service({ idService, onClose }) {
                             disabled={loading.submit}
                         />
                     </div>
-                </div>
+                {/*</div>*/}
             </div>
 
-            <div className="flex justify-center mt-6">
+            <div className="text-center flex justify-center mt-6">
                 <button
                     onClick={updateService}
                     disabled={loading.submit}

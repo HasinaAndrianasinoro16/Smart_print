@@ -13,6 +13,7 @@ import Histoique_facture from "./Page/Hitsorique_facture";
 import Liste_Client from "./Page/Liste_Client";
 import Liste_produit from "./Page/Liste_produit";
 import Liste_service from "./Page/Liste_service";
+import Liste_facture_manager from "./Page/Liste_facture_manager";
 import Login from "./Page/Login";
 import Home from "./Page/Home";
 import List_users from "./Page/List_users";
@@ -66,6 +67,7 @@ function App() {
                 <Route path="/login" element={!user ? <Login setUser={setUser} /> : <Navigate to="/" />} />
                 <Route path="/liste_facture" element={user ? <Facturation /> : <Navigate to="/login" />} />
                 <Route path="/info" element={user ? <Info_facture /> : <Navigate to="/login" />} />
+                <Route path="/factures" element={user ? <Liste_facture_manager/> : <Navigate to="/login"/>}/>
                 <Route path="/Historique" element={user ? <Histoique_facture /> : <Navigate to="/login" />} />
                 <Route path="/liste_client" element={user ? <Liste_Client /> : <Navigate to="/login" />} />
                 <Route path="/liste_produit" element={user ? <Liste_produit /> : <Navigate to="/login" />} />

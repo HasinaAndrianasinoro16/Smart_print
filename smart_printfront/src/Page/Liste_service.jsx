@@ -17,6 +17,28 @@ export default function Liste_service(){
     const [selectedIdService, setSelectedIdService] = useState(null);
 
 
+    const getCsrfToken = async () => {
+        try {
+            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            const cookieValue = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('XSRF-TOKEN='))
+                ?.split('=')[1];
+
+            return decodeURIComponent(cookieValue || '');
+        } catch (error) {
+            console.error("Erreur CSRF token:", error);
+            throw error;
+        }
+    };
+
     const Liste_service = async () => {
         try {
             const reponse = await fetch(getApiUrl('services'));
@@ -36,10 +58,18 @@ export default function Liste_service(){
 
     const DeleteServices = async (idServices) => {
         try {
-            const url = 'services/delete' + idServices;
+            const csrfToken = await getCsrfToken();
+            const url = 'services/delete/' + idServices;
             const reponse = await fetch(getApiUrl(url), {
                 method: 'PUT',
-                headers: {'Content-Type': 'application/json'}
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'include',
+                body: JSON.stringify({})
             });
 
             if (!reponse.ok){
@@ -47,7 +77,7 @@ export default function Liste_service(){
             }
 
             const result = await reponse.json();
-            console.log("Produits supprimer:", result);
+            console.log("Services supprimer:", result);
             alert("produits supprimer avec succes");
             await Liste_service();
 
@@ -86,7 +116,7 @@ export default function Liste_service(){
             {/*<Headers/>*/}
             <ConfirmPopup/>
             <Dialog
-                header="Creer un Produit"
+                header="Creer un Service"
                 visible={visible2}
                 style={{width: '50vw'}}
                 onHide={() => setVisible2(false)}
@@ -94,7 +124,7 @@ export default function Liste_service(){
                 <Modals_Create_Service onClose={() => {setVisible(false); Liste_service();}} />
             </Dialog>
             <Dialog
-                header="Modifier un Produit"
+                header="Modifier un Service"
                 visible={visible}
                 style={{ width: '50vw' }}
                 onHide={() => setVisible(false)}

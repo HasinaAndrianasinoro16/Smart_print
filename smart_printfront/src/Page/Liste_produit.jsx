@@ -15,6 +15,28 @@ export default function Liste_produit(){
     const [produits, setProduits] = useState([]);
     const [selectedIdProduits, setSelectedIdProduits] = useState('');
 
+    const getCsrfToken = async () => {
+        try {
+            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            const cookieValue = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('XSRF-TOKEN='))
+                ?.split('=')[1];
+
+            return decodeURIComponent(cookieValue || '');
+        } catch (error) {
+            console.error("Erreur CSRF token:", error);
+            throw error;
+        }
+    };
+
     const Liste_produits = async () => {
         try {
             const reponse = await fetch(getApiUrl("produits"));
@@ -34,26 +56,61 @@ export default function Liste_produit(){
 
     const DeleteProduits = async (idProduits) => {
         try {
-            const url = 'produits/delete/'+ idProduits;
-            const reponse = await fetch(getApiUrl(url), {
-                method:'PUT',
-                headers: { 'Content-Type': 'application/json' }
+            const csrfToken = await getCsrfToken();
+
+            const url = `produits/delete/${idProduits}`;
+            const response = await fetch(getApiUrl(url), {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'include',
+                body: JSON.stringify({})
             });
 
-            if(!reponse.ok){
-                throw new Error("Erreur lors de la suppression");
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Erreur lors de la suppression");
             }
 
-            const result = await reponse.json();
-            console.log("Produits supprimé :", result);
-            alert("produit supprimé avec succès !");
+            const result = await response.json();
+            console.log("Produit supprimé :", result);
+            alert("Produit supprimé avec succès !");
             await Liste_produits();
 
-        }catch (e) {
+        } catch (e) {
             console.error("Erreur:", e.message);
-            alert("Erreur lors de la suppression !");
+            alert(e.message || "Erreur lors de la suppression !");
         }
     }
+    // const DeleteProduits = async (idProduits) => {
+    //     try {
+    //         const csrfToken = await getCsrfToken();
+    //         // const url = 'produits/delete/'+ idProduits;
+    //         const response = await fetch(getApiUrl(`produits/delete/${idProduits}`), {
+    //             method: 'PUT',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'X-XSRF-TOKEN': csrfToken
+    //             }
+    //         });
+    //
+    //         if (!response.ok) {
+    //             throw new Error("Erreur lors de la modification de la facture");
+    //         }
+    //
+    //         const result = await response.json();
+    //         alert("Produits suprimée avec succès");
+    //         await Liste_produits();
+    //
+    //     } catch (e) {
+    //         console.error(e.message);
+    //         alert("Erreur lors de la suppression du produit");
+    //     }
+    // };
 
     const confirm = (event, id) => {
         confirmPopup({

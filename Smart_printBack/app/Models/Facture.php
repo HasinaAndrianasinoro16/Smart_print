@@ -102,4 +102,15 @@ class Facture extends Model
             throw new \Exception($exception->getMessage());
         }
     }
+    //fonction pour approuver une facture
+    public static function approuver_facture($id)
+    {
+        try {
+            $factures = DB::table('facture')->where('id', $id)
+                ->update(['statut' => 2]);
+            return $factures;
+        }catch (\Exception $exception){
+            throw new \Exception($exception->getMessage());
+        }
+    }
 }

@@ -14,6 +14,29 @@ export default function Liste_Client() {
     const [visible, setVisible] = useState(false);
     const [selectedClientId, setSelectedClientId] = useState(null);
 
+
+    const getCsrfToken = async () => {
+        try {
+            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            const cookieValue = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('XSRF-TOKEN='))
+                ?.split('=')[1];
+
+            return decodeURIComponent(cookieValue || '');
+        } catch (error) {
+            console.error("Erreur CSRF token:", error);
+            throw error;
+        }
+    };
+
     const Liste_clients = async () => {
         try {
             const reponse = await fetch(getApiUrl("clients"));
@@ -33,10 +56,18 @@ export default function Liste_Client() {
 
     const DeleteCLient = async (idClient) => {
         try {
+            const csrfToken = await getCsrfToken();
             const url = 'clients/delete/' + idClient;
             const response = await fetch(getApiUrl(url), {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'include',
+                body: JSON.stringify({})
             });
 
             if (!response.ok) {

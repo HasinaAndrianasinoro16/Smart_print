@@ -23,6 +23,28 @@ export default function Facturation(){
     const [factures, setFactures] = useState([]);
     const [selectedFactureId, setSelectedFactureId] = useState(null);
 
+    const getCsrfToken = async () => {
+        try {
+            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            const cookieValue = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('XSRF-TOKEN='))
+                ?.split('=')[1];
+
+            return decodeURIComponent(cookieValue || '');
+        } catch (error) {
+            console.error("Erreur CSRF token:", error);
+            throw error;
+        }
+    };
+
     const Liste_facture = async () => {
         try {
             const response = await fetch(getApiUrl('factures'));
@@ -43,12 +65,18 @@ export default function Facturation(){
 
     const DeleteFacture = async (idfacture) => {
         try {
+            const csrfToken = await getCsrfToken();
+
             const response = await fetch(getApiUrl(`factures/delete/${idfacture}`), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                }
+                    'Accept': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'include',
+                body: JSON.stringify({})
             });
 
             if (!response.ok) {
