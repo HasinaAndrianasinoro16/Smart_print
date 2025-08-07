@@ -157,10 +157,6 @@ export default function Facturation(){
         <>
             {/*<Headers/>*/}
             {/* Modal dialogs */}
-            <Dialog header="Ajout de Client" visible={visible1} style={{width: '70vw'}}
-                    onHide={() => setVisible1(false)}>
-                <Modals_Ajout_client/>
-            </Dialog>
 
             <Dialog
                 header="Creation facture"

@@ -7,11 +7,13 @@ import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { Dialog } from "primereact/dialog";
 import Modals_update_clients from "../Components/Modals_update_clients";
  import Headers from "../Body/Headers";
+ import Modals_Ajout_client from "../Components/Modals_Ajout_client";
 
 export default function Liste_Client() {
     const [globalFilter, setGlobalFilter] = useState('');
     const [Clients, setClients] = useState([]);
     const [visible, setVisible] = useState(false);
+    const [visible1, setVisible1] = useState(false);
     const [selectedClientId, setSelectedClientId] = useState(null);
 
 
@@ -125,15 +127,24 @@ export default function Liste_Client() {
                     />
                 )}
             </Dialog>
+            <Dialog header="Ajout de Client" visible={visible1} style={{width: '70vw'}}
+                    onHide={() => setVisible1(false)}>
+                <Modals_Ajout_client/>
+            </Dialog>
 
             <div className="container-lg">
                 <div className="text-start bold h4">Smart Print Liste des clients:</div>
                 <div className="py-1" />
                 <div className="row">
+                    <div className="d-flex justify-content-center gap-3 mb-3">
+                        <button className="btn btn-outline-success" onClick={() => setVisible1(true)}>
+                            <i className="fas fa-plus-circle"/> Ajouter Client
+                        </button>
+                    </div>
                     <div className="card">
                         <div className="flex justify-content-end mb-3">
                             <span className="p-input-icon-left">
-                                <i className="pi pi-search" />
+                                <i className="pi pi-search"/>
                                 <InputText
                                     type="search"
                                     onInput={(e) => setGlobalFilter(e.target.value)}
@@ -149,14 +160,14 @@ export default function Liste_Client() {
                             rows={5}
                             rowsPerPageOptions={[5, 10, 20]}
                             globalFilter={globalFilter}
-                            tableStyle={{ minWidth: '50rem' }}
+                            tableStyle={{minWidth: '50rem'}}
                             header="Liste des Clients"
                         >
-                            <Column field="nom" header="Client" sortable filter />
-                            <Column field="adresse" header="Adresse" sortable filter />
-                            <Column field="email" header="Email" sortable filter />
-                            <Column field="telephone" header="Contact" sortable filter />
-                            <Column header="Action" body={actionBodyTemplate} />
+                            <Column field="nom" header="Client" sortable filter/>
+                            <Column field="adresse" header="Adresse" sortable filter/>
+                            <Column field="email" header="Email" sortable filter/>
+                            <Column field="telephone" header="Contact" sortable filter/>
+                            <Column header="Action" body={actionBodyTemplate}/>
                         </DataTable>
                     </div>
                 </div>

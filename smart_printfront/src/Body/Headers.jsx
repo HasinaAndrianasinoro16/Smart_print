@@ -76,7 +76,7 @@ export default function Headers({ user, setUser }) {
 
                 {/* Logo */}
                 <Link to="/" className="navbar-brand d-flex align-items-center gap-2">
-                    <img src={Mylogo} alt="Smart Print" style={{ height: '45px', borderRadius:'50%' }} />
+                    <img src={Mylogo} alt="Smart Print" style={{ height: '35px', borderRadius:'50%' }} />
                     <span className="text-white fw-bold fs-5">Smart Print & Design</span>
                 </Link>
 
@@ -89,11 +89,11 @@ export default function Headers({ user, setUser }) {
                             {user.role === 2 && (
                                 <>
                                     <li><Link to="/factures" className="nav-link text-white">
-                                        <i className="fas fa-money-check-alt"></i> Factures<sup className="badge rounded-pill bg-success">{count}</sup>
+                                        <i className="fas fa-money-check-alt"></i> Factures <sup className="badge rounded-pill bg-success">{count}</sup>
                                     </Link></li>
-                                    <li><Link to="/liste_client" className="nav-link text-white">
-                                        <i className="fas fa-users"></i> Clients
-                                    </Link></li>
+                                    {/*<li><Link to="/liste_client" className="nav-link text-white">*/}
+                                    {/*    <i className="fas fa-users"></i> Clients*/}
+                                    {/*</Link></li>*/}
                                     <li><Link to="/liste_produit" className="nav-link text-white">
                                         <i className="fas fa-box-open"></i> Produits
                                     </Link></li>
