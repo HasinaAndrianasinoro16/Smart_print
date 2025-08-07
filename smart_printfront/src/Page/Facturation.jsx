@@ -189,9 +189,9 @@ export default function Facturation(){
                 <div className="py-1"/>
                 <div className="row">
                     <div className="d-flex justify-content-center gap-3 mb-3">
-                        <button className="btn btn-outline-success" onClick={() => setVisible1(true)}>
-                            <i className="fas fa-plus-circle"/> Ajouter Client
-                        </button>
+                        {/*<button className="btn btn-outline-success" onClick={() => setVisible1(true)}>*/}
+                        {/*    <i className="fas fa-plus-circle"/> Ajouter Client*/}
+                        {/*</button>*/}
                         <button className="btn btn-outline-success" onClick={() => setVisible2(true)}>
                             <i className="fas fa-plus-circle"/> Creer une facture
                         </button>

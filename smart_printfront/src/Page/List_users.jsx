@@ -32,13 +32,13 @@ export default function List_users(){
     }, []);
     const actionBodyTemplate = (rowData) => {
         if (rowData.role === 0) {
-            return <div className="p-badge p-badge-success">Administrateur</div>;
+            return <div className="badge rounded-pill bg-danger">Administrateur</div>;
         } else if (rowData.role === 1) {
-            return <div className="p-badge p-badge-warning">Facturier</div>;
+            return <div className="badge rounded-pill bg-success">Facturier</div>;
         } else if (rowData.role === 2) {
-            return <div className="p-badge p-badge-info">Manager</div>;
+            return <div className="badge rounded-pill bg-primary">Manager</div>;
         } else {
-            return <div className="p-badge p-badge-secondary">Inconnu</div>;
+            return <div className="badge rounded-pill bg-secondary">Inconnu</div>;
         }
     };
 
