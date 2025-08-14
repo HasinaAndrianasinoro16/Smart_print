@@ -55,7 +55,8 @@ export default function List_users(){
                 >
                 <Modal_Create_Users onClose={() => {setVisible(false); Liste_users();}}/>
             </Dialog>
-            <div className="container-lg">
+            <div className="py-3"/>
+            <div className="container-fluid">
                 <div className="text-start bold h4">Smart Print Liste des Utilisateurs:</div>
                 <div className="py-1"/>
                 <div className="row">

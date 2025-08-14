@@ -136,8 +136,8 @@ export default function Liste_service(){
                     />
                 )}
             </Dialog>
-
-            <div className="container-lg">
+            <div className="py-3"/>
+            <div className="container-fluid">
                 <div className="text-start bold h4">Smart Print Liste des Services:</div>
                 <div className="py-1"/>
                 <div className="row">

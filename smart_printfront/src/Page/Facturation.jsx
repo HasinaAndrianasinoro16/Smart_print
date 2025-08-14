@@ -183,8 +183,8 @@ export default function Facturation(){
                     onHide={() => setVisible5(false)}>
                 <ServiceForm facture={selectedFactureId}/>
             </Dialog>
-
-            <div className="container-lg">
+            <div className="py-3"/>
+            <div className="container-fluid">
                 <div className="text-start bold h4">Smart Print Facturation :</div>
                 <div className="py-1"/>
                 <div className="row">

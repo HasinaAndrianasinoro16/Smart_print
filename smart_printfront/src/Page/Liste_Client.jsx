@@ -132,7 +132,8 @@ export default function Liste_Client() {
                 <Modals_Ajout_client/>
             </Dialog>
 
-            <div className="container-lg">
+            <div className="py-3"/>
+            <div className="container-fluid">
                 <div className="text-start bold h4">Smart Print Liste des clients:</div>
                 <div className="py-1" />
                 <div className="row">

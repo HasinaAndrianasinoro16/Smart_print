@@ -61,7 +61,11 @@ function App() {
 
     return (
         <Router>
+            <div className="row">
+                <div className="col-2">
             {user && <Headers user={user} setUser={setUser} />}
+                </div>
+                <div className="col-10">
             <Routes>
                 <Route path="/" element={user ? <Home user={user}/> : <Navigate to="/login" /> }/>
                 <Route path="/login" element={!user ? <Login setUser={setUser} /> : <Navigate to="/" />} />
@@ -74,6 +78,8 @@ function App() {
                 <Route path="/liste_service" element={user ? <Liste_service /> : <Navigate to="/login" />} />
                 <Route path="/liste_utilisateur" element={user ? <List_users /> : <Navigate to="/login" />} />
             </Routes>
+                </div>
+            </div>
         </Router>
     );
 }

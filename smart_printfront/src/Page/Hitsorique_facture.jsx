@@ -187,8 +187,9 @@ export default function HistoriqueFacture() {
 
     return (
         <>
+            <div className="py-3"/>
             {/*<Headers/>*/}
-            <div className="container-lg">
+            <div className="container-fluid">
                 {/* Tableau de bord */}
                 <div className="row">
                     <div className="col-md-6 mb-4">

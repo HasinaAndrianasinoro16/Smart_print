@@ -102,7 +102,8 @@ export default function Liste_facture_manager(){
 
     return(
         <>
-            <div className="container-lg">
+            <div className="py-3"/>
+            <div className="container-fluid">
                 <div className="text-start bold h4">Smart Print liste Facture :</div>
                 <div className="py-1"/>
                 <div className="row">

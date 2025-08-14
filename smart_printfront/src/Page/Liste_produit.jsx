@@ -163,7 +163,8 @@ export default function Liste_produit(){
                 <Modals_Create_produits onClose={() => {setVisible2(false); Liste_produits();}} />
             </Dialog>
 
-        <div className="container-lg">
+            <div className="py-3"/>
+            <div className="container-fluid">
             <div className="text-start bold h4">Smart Print Liste des produits:</div>
             <div className="py-1"/>
             <div className="row">
