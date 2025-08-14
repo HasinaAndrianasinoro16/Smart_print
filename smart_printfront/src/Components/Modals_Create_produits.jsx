@@ -12,15 +12,6 @@ export default function Modals_Create_produits({ onClose }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const handleInputChange = (e) => {
-        const { id, value } = e.target;
-        setFormData(prev => ({ ...prev, [id]: value }));
-    };
-
-    const handleNumberChange = (value) => {
-        setFormData(prev => ({ ...prev, prix_unitaire: value }));
-    };
-
     const getCsrfToken = async () => {
         try {
             await fetch("http://localhost:8000/sanctum/csrf-cookie", {
@@ -41,6 +32,15 @@ export default function Modals_Create_produits({ onClose }) {
             console.error("Erreur CSRF token:", error);
             throw error;
         }
+    };
+
+    const handleInputChange = (e) => {
+        const { id, value } = e.target;
+        setFormData(prev => ({ ...prev, [id]: value }));
+    };
+
+    const handleNumberChange = (value) => {
+        setFormData(prev => ({ ...prev, prix_unitaire: value }));
     };
 
     const save_produits = async () => {

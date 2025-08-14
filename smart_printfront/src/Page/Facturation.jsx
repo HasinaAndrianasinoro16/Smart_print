@@ -167,7 +167,7 @@ export default function Facturation(){
                     await Liste_facture();
                 }}
             >
-                <Modals_Creation_Facture/>
+                <Modals_Creation_Facture onClose={() => {setVisible2(false); Liste_facture();}} />
             </Dialog>
 
             <Dialog header="Creation facture" visible={visible3} style={{width: '110vw'}}

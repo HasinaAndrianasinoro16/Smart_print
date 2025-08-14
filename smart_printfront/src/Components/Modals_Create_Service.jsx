@@ -12,15 +12,6 @@ export default function Modals_Create_Service({ onClose }) {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
-    const handleInputChange = (e) => {
-        const { id, value } = e.target;
-        setFormData(prev => ({ ...prev, [id]: value }));
-    };
-
-    const handleNumberChange = (value) => {
-        setFormData(prev => ({ ...prev, prix: value }));
-    };
-
     const getCsrfToken = async () => {
         try {
             await fetch("http://localhost:8000/sanctum/csrf-cookie", {
@@ -42,6 +33,17 @@ export default function Modals_Create_Service({ onClose }) {
             throw error;
         }
     };
+
+    const handleInputChange = (e) => {
+        const { id, value } = e.target;
+        setFormData(prev => ({ ...prev, [id]: value }));
+    };
+
+    const handleNumberChange = (value) => {
+        setFormData(prev => ({ ...prev, prix: value }));
+    };
+
+
 
     const saveService = async () => {
         if (!formData.designation.trim() || formData.prix === null) {
@@ -99,21 +101,21 @@ export default function Modals_Create_Service({ onClose }) {
             <div className="row">
                 <div className="col-md-12">
                     <div className="mb-4">
-                        <label htmlFor="designation" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="designation" className="form-label">
                             Désignation :
                         </label>
                         <InputText
                             id="designation"
                             value={formData.designation}
                             onChange={handleInputChange}
-                            className="w-full"
+                            className="w-100"
                             disabled={loading}
                             required
                         />
                     </div>
 
                     <div className="mb-4">
-                        <label htmlFor="prix" className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="prix" className="form-label">
                             Prix unitaire (MGA) :
                         </label>
                         <InputNumber
@@ -123,18 +125,18 @@ export default function Modals_Create_Service({ onClose }) {
                             mode="currency"
                             currency="MGA"
                             locale="fr-FR"
-                            className="w-full"
+                            className="w-100"
                             disabled={loading}
                         />
                     </div>
                 </div>
             </div>
 
-            <div className="flex justify-center mt-6">
+            <div className="text-center">
                 <button
                     onClick={saveService}
                     disabled={loading}
-                    className={`px-4 py-2 rounded-md text-white font-medium flex items-center
+                    className={`px-4 py-2 rounded-md text-white font-medium flex items-center bg-success
                               ${loading ? 'bg-sucsess' : 'bg-sucsess hover:bg-sucsess'} 
                               transition-colors duration-200`}
                 >

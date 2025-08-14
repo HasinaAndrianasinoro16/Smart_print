@@ -3,7 +3,7 @@ import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { getApiUrl } from "../Link/URL";
 
-export default function Modals_Ajout_client() {
+export default function Modals_Ajout_client({onCLose}) {
     const [formData, setFormData] = useState({
         nom: '',
         adresse: '',
@@ -91,6 +91,7 @@ export default function Modals_Ajout_client() {
                 rcs: '',
                 code: ''
             });
+            onCLose();
 
             alert("Client ajouté avec succès !");
 

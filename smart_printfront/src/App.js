@@ -5,6 +5,7 @@ import './assets/fontawesome-5/css/all.min.css';
 import './assets/fontawesome-5/css/all.css';
 import './assets/dist/css/bootstrap.min.css';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
+import "./App.css";
 
 import Headers from "./Body/Headers";
 import Facturation from "./Page/Facturation";
@@ -61,14 +62,14 @@ function App() {
 
     return (
         <Router>
-            <div className="row">
-                <div className="col-2">
+            <Routes>
+                <Route path="/login" element={!user ? <Login setUser={setUser} /> : <Navigate to="/" />} />
+            </Routes>
+            <div  className="app-container">
             {user && <Headers user={user} setUser={setUser} />}
-                </div>
-                <div className="col-10">
+                <main className="main-content">
             <Routes>
                 <Route path="/" element={user ? <Home user={user}/> : <Navigate to="/login" /> }/>
-                <Route path="/login" element={!user ? <Login setUser={setUser} /> : <Navigate to="/" />} />
                 <Route path="/liste_facture" element={user ? <Facturation /> : <Navigate to="/login" />} />
                 <Route path="/info" element={user ? <Info_facture /> : <Navigate to="/login" />} />
                 <Route path="/factures" element={user ? <Liste_facture_manager/> : <Navigate to="/login"/>}/>
@@ -78,7 +79,7 @@ function App() {
                 <Route path="/liste_service" element={user ? <Liste_service /> : <Navigate to="/login" />} />
                 <Route path="/liste_utilisateur" element={user ? <List_users /> : <Navigate to="/login" />} />
             </Routes>
-                </div>
+                </main>
             </div>
         </Router>
     );

@@ -106,17 +106,19 @@ export default function Modals_create_BonCommande({ facture, onSuccess }) {
 
     return (
         <div className="p-4">
+            <div className="row">
+                <div className="col-12">
             <div className="mb-4">
-                <label className="font-bold block mb-2">Numéro de Facture :</label>
+                <label className="form-label">Numéro de Facture :</label>
                 <InputText
                     value={facture}
-                    className="w-full"
+                    className="w-100"
                     readOnly
                 />
             </div>
 
             <div className="mb-4">
-                <label className="font-bold block mb-2">
+                <label className="form-label">
                     Fichier Bon de Commande (PDF, JPG, PNG - max 7MB) :
                 </label>
                 <input
@@ -126,7 +128,7 @@ export default function Modals_create_BonCommande({ facture, onSuccess }) {
                         setFile(e.target.files?.[0] || null);
                         setError(null);
                     }}
-                    className="block w-full text-sm text-gray-500
+                    className="block w-100 text-sm text-gray-500
                               file:mr-4 file:py-2 file:px-4
                               file:rounded-md file:border-0
                               file:text-sm file:font-semibold
@@ -182,6 +184,8 @@ export default function Modals_create_BonCommande({ facture, onSuccess }) {
                         </span>
                     )}
                 </button>
+            </div>
+            </div>
             </div>
         </div>
     );

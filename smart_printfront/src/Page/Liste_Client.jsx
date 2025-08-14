@@ -129,7 +129,7 @@ export default function Liste_Client() {
             </Dialog>
             <Dialog header="Ajout de Client" visible={visible1} style={{width: '70vw'}}
                     onHide={() => setVisible1(false)}>
-                <Modals_Ajout_client/>
+                <Modals_Ajout_client onCLose={() => {setVisible1(false); Liste_clients();}} />
             </Dialog>
 
             <div className="py-3"/>

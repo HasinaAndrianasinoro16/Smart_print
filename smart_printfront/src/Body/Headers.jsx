@@ -56,12 +56,12 @@ export default function Headers({ user, setUser }) {
                         <i className="fas fa-bars"></i>
                     </button>
                     <Link to="/" className="navbar-brand">
-                        <img src={Mylogo} alt="Logo" height="30" className="d-inline-block align-top me-2" />
+                        <img src={Mylogo} alt="Logo" height="30" style={{borderRadius:'50%'}} className="d-inline-block align-top me-2" />
                         Smart Print
                     </Link>
-                    <button className="btn btn-outline-light" onClick={handleLogout}>
-                        <i className="fas fa-sign-out-alt"></i>
-                    </button>
+                    {/*<button className="btn btn-outline-light" onClick={handleLogout}>*/}
+                    {/*    <i className="fas fa-sign-out-alt"></i>*/}
+                    {/*</button>*/}
                 </div>
             </nav>
 

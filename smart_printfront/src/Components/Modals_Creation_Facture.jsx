@@ -5,7 +5,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { getApiUrl } from "../Link/URL";
 
-export default function Modals_Creation_Facture({ onSuccess }) {
+export default function Modals_Creation_Facture({ onSuccess, onClose }) {
     const [formData, setFormData] = useState({
         client: null,
         date_emission: null,
@@ -71,6 +71,7 @@ export default function Modals_Creation_Facture({ onSuccess }) {
 
         try {
             const csrfToken = await getCsrfToken();
+            console.log(formData);
 
             const response = await fetch(getApiUrl('factures/add'), {
                 method: 'POST',
@@ -82,7 +83,7 @@ export default function Modals_Creation_Facture({ onSuccess }) {
                 },
                 credentials: 'include',
                 body: JSON.stringify({
-                    client_id: formData.client.id,
+                    client: formData.client.id,
                     date_emission: formData.date_emission.toISOString().split('T')[0],
                     date_echeance: formData.date_echeance.toISOString().split('T')[0],
                     condition_paiement: formData.condition_paiement
@@ -104,6 +105,8 @@ export default function Modals_Creation_Facture({ onSuccess }) {
                 date_echeance: null,
                 condition_paiement: ''
             });
+
+            onClose();
 
             // Appeler le callback de succès si fourni
             if (onSuccess) onSuccess(newFacture);
@@ -130,89 +133,92 @@ export default function Modals_Creation_Facture({ onSuccess }) {
                 </div>
             )}
 
-            <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Client <span className="text-red-500">*</span>
-                </label>
-                <Dropdown
-                    value={formData.client}
-                    onChange={(e) => handleInputChange('client', e.value)}
-                    options={clients}
-                    optionLabel="nom"
-                    placeholder="Sélectionner un client"
-                    filter
-                    className="w-full"
-                    disabled={loading}
-                />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Date d'émission <span className="text-red-500">*</span>
-                    </label>
-                    <Calendar
-                        value={formData.date_emission}
-                        onChange={(e) => handleInputChange('date_emission', e.value)}
-                        dateFormat="dd/mm/yy"
-                        showButtonBar
-                        className="w-full"
-                        disabled={loading}
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Date d'échéance <span className="text-red-500">*</span>
-                    </label>
-                    <Calendar
-                        value={formData.date_echeance}
-                        onChange={(e) => handleInputChange('date_echeance', e.value)}
-                        dateFormat="dd/mm/yy"
-                        showButtonBar
-                        className="w-full"
-                        disabled={loading}
-                    />
-                </div>
-            </div>
-
-            <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Conditions de paiement
-                </label>
-                <InputTextarea
-                    value={formData.condition_paiement}
-                    onChange={(e) => handleInputChange('condition_paiement', e.target.value)}
-                    rows={3}
-                    className="w-full"
-                    disabled={loading}
-                />
-            </div>
-
-            <div className="flex justify-center mt-6">
-                <button
-                    onClick={handleSubmit}
-                    disabled={loading}
-                    className={`px-4 py-2 rounded-md text-white font-medium flex items-center
-                              ${loading ? 'bg-primary' : 'bg-pimary hover:bg-primary'} 
-                              transition-colors duration-200`}
-                >
-                    {loading ? (
-                        <>
-                            <ProgressSpinner
-                                style={{ width: '20px', height: '20px' }}
-                                strokeWidth="6"
-                                className="mr-2"
+            <div className="row">
+                <div className="col-12">
+                    <div className="mb-4">
+                        <label className="form-label">
+                            Client <span className="text-danger">*</span>
+                        </label>
+                        <Dropdown
+                            value={formData.client}
+                            onChange={(e) => handleInputChange('client', e.value)}
+                            options={clients}
+                            optionLabel="nom"
+                            placeholder="Sélectionner un client"
+                            filter
+                            className="w-100"
+                            disabled={loading}
+                        />
+                    </div>
+                    <div className="mb-4">
+                        <div>
+                            <label className="form-label">
+                                Date d'émission <span className="text-danger">*</span>
+                            </label>
+                            <Calendar
+                                value={formData.date_emission}
+                                onChange={(e) => handleInputChange('date_emission', e.value)}
+                                dateFormat="dd/mm/yy"
+                                showButtonBar
+                                className="w-100"
+                                disabled={loading}
                             />
-                            Création en cours...
-                        </>
-                    ) : (
-                        <>
-                            <i className="fas fa-file-invoice mr-2"></i>
-                            Créer la facture
-                        </>
-                    )}
-                </button>
+                        </div>
+
+                        <div>
+                            <label className="form-label">
+                                Date d'échéance <span className="text-danger">*</span>
+                            </label>
+                            <Calendar
+                                value={formData.date_echeance}
+                                onChange={(e) => handleInputChange('date_echeance', e.value)}
+                                dateFormat="dd/mm/yy"
+                                showButtonBar
+                                className="w-100"
+                                disabled={loading}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="mb-4">
+                        <label className="form-label">
+                            Conditions de paiement
+                        </label>
+                        <InputTextarea
+                            value={formData.condition_paiement}
+                            onChange={(e) => handleInputChange('condition_paiement', e.target.value)}
+                            rows={3}
+                            className="w-100"
+                            disabled={loading}
+                        />
+                    </div>
+
+                    <div className="text-center">
+                        <button
+                            onClick={handleSubmit}
+                            disabled={loading}
+                            className={`px-4 py-2 rounded-md text-white font-medium flex items-center bg-primary
+                                      ${loading ? 'bg-primary' : 'bg-primary hover:bg-primary'} 
+                                      transition-colors duration-200`}
+                        >
+                        {loading ? (
+                            <>
+                                <ProgressSpinner
+                                    style={{ width: '20px', height: '20px' }}
+                                    strokeWidth="6"
+                                    className="mr-2"
+                                />
+                                Création en cours...
+                            </>
+                        ) : (
+                            <>
+                                <i className="fas fa-file-invoice mr-2"></i>
+                                Créer la facture
+                            </>
+                        )}
+                    </button>
+                    </div>
+                </div>
             </div>
         </div>
     );

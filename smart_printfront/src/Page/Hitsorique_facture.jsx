@@ -70,7 +70,7 @@ export default function HistoriqueFacture() {
             setBonCommandeSupprimer(bonCommandeData || []);
 
             setStats({
-                total: totalCount || 0,
+                total: supprimerCount + payerCount,
                 supprimees: supprimerCount || 0,
                 payees: payerCount || 0
             });
