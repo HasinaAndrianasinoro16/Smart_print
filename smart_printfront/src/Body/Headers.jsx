@@ -59,9 +59,6 @@ export default function Headers({ user, setUser }) {
                         <img src={Mylogo} alt="Logo" height="30" style={{borderRadius:'50%'}} className="d-inline-block align-top me-2" />
                         Smart Print
                     </Link>
-                    {/*<button className="btn btn-outline-light" onClick={handleLogout}>*/}
-                    {/*    <i className="fas fa-sign-out-alt"></i>*/}
-                    {/*</button>*/}
                 </div>
             </nav>
 
@@ -154,7 +151,7 @@ export default function Headers({ user, setUser }) {
             )}
 
             {/* CSS intégré */}
-            <style jsx>{`
+            <style>{`
                 .sidebar {
                     position: fixed;
                     top: 0;
