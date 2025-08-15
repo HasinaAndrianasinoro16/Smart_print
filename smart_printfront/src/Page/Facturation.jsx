@@ -114,12 +114,12 @@ export default function Facturation(){
             <div className="d-flex gap-3 mb-3 text-center">
                 <Link
                     to={`/info?id=${encodeURIComponent(rowData.id)}`}
-                    className="btn btn-info btn-sm"
+                    className="btn btn-outline-info btn-sm"
                 >
                     <i className="fas fa-info-circle"/>
                 </Link>
                 <button
-                    className="btn btn-dark btn-sm"
+                    className="btn btn-outline-dark btn-sm"
                     onClick={() => {
                         setVisible3(true);
                         setSelectedFactureId(rowData.id);
@@ -128,7 +128,7 @@ export default function Facturation(){
                     <i className="fas fa-money-check"/>
                 </button>
                 <button
-                    className="btn btn-warning btn-sm"
+                    className="btn btn-outline-warning btn-sm"
                     onClick={() => {
                         setVisible4(true);
                         setSelectedFactureId(rowData.id);
@@ -136,14 +136,14 @@ export default function Facturation(){
                 >
                     <i className="fas fa-file-alt"/>
                 </button>
-                <button className="btn btn-success btn-sm" onClick={() => {
+                <button className="btn btn-outline-success btn-sm" onClick={() => {
                     setVisible5(true);
                     setSelectedFactureId(rowData.id);
                 }}>
                     <i className="fas fa-tools"/>
                 </button>
                 <button
-                    className="btn btn-danger btn-sm"
+                    className="btn btn-outline-danger btn-sm"
                     onClick={(e) => confirmDelete(e, rowData.id)}
                 >
                     <i className="fas fa-trash"/>
