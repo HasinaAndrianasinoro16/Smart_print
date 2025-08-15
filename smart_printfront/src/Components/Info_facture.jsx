@@ -60,53 +60,52 @@ export default function Info_facture() {
         }
     };
 
+    const fetchData = async () => {
+        try {
+            const csrfToken = await getCsrfToken();
+            const config = {
+                ...fetchConfig,
+                headers: {
+                    ...fetchConfig.headers,
+                    'X-XSRF-TOKEN': csrfToken
+                }
+            };
+
+            const [factureRes, sousFacturesRes, bonsCommandeRes, servicesRes] = await Promise.all([
+                fetch(getApiUrl(`factures/self/${factureId}`), config),
+                fetch(getApiUrl(`sousfactures/details/${factureId}`), config),
+                fetch(getApiUrl(`boncommandes/${factureId}`), config),
+                fetch(getApiUrl(`services/service-facture/${factureId}`), config)
+            ]);
+
+            if (!factureRes.ok) throw new Error("Erreur lors du chargement de la facture");
+            if (!sousFacturesRes.ok) throw new Error("Erreur lors du chargement des sous-factures");
+            if (!bonsCommandeRes.ok) throw new Error("Erreur lors du chargement des bons de commande");
+            if (!servicesRes.ok) throw new Error("Erreur lors du chargement des services");
+
+            setFacture(await factureRes.json());
+            setSousFactures(await sousFacturesRes.json() || []);
+            setBonsCommande(await bonsCommandeRes.json() || []);
+            setServices(await servicesRes.json() || []);
+
+        } catch (error) {
+            console.error("Erreur:", error);
+            showError(error.message || "Une erreur est survenue lors du chargement");
+        } finally {
+            setLoading({
+                facture: false,
+                sousFactures: false,
+                bonsCommande: false,
+                services: false,
+                email: false,
+                pdf: false
+            });
+        }
+    };
+
     // Chargement des données
     useEffect(() => {
         if (!factureId) return;
-
-        const fetchData = async () => {
-            try {
-                const csrfToken = await getCsrfToken();
-                const config = {
-                    ...fetchConfig,
-                    headers: {
-                        ...fetchConfig.headers,
-                        'X-XSRF-TOKEN': csrfToken
-                    }
-                };
-
-                const [factureRes, sousFacturesRes, bonsCommandeRes, servicesRes] = await Promise.all([
-                    fetch(getApiUrl(`factures/self/${factureId}`), config),
-                    fetch(getApiUrl(`sousfactures/details/${factureId}`), config),
-                    fetch(getApiUrl(`boncommandes/${factureId}`), config),
-                    fetch(getApiUrl(`services/service-facture/${factureId}`), config)
-                ]);
-
-                if (!factureRes.ok) throw new Error("Erreur lors du chargement de la facture");
-                if (!sousFacturesRes.ok) throw new Error("Erreur lors du chargement des sous-factures");
-                if (!bonsCommandeRes.ok) throw new Error("Erreur lors du chargement des bons de commande");
-                if (!servicesRes.ok) throw new Error("Erreur lors du chargement des services");
-
-                setFacture(await factureRes.json());
-                setSousFactures(await sousFacturesRes.json() || []);
-                setBonsCommande(await bonsCommandeRes.json() || []);
-                setServices(await servicesRes.json() || []);
-
-            } catch (error) {
-                console.error("Erreur:", error);
-                showError(error.message || "Une erreur est survenue lors du chargement");
-            } finally {
-                setLoading({
-                    facture: false,
-                    sousFactures: false,
-                    bonsCommande: false,
-                    services: false,
-                    email: false,
-                    pdf: false
-                });
-            }
-        };
-
         fetchData();
     }, [factureId]);
 
@@ -127,7 +126,7 @@ export default function Info_facture() {
 
             const result = await response.json();
             showSuccess("Bon de commande supprimé avec succès !");
-            await bonsCommande(factureId);
+            await fetchData();
         } catch (error) {
             console.error("Erreur:", error);
             showError(error.message || "Erreur lors de la suppression");
@@ -487,12 +486,12 @@ export default function Info_facture() {
                                                 href={`http://localhost:8000/${bc.commande}`}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="btn btn-info btn-sm me-2"
+                                                className="btn btn-outline-info btn-sm me-2"
                                             >
                                                 <i className="fas fa-eye me-1"></i> Voir
                                             </a>
                                             <button
-                                                className="btn btn-danger btn-sm"
+                                                className="btn btn-outline-danger btn-sm"
                                                 onClick={(e) => {
                                                     e.preventDefault();
                                                     confirmDelete(e, bc.id);

@@ -136,14 +136,18 @@ export default function HistoriqueFacture() {
 
     const undo_bon_commande = async (idBonCommande) => {
         try {
-            const csrfToken = getCsrfToken();
+            const csrfToken = await getCsrfToken();
             const url = 'boncommandes/restore/'+idBonCommande;
             const response = await fetch(getApiUrl(url),{
                 method:'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-XSRF-TOKEN': csrfToken
-                }
+                    'Accept': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'include',
+                body: JSON.stringify({})
             });
 
             if (!response.ok){
@@ -162,13 +166,17 @@ export default function HistoriqueFacture() {
 
     const undo_facture = async (idFacture) => {
         try {
-            const csrfToken = getCsrfToken();
+            const csrfToken = await getCsrfToken();
             const response = await fetch(getApiUrl(`factures/undo/${idFacture}`), {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-XSRF-TOKEN': csrfToken
-                }
+                    'Accept': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'include',
+                body: JSON.stringify({})
             });
 
             if (!response.ok) {
