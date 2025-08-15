@@ -91,7 +91,7 @@ export default function HistoriqueFacture() {
         return (
             <div className="d-flex gap-3 mb-3 text-center">
                 <Link to={`/info?id=${encodeURIComponent(rowData.id)}`}
-                      className="btn btn-info btn-sm">
+                      className="btn btn-outline-info btn-sm">
                     <i className="fas fa-info-circle"/> Info
                 </Link>
             </div>
@@ -102,10 +102,10 @@ export default function HistoriqueFacture() {
         return (
             <div className="d-flex gap-3 mb-3 text-center">
                 <Link to={`/info?id=${encodeURIComponent(rowData.id)}`}
-                      className="btn btn-info btn-sm">
+                      className="btn btn-outline-info btn-sm">
                     <i className="fas fa-info-circle"/> Info
                 </Link>
-                <button className="btn btn-warning btn-sm"
+                <button className="btn btn-outline-warning btn-sm"
                         onClick={() => undo_facture(rowData.id)}>
                     <i className="fas fa-undo-alt"/> Restituer
                 </button>
@@ -120,12 +120,12 @@ export default function HistoriqueFacture() {
                     href={`http://localhost:8000/${rowData.commande}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn btn-info btn-sm"
+                    className="btn btn-outline-info btn-sm"
                 >
                     Voir le fichier
                 </a>
                 <button
-                    className="btn btn-warning btn-sm"
+                    className="btn btn-outline-warning btn-sm"
                     onClick={() => undo_bon_commande(rowData.id)}
                 >
                     <i className="fas fa-undo-alt"/> Restaurer

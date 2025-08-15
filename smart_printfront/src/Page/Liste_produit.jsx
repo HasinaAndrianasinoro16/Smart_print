@@ -124,10 +124,10 @@ export default function Liste_produit(){
 
     const actionBodyTemplate = (rowData) => (
         <div className="d-flex gap-3 mb-3 text-center">
-            <button className="btn btn-danger" onClick={(e) => { e.preventDefault(); confirm(e, rowData.id) }}>
+            <button className="btn btn-outline-danger" onClick={(e) => { e.preventDefault(); confirm(e, rowData.id) }}>
                 <i className="fas fa-trash" />
             </button>
-            <button className="btn btn-warning" onClick={() => {
+            <button className="btn btn-outline-warning" onClick={() => {
                 setSelectedIdProduits(rowData.id);
                 setVisible(true);
             }}>

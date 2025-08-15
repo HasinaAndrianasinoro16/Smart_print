@@ -85,11 +85,11 @@ export default function Liste_facture_manager(){
         <div className="d-flex gap-3 mb-3 text-center">
             <Link
                 to={`/info?id=${encodeURIComponent(rowData.id)}`}
-                className="btn btn-info"
+                className="btn btn-outline-info"
             >
                 <i className="fas fa-info-circle"/>
             </Link>
-            <button className="btn btn-success" onClick={() => Approuver_factures(rowData.id)}>
+            <button className="btn btn-outline-success" onClick={() => Approuver_factures(rowData.id)}>
                 <i className="fas fa-check"/>
             </button>
         </div>
