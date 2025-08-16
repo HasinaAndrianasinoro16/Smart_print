@@ -302,75 +302,64 @@ export default function Info_facture() {
                 {/* Contenu de la facture (PDF) */}
                 <div className="card p-4" id="facture-pdf">
                     {/* Logo et informations client */}
-                    <div className="flex flex-wrap">
-                        <div className="w-full md:w-1/2 flex items-start mb-4 md:mb-0">
-                            <img src={MyLogo} alt="Logo Smart Print" height="160" className="max-h-40"/>
+                    <div className="row">
+                        <div className="col-md-6 d-flex align-items-start">
+                            <img src={MyLogo} alt="Smart Print Logo" height="160"/>
                         </div>
-                        <div className="row">
-                            {/* Colonne de gauche - Informations client */}
-                            <div className="col-md-6">
-                                <div className="d-flex flex-column gap-2">
-                                    <h5 className="mb-1">
-                                        <i className="pi pi-user text-primary mr-2"/> Client:
-                                        <strong className="ml-2">{facture?.client_relation?.nom || '-'}</strong>
-                                    </h5>
-                                    <p className="mb-1">
-                                        <i className="pi pi-map-marker text-red-500 mr-2"/> Adresse: {facture?.client_relation?.adresse || '-'}
-                                    </p>
-                                    <p className="mb-1">
-                                        <i className="pi pi-phone text-gray-700 mr-2"/> Téléphone: {facture?.client_relation?.telephone || '-'}
-                                    </p>
-                                    <p className="mb-1">
-                                        <i className="pi pi-envelope text-green-500 mr-2"/> Email: {facture?.client_relation?.email || '-'}
-                                    </p>
-                                    <p className="mb-1">NIF: {facture?.client_relation?.nif || '-'}</p>
-                                    <p className="mb-1">STAT: {facture?.client_relation?.stat || '-'}</p>
-                                </div>
-                            </div>
 
-                            {/* Colonne de droite - Détails de la facture */}
-                            <div className="col-md-6">
-                                <div className="d-flex flex-column gap-2">
-                                    <div className="d-flex">
-                                        <div className="w-1/2">
-                                            <p>
-                                                <i className="pi pi-calendar text-green-500 mr-2"/>
-                                                <strong>Date d'émission:</strong> {facture?.date_emission || '-'}
-                                            </p>
-                                            <p>
-                                                <i className="pi pi-calendar text-green-500 mr-2"/>
-                                                <strong>Date d'échéance:</strong> {facture?.date_echeance || '-'}
-                                            </p>
-                                            <p>
-                                                <i className="pi pi-money-bill mr-2"/>
-                                                <strong>Conditions de
-                                                    paiement:</strong> {facture?.condition_paiement || '-'}
-                                            </p>
-                                        </div>
-                                        <div className="w-1/2 text-right">
-                                            <p><strong>N° Facture:</strong> {factureCode}</p>
-                                            <p>
-                                                <strong>Statut:</strong>
-                                                {facture?.statut === 0 ? ' En Attente' :
-                                                    facture?.statut === 1 ? ' Annulé' :
-                                                        facture?.statut === 2 ? ' Payé' :
-                                                            facture?.statut === 3 ? ' Envoyé' : ' Inconnu'}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="col-md-6 text-end">
+                            <h5 className="mb-1">
+                                <i className="fas fa-user text-primary"/> Client :
+                                <strong>{facture?.client_relation?.nom || '-'}</strong>
+                            </h5>
+                            <p className="mb-0"><i className="fas fa-map-pin text-danger"/> Adresse
+                                : {facture?.client_relation?.adresse || '-'}</p>
+                            <p className="mb-0"><i className="fas fa-phone-alt text-dark"/> Téléphone
+                                : {facture?.client_relation?.telephone || '-'}</p>
+                            <p className="mb-0"><i className="fas fa-envelope text-success"/> Email
+                                : {facture?.client_relation?.email || '-'}</p>
+                            <p className="mb-0"> NIF
+                                : {facture?.client_relation?.nif || '-'}</p>
+                            <p className="mb-0"> STAT
+                                : {facture?.client_relation?.stat || '-'}</p>
                         </div>
                     </div>
 
-                    <hr className="my-4"/>
+                    <hr/>
+
+                    <div className="row mb-4">
+                        <div className="col-md-6">
+                            <p><strong><i className="fas fa-calendar text-success"/> Date d’émission
+                                :</strong> {facture?.date_emission || '-'}</p>
+                            <p><strong><i className="fas fa-calendar text-success"/> Date d’échéance
+                                :</strong> {facture?.date_echeance || '-'}</p>
+                            <p><strong><i className="fas fa-money-check"/> Conditions de paiement :</strong>
+                                {facture?.condition_paiement}</p>
+                        </div>
+                        <div className="col-md-6 text-end ">
+                            <p><strong>N° Facture :</strong> {factureCode || ''}</p>
+                            <p><strong>Statut :</strong>
+                                {facture.statut === 0
+                                    ? 'En Attente'
+                                    : facture.statut === 1
+                                        ? 'envoyer'
+                                        : facture.statut === 2
+                                            ? 'payer'
+                                            : facture.statut === 3
+                                                ? 'Annuler'
+                                                : 'Inconnu'}
+                            </p>
+                        </div>
+                    </div>
+
+                    <hr className="my-3"/>
 
                     {/* Tableau des produits */}
                     <div className="mb-4">
                         <h5 className="text-lg font-semibold mb-2">Produits:</h5>
                         <div className="overflow-x-auto">
-                            <table className="w-full border-collapse">
-                                <thead className="bg-gray-100">
+                            <table className="table table-bordered table-responsive">
+                                <thead className="table-light">
                                 <tr>
                                     <th className="p-3 text-left">#</th>
                                     <th className="p-3 text-left">Désignation</th>
@@ -411,8 +400,8 @@ export default function Info_facture() {
                     <div className="mb-4">
                         <h5 className="text-lg font-semibold mb-2">Services:</h5>
                         <div className="overflow-x-auto">
-                            <table className="w-full border-collapse">
-                                <thead className="bg-gray-100">
+                            <table className="table table-bordered table-responsive">
+                                <thead className="table-light">
                                 <tr>
                                     <th className="p-3 text-left">#</th>
                                     <th className="p-3 text-left">Désignation</th>
@@ -447,20 +436,20 @@ export default function Info_facture() {
 
                     {/* Total général */}
                     <div className="overflow-x-auto">
-                        <table className="w-full border-collapse">
-                            <tfoot>
+                        <table className="table table-striped table-responsive">
+                            <thead className="table-light">
                             <tr className="bg-gray-100">
-                                <th colSpan="4" className="p-3 text-left">Coût Total TTC</th>
-                                <th className="p-3 font-bold">{prixTotalTTC.toLocaleString("fr-FR")} Ar</th>
+                                <th colSpan="4" className="p-3 h3 text-left">Coût Total TTC</th>
+                                <th className="p-3 font-bold h3">{prixTotalTTC.toLocaleString("fr-FR")} Ar</th>
                             </tr>
-                            </tfoot>
+                            </thead>
                         </table>
                     </div>
 
                     {/* Mentions légales */}
-                    <div className="mt-4 p-3 bg-gray-50 rounded">
-                        <p className="text-sm text-gray-600">
-                            <i className="pi pi-info-circle mr-2"/>
+                    <div className="mt-1 p-3 bg-gray-50 rounded">
+                        <p className="text-sm-start text-secondary">
+                            <i className="fas fa-info-circle mr-2"/>
                             <strong>Mentions légales :</strong> Cette facture est émise par
                             Smart Print SARL – NIF : 123456789 – STAT : 987654321. Tout retard de paiement peut
                             entraîner
