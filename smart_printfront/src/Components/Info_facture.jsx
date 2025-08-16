@@ -325,9 +325,9 @@ export default function Info_facture() {
                         </div>
                     </div>
 
-                    <hr/>
+                    <hr className="my-1"/>
 
-                    <div className="row mb-4">
+                    <div className="row mb-1">
                         <div className="col-md-6">
                             <p><strong><i className="fas fa-calendar text-success"/> Date d’émission
                                 :</strong> {facture?.date_emission || '-'}</p>
@@ -352,7 +352,7 @@ export default function Info_facture() {
                         </div>
                     </div>
 
-                    <hr className="my-3"/>
+                    <hr />
 
                     {/* Tableau des produits */}
                     <div className="mb-4">
