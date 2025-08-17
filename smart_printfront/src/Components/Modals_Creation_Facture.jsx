@@ -3,7 +3,7 @@ import { Dropdown } from "primereact/dropdown";
 import { Calendar } from 'primereact/calendar';
 import { InputTextarea } from "primereact/inputtextarea";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { getApiUrl } from "../Link/URL";
+import {getApiUrl, getCookie} from "../Link/URL";
 
 export default function Modals_Creation_Facture({ onSuccess, onClose }) {
     const [formData, setFormData] = useState({
@@ -18,7 +18,7 @@ export default function Modals_Creation_Facture({ onSuccess, onClose }) {
 
     const getCsrfToken = async () => {
         try {
-            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+            await fetch(getCookie(), {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json',

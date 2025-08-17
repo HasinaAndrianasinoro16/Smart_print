@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { getApiUrl } from "../Link/URL";
+import {getApiUrl, getCookie} from "../Link/URL";
 
 export default function Modal_update_service({ idService, onClose }) {
     const [formData, setFormData] = useState({
@@ -17,7 +17,7 @@ export default function Modal_update_service({ idService, onClose }) {
 
     const getCsrfToken = async () => {
         try {
-            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+            await fetch(getCookie(), {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json',

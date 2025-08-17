@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { getApiUrl } from "../Link/URL";
+import {getApiUrl, getCookie} from "../Link/URL";
 import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Button } from 'primereact/button';
@@ -40,7 +40,7 @@ export default function Info_facture() {
     // Récupération du token CSRF
     const getCsrfToken = async () => {
         try {
-            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+            await fetch(getCookie(), {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json',
@@ -342,11 +342,11 @@ export default function Info_facture() {
                                 {facture.statut === 0
                                     ? 'En Attente'
                                     : facture.statut === 1
-                                        ? 'envoyer'
+                                        ? 'Annuler'
                                         : facture.statut === 2
                                             ? 'payer'
                                             : facture.statut === 3
-                                                ? 'Annuler'
+                                                ? 'Envoyer'
                                                 : 'Inconnu'}
                             </p>
                         </div>

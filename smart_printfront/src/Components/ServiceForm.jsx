@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getApiUrl } from "../Link/URL";
+import {getApiUrl, getCookie} from "../Link/URL";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
@@ -16,7 +16,7 @@ export default function ServiceForm({ facture, onSuccess }) {
 
     const getCsrfToken = async () => {
         try {
-            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+            await fetch(getCookie(), {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json',

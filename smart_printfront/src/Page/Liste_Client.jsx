@@ -2,7 +2,7 @@
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { getApiUrl } from "../Link/URL";
+import {getApiUrl, getCookie} from "../Link/URL";
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { Dialog } from "primereact/dialog";
 import Modals_update_clients from "../Components/Modals_update_clients";
@@ -19,7 +19,7 @@ export default function Liste_Client() {
 
     const getCsrfToken = async () => {
         try {
-            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+            await fetch(getCookie(), {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json',

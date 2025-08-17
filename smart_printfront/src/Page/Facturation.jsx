@@ -8,14 +8,14 @@ import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import Modals_Ajout_client from "../Components/Modals_Ajout_client";
 import Modals_Creation_Facture from "../Components/Modals_Creation_Facture";
 import FactureForm from "../Components/FactureForm";
-import {getApiUrl} from "../Link/URL";
+import {getApiUrl, getCookie} from "../Link/URL";
 import Modals_create_BonCommande from "../Components/Modals_create_BonCommande";
 import ServiceForm from "../Components/ServiceForm";
 import Headers from "../Body/Headers";
 
 export default function Facturation(){
     const [globalFilter, setGlobalFilter] = useState('');
-    const [visible1, setVisible1] = useState(false);
+    // const [visible1, setVisible1] = useState(false);
     const [visible2, setVisible2] = useState(false);
     const [visible3, setVisible3] = useState(false);
     const [visible4, setVisible4] = useState(false);
@@ -25,7 +25,7 @@ export default function Facturation(){
 
     const getCsrfToken = async () => {
         try {
-            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+            await fetch(getCookie(), {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json',

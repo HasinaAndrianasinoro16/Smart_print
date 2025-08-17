@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MyLogo from "../assets/img/upscalemedia-transformed-removebg.png";
-import { getApiUrl } from "../Link/URL";
+import {getApiUrl, getCookie} from "../Link/URL";
 import '../assets/dist/js/bootstrap.bundle.min';
 import '../assets/fontawesome-5/css/all.min.css';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
@@ -22,7 +22,7 @@ export default function Login({ setUser }) {
 
         try {
             // 1. Récupérer le cookie CSRF
-            const csrfResponse = await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+            const csrfResponse = await fetch(getCookie(), {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json',

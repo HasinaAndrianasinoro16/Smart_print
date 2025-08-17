@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { InputText } from "primereact/inputtext";
-import { getApiUrl } from "../Link/URL";
+import {getApiUrl, getCookie} from "../Link/URL";
 import { ProgressSpinner } from "primereact/progressspinner";
 
 export default function Modals_create_BonCommande({ facture, onSuccess }) {
@@ -11,7 +11,7 @@ export default function Modals_create_BonCommande({ facture, onSuccess }) {
 
     const getCsrfToken = async () => {
         try {
-            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+            await fetch(getCookie(), {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json',

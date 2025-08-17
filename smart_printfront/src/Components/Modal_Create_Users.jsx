@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {getApiUrl} from "../Link/URL";
+import {getApiUrl, getCookie} from "../Link/URL";
 import {InputText} from "primereact/inputtext";
 import {Dropdown} from "primereact/dropdown";
 
@@ -19,7 +19,7 @@ export default function Modal_Create_Users({onClose}){
     const getCsrfToken = async () => {
         try {
             // Récupérer le cookie CSRF
-            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+            await fetch(getCookie(), {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json',

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {getApiUrl} from "../Link/URL";
+import {getApiUrl, getCookie} from "../Link/URL";
 import {InputText} from "primereact/inputtext";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
@@ -12,7 +12,7 @@ export default function Liste_facture_manager(){
 
     const getCsrfToken = async () => {
         try {
-            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+            await fetch(getCookie(), {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json',

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {getApiUrl} from "../Link/URL";
+import {getApiUrl, getCookie} from "../Link/URL";
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import {InputText} from "primereact/inputtext";
 import {DataTable} from "primereact/datatable";
@@ -19,7 +19,7 @@ export default function Liste_service(){
 
     const getCsrfToken = async () => {
         try {
-            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+            await fetch(getCookie(), {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json',

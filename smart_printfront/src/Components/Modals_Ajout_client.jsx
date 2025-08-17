@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
-import { getApiUrl } from "../Link/URL";
+import {getApiUrl, getCookie} from "../Link/URL";
 
 export default function Modals_Ajout_client({onCLose}) {
     const [formData, setFormData] = useState({
@@ -28,7 +28,7 @@ export default function Modals_Ajout_client({onCLose}) {
 
     const getCsrfToken = async () => {
         try {
-            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+            await fetch(getCookie(), {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json',

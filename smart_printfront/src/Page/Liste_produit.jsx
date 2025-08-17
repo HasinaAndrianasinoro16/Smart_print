@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { InputText } from "primereact/inputtext";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
-import { getApiUrl } from "../Link/URL";
+import {getApiUrl, getCookie} from "../Link/URL";
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { Dialog } from "primereact/dialog";
 import Modals_update_produits from "../Components/Modals_update_produits";
@@ -17,7 +17,7 @@ export default function Liste_produit(){
 
     const getCsrfToken = async () => {
         try {
-            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+            await fetch(getCookie(), {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json',
@@ -86,31 +86,6 @@ export default function Liste_produit(){
             alert(e.message || "Erreur lors de la suppression !");
         }
     }
-    // const DeleteProduits = async (idProduits) => {
-    //     try {
-    //         const csrfToken = await getCsrfToken();
-    //         // const url = 'produits/delete/'+ idProduits;
-    //         const response = await fetch(getApiUrl(`produits/delete/${idProduits}`), {
-    //             method: 'PUT',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 'X-XSRF-TOKEN': csrfToken
-    //             }
-    //         });
-    //
-    //         if (!response.ok) {
-    //             throw new Error("Erreur lors de la modification de la facture");
-    //         }
-    //
-    //         const result = await response.json();
-    //         alert("Produits suprimée avec succès");
-    //         await Liste_produits();
-    //
-    //     } catch (e) {
-    //         console.error(e.message);
-    //         alert("Erreur lors de la suppression du produit");
-    //     }
-    // };
 
     const confirm = (event, id) => {
         confirmPopup({

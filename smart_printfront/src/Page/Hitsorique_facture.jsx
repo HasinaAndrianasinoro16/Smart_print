@@ -4,8 +4,7 @@ import {InputText} from "primereact/inputtext";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {Card} from 'primereact/card';
-import {getApiUrl} from "../Link/URL";
-import Headers from "../Body/Headers";
+import {getApiUrl, getCookie} from "../Link/URL";
 
 export default function HistoriqueFacture() {
     const [globalFilter, setGlobalFilter] = useState('');
@@ -21,7 +20,7 @@ export default function HistoriqueFacture() {
     // Fonction pour récupérer le token CSRF
     const getCsrfToken = async () => {
         try {
-            await fetch("http://localhost:8000/sanctum/csrf-cookie", {
+            await fetch(getCookie(), {
                 credentials: 'include',
                 headers: {
                     'Accept': 'application/json',
@@ -56,10 +55,9 @@ export default function HistoriqueFacture() {
             };
 
             // Chargement en parallèle
-            const [payerData, supprimerData, totalCount, supprimerCount, payerCount, bonCommandeData] = await Promise.all([
+            const [payerData, supprimerData, supprimerCount, payerCount, bonCommandeData] = await Promise.all([
                 fetch(getApiUrl('factures/get_facture_statut/2'), { headers }).then(res => res.json()),
                 fetch(getApiUrl('factures/get_facture_statut/1'), { headers }).then(res => res.json()),
-                fetch(getApiUrl('factures/count_facture_statut/0'), { headers }).then(res => res.json()),
                 fetch(getApiUrl('factures/count_facture_statut/1'), { headers }).then(res => res.json()),
                 fetch(getApiUrl('factures/count_facture_statut/2'), { headers }).then(res => res.json()),
                 fetch(getApiUrl('boncommandes/get_by_etat/1'), { headers }).then(res => res.json()),
