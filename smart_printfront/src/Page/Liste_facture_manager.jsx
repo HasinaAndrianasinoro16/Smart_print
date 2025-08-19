@@ -4,6 +4,8 @@ import {InputText} from "primereact/inputtext";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {Link} from "react-router-dom";
+import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
+
 
 export default function Liste_facture_manager(){
     const [globalFilter, setGlobalFilter] = useState('');
@@ -81,6 +83,48 @@ export default function Liste_facture_manager(){
         }
     }
 
+    const DeleteFacture = async (idfacture) => {
+        try {
+            const csrfToken = await getCsrfToken();
+
+            const response = await fetch(getApiUrl(`factures/delete/${idfacture}`), {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-XSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                credentials: 'include',
+                body: JSON.stringify({})
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Erreur lors de la suppression");
+            }
+
+            const result = await response.json();
+            console.log("Facture supprimée :", result);
+            alert("Facture supprimée avec succès !");
+            await Liste_facture_a_approuver(); // Refresh the list
+        } catch (e) {
+            console.error("Erreur:", e.message);
+            alert(`Erreur lors de la suppression: ${e.message}`);
+        }
+    };
+
+    const confirmDelete = (event, id) => {
+        confirmPopup({
+            target: event.currentTarget,
+            message: "Voulez-vous vraiment supprimer cette facture ?",
+            acceptLabel: "Confirmer",
+            rejectLabel: "Annuler",
+            acceptClassName: 'p-button-danger',
+            accept: () => DeleteFacture(id)
+        });
+    };
+
     const actionBodyTemplate = (rowData) => (
         <div className="d-flex gap-3 mb-3 text-center">
             <Link
@@ -92,6 +136,13 @@ export default function Liste_facture_manager(){
             <button className="btn btn-outline-success" onClick={() => Approuver_factures(rowData.id)}>
                 <i className="fas fa-check"/>
             </button>
+            <button
+                className="btn btn-outline-danger"
+                onClick={(e) => confirmDelete(e, rowData.id)}
+            >
+                <i className="fas fa-trash"/>
+            </button>
+            <ConfirmPopup />
         </div>
     );
 

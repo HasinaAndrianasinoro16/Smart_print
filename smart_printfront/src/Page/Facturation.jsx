@@ -5,7 +5,7 @@ import { InputText } from 'primereact/inputtext';
 import { Dialog } from "primereact/dialog";
 import { Link } from 'react-router-dom';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
-import Modals_Ajout_client from "../Components/Modals_Ajout_client";
+// import Modals_Ajout_client from "../Components/Modals_Ajout_client";
 import Modals_Creation_Facture from "../Components/Modals_Creation_Facture";
 import FactureForm from "../Components/FactureForm";
 import {getApiUrl, getCookie} from "../Link/URL";

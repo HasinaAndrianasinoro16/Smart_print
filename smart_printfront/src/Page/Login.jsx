@@ -35,12 +35,12 @@ export default function Login({ setUser }) {
             }
 
             // 2. Extraire le token CSRF des cookies
-            const getCookie = (name) => {
+            const getCookies = (name) => {
                 const value = `; ${document.cookie}`;
                 const parts = value.split(`; ${name}=`);
                 if (parts.length === 2) return parts.pop().split(';').shift();
             };
-            const csrfToken = getCookie('XSRF-TOKEN');
+            const csrfToken = getCookies('XSRF-TOKEN');
 
             // 3. Faire le login avec le token CSRF
             const response = await fetch(getApiUrl("login"), {
