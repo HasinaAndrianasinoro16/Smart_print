@@ -28,6 +28,22 @@ class Utilisateur extends Model
         }
     }
 
+    //fonction pour modifier un utilisateur
+    public static function Update_users($id,$name, $email, $password, $role){
+        try {
+            $user = DB::table('users')->where('id', $id)
+                ->update([
+                    'name' => $name,
+                    'email' => $email,
+                    'password' => Hash::make($password),
+                    'role' => $role
+                ]);
+            return $user;
+        }catch (\Exception $exception){
+            throw new \Exception($exception->getMessage());
+        }
+    }
+
     //fonction pour lister tous les utilisateurs
     public static function get_all_users ()
     {

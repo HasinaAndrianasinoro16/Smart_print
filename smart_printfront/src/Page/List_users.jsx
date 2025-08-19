@@ -6,12 +6,14 @@ import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {Dialog} from "primereact/dialog";
 import Modal_Create_Users from "../Components/Modal_Create_Users";
+import Modals_update_users from "../Components/Modals_update_users";
 
 export default function List_users(){
     const [users, setUsers] = useState([]);
     const [globalFilter, setGlobalFilter] = useState('');
     const [visible, setVisible] = useState(false);
-    // const [selectedUserId, setSelectedUserId] = useState();
+    const [visible1, setVisible1] = useState(false);
+    const [selectedUserId, setSelectedUserId] = useState();
 
     const Liste_users = async () => {
         try {
@@ -30,6 +32,18 @@ export default function List_users(){
     useEffect(() => {
         Liste_users();
     }, []);
+
+    const buttonTemplaye = (rowData) => (
+        <div className="d-flex gap-3 mb-3 text-center">
+            <button className="btn btn-outline-warning" onClick={() => {
+                setSelectedUserId(rowData.id);
+                setVisible1(true);
+            }}>
+                <i className="fas fa-pencil-alt" />
+            </button>
+        </div>
+    );
+
     const actionBodyTemplate = (rowData) => {
         if (rowData.role === 0) {
             return <div className="badge rounded-pill bg-danger">Administrateur</div>;
@@ -54,6 +68,15 @@ export default function List_users(){
                 onHide={() => setVisible(false)}
                 >
                 <Modal_Create_Users onClose={() => {setVisible(false); Liste_users();}}/>
+            </Dialog>
+            <Dialog
+                header="Creer un utilisateur"
+                visible={visible1}
+                style={{width:'70w'}}
+                onHide={() => setVisible1(false)}
+            >
+                <Modals_update_users onClose={() => {setVisible1(false); Liste_users();}} idUser={selectedUserId}/>
+                {/*<Modal_Create_Users onClose={() => {setVisible(false); Liste_users();}}/>*/}
             </Dialog>
             <div className="py-3"/>
             <div className="container-fluid">
@@ -91,6 +114,7 @@ export default function List_users(){
                             <Column field="name" header="Nom" sortable filter/>
                             <Column field="email" header="Email" sortable filter/>
                             <Column header="Role" body={actionBodyTemplate} sortable filter/>
+                            <Column header="Action" body={buttonTemplaye}/>
                         </DataTable>
                     </div>
                 </div>

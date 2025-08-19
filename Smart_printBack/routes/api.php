@@ -103,4 +103,6 @@ Route::prefix('services')->group(function (){
 Route::prefix('users')->group(function (){
    Route::post('/add',[\App\Http\Controllers\Utilisateur_controller::class,'save_user']);
    Route::get('/',[\App\Http\Controllers\Utilisateur_controller::class,'get_all_users']);
+   Route::get('/{id}',[\App\Http\Controllers\Utilisateur_controller::class,'get_user_by_id']);
+   Route::put('/update/{id}', [\App\Http\Controllers\Utilisateur_controller::class, 'update_user']);
 });
