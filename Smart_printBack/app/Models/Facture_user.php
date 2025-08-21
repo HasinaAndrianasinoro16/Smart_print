@@ -29,7 +29,7 @@ class Facture_user extends Model
             $made_by->save();
             return $made_by;
         }catch (\Exception $exception){
-            return false;
+            throw new \Exception($exception->getMessage());
         }
     }
 
