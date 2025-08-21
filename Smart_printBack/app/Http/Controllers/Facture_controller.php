@@ -43,13 +43,15 @@ class Facture_controller extends Controller
                 'date_emission' => 'required',
                 'date_echeance' => 'required',
                 'condition_paiement' => 'required',
+                'user' => 'required',
             ]);
 
             $facture = Facture::create_facture(
                 $request->input('client'),
                 $request->input('date_emission'),
                 $request->input('date_echeance'),
-                $request->input('condition_paiement')
+                $request->input('condition_paiement'),
+                $request->input('user')
             );
 
             return response()->json($facture);

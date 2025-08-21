@@ -13,7 +13,7 @@ import Modals_create_BonCommande from "../Components/Modals_create_BonCommande";
 import ServiceForm from "../Components/ServiceForm";
 import Headers from "../Body/Headers";
 
-export default function Facturation(){
+export default function Facturation({user}){
     const [globalFilter, setGlobalFilter] = useState('');
     // const [visible1, setVisible1] = useState(false);
     const [visible2, setVisible2] = useState(false);
@@ -167,7 +167,7 @@ export default function Facturation(){
                     await Liste_facture();
                 }}
             >
-                <Modals_Creation_Facture onClose={() => {setVisible2(false); Liste_facture();}} />
+                <Modals_Creation_Facture onClose={() => {setVisible2(false); Liste_facture();}} User={user} />
             </Dialog>
 
             <Dialog header="Creation facture" visible={visible3} style={{width: '110vw'}}

@@ -5,12 +5,13 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { ProgressSpinner } from "primereact/progressspinner";
 import {getApiUrl, getCookie} from "../Link/URL";
 
-export default function Modals_Creation_Facture({ onSuccess, onClose }) {
+export default function Modals_Creation_Facture({ onSuccess, onClose, User }) {
     const [formData, setFormData] = useState({
         client: null,
         date_emission: null,
         date_echeance: null,
-        condition_paiement: ''
+        condition_paiement: '',
+        user: User.id ? User.id : null,
     });
     const [clients, setClients] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -86,7 +87,8 @@ export default function Modals_Creation_Facture({ onSuccess, onClose }) {
                     client: formData.client.id,
                     date_emission: formData.date_emission.toISOString().split('T')[0],
                     date_echeance: formData.date_echeance.toISOString().split('T')[0],
-                    condition_paiement: formData.condition_paiement
+                    condition_paiement: formData.condition_paiement,
+                    user: formData.user,
                 })
             });
 

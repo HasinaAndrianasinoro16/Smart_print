@@ -70,7 +70,7 @@ function App() {
                 <main className="main-content">
             <Routes>
                 <Route path="/" element={user ? <Home user={user}/> : <Navigate to="/login" /> }/>
-                <Route path="/liste_facture" element={user ? <Facturation /> : <Navigate to="/login" />} />
+                <Route path="/liste_facture" element={user ? <Facturation user={user} /> : <Navigate to="/login" />} />
                 <Route path="/info" element={user ? <Info_facture /> : <Navigate to="/login" />} />
                 <Route path="/factures" element={user ? <Liste_facture_manager/> : <Navigate to="/login"/>}/>
                 <Route path="/Historique" element={user ? <Histoique_facture /> : <Navigate to="/login" />} />

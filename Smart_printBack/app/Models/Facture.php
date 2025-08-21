@@ -39,11 +39,12 @@ class Facture extends Model
     }
 
     // Création de facture
-    public static function create_facture($client, $date_emission, $date_echeance, $condition_paiement)
+    public static function create_facture($client, $date_emission, $date_echeance, $condition_paiement, $user)
     {
         try {
+            $id = self::getId();
             $facture = new Facture();
-            $facture->id = self::getId();
+            $facture->id = $id;
             $facture->client = $client;
             $facture->date_emission = $date_emission;
             $facture->date_echeance = $date_echeance;
@@ -51,6 +52,9 @@ class Facture extends Model
             $facture->statut = 0;
             $facture->created_at = Carbon::now();
             $facture->save();
+
+            $made_by = Facture_user::Made_by($id,$user);
+
             return $facture;
         } catch (\Exception $exception) {
             throw new \Exception($exception->getMessage());

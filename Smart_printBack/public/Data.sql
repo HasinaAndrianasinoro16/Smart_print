@@ -44,6 +44,13 @@ create table facture(
 );
 alter table facture add column created_at date;
 
+--Avant d'ajouter cette table assurer vous avez deja fait la migration dans le projet Back end
+create table facture_user(
+    id serial primary key,
+    facture varchar(255) references facture(id),
+    userId int references users(id)
+);
+
 create table sousfacture(
     id serial primary key,
     facture varchar(255) references facture(id),
