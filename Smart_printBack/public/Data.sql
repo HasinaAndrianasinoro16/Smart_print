@@ -48,7 +48,7 @@ alter table facture add column created_at date;
 create table facture_user(
     id serial primary key,
     facture varchar(255) references facture(id),
-    userId int references users(id)
+    userid int references users(id)
 );
 
 create table sousfacture(

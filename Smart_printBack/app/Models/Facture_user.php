@@ -25,7 +25,7 @@ class Facture_user extends Model
         try {
             $made_by = new Facture_user();
             $made_by->facture = $facture;
-            $made_by->userId = $userId;
+            $made_by->userid = $userId;
             $made_by->save();
             return $made_by;
         }catch (\Exception $exception){
