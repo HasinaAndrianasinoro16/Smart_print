@@ -343,7 +343,7 @@ export default function Info_facture() {
                         </div>
                         <div className="col-md-6 text-end ">
                             <p><strong>N° Facture :</strong> {factureCode || ''}</p>
-                            <p><strong>Statut :</strong>
+                            <p><strong>Statut : </strong>
                                 {facture.statut === 0
                                     ? 'En Attente'
                                     : facture.statut === 1
@@ -354,7 +354,7 @@ export default function Info_facture() {
                                                 ? 'Envoyer'
                                                 : 'Inconnu'}
                             </p>
-                            <p><strong>Cassier:</strong>
+                            <p><strong>Cassier : </strong>
                                 {facture_user?.[0]?.user_relation?.name || '-'}
                             </p>
 
