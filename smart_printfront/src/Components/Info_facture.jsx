@@ -18,6 +18,7 @@ export default function Info_facture() {
     const [sousFactures, setSousFactures] = useState([]);
     const [bonsCommande, setBonsCommande] = useState([]);
     const [services, setServices] = useState([]);
+    const [facture_user, setFacture_user] = useState([]);
     const [loading, setLoading] = useState({
         facture: true,
         sousFactures: true,
@@ -71,22 +72,25 @@ export default function Info_facture() {
                 }
             };
 
-            const [factureRes, sousFacturesRes, bonsCommandeRes, servicesRes] = await Promise.all([
+            const [factureRes, sousFacturesRes, bonsCommandeRes, servicesRes, factureuserRes] = await Promise.all([
                 fetch(getApiUrl(`factures/self/${factureId}`), config),
                 fetch(getApiUrl(`sousfactures/details/${factureId}`), config),
                 fetch(getApiUrl(`boncommandes/${factureId}`), config),
-                fetch(getApiUrl(`services/service-facture/${factureId}`), config)
+                fetch(getApiUrl(`services/service-facture/${factureId}`), config),
+                fetch(getApiUrl(`factures/facture-user/${factureId}`), config)
             ]);
 
             if (!factureRes.ok) throw new Error("Erreur lors du chargement de la facture");
             if (!sousFacturesRes.ok) throw new Error("Erreur lors du chargement des sous-factures");
             if (!bonsCommandeRes.ok) throw new Error("Erreur lors du chargement des bons de commande");
             if (!servicesRes.ok) throw new Error("Erreur lors du chargement des services");
+            if (!factureuserRes.ok) throw new Error("Erreur lors du chargement des factures & user");
 
             setFacture(await factureRes.json());
             setSousFactures(await sousFacturesRes.json() || []);
             setBonsCommande(await bonsCommandeRes.json() || []);
             setServices(await servicesRes.json() || []);
+            setFacture_user(await factureuserRes.json() || []);
 
         } catch (error) {
             console.error("Erreur:", error);
@@ -97,6 +101,7 @@ export default function Info_facture() {
                 sousFactures: false,
                 bonsCommande: false,
                 services: false,
+                factureuser: false,
                 email: false,
                 pdf: false
             });
@@ -349,6 +354,10 @@ export default function Info_facture() {
                                                 ? 'Envoyer'
                                                 : 'Inconnu'}
                             </p>
+                            <p><strong>Cassier:</strong>
+                                {facture_user?.[0]?.user_relation?.name || '-'}
+                            </p>
+
                         </div>
                     </div>
 

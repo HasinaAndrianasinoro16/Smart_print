@@ -55,6 +55,8 @@ Route::prefix('factures')->group(function () {
     Route::get('/count_facture_statut/{statut}',[\App\Http\Controllers\Facture_controller::class,'count_facture_by_statut']);
     Route::put('/undo/{id}',[\App\Http\Controllers\Facture_controller::class,'undo_facture']);
     Route::middleware('auth:sanctum')->put('/payer/{id}',[\App\Http\Controllers\Facture_controller::class,'approuver_facture']);
+    Route::get('/user/{user}',[\App\Http\Controllers\Facture_controller::class,'getFactures_by_users']);
+    Route::get('/facture-user/{id}',[\App\Http\Controllers\Facture_controller::class,'getFacture_user_by_facture']);
 });
 
 //API sous facture

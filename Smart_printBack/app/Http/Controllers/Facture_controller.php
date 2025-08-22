@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Facture;
+use App\Models\Facture_user;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -155,6 +156,34 @@ class Facture_controller extends Controller
         try {
             $facture = Facture::approuver_facture($id);
             return response()->json($facture);
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
+    }
+
+    //Liste des factures creer par utilisateur
+    public function getFactures_by_users($user)
+    {
+        try {
+            $factures = Facture_user::with('factureRelation')
+                ->with('userRelation')
+                ->where('userid', $user)
+                ->get();
+            return response()->json($factures);
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
+    }
+
+    //fonction pour recuperer quelle utilisateur a creer la facture
+    public function getFacture_user_by_facture($id)
+    {
+        try {
+            $factures = Facture_user::with('factureRelation')
+                ->with('userRelation')
+                ->where('facture', $id)
+                ->get();
+            return response()->json($factures);
         }catch (\Exception $exception){
             return response()->json(['error' => $exception->getMessage()], 500);
         }

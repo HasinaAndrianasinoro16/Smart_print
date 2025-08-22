@@ -10,13 +10,19 @@ class Facture_user extends Model
 {
     protected $table = 'facture_user';
     protected $primaryKey = 'id';
-    protected $fillable = ['facture', 'userId'];
+    protected $fillable = ['facture', 'userid'];
     public $timestamps = false;
 
     //relation avec facture
     public function factureRelation()
     {
         return $this->belongsTo(Facture::class, 'facture');
+    }
+
+    //relation avec user
+    public function userRelation()
+    {
+        return $this->belongsTo(User::class, 'userid');
     }
 
     //fonction pour ajouter un utilisateur qui a creer une facture
