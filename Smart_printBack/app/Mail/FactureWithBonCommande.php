@@ -23,7 +23,7 @@ class FactureWithBonCommande extends Mailable
     public function build()
     {
         $email = $this->markdown('emails.facture')
-            ->from('handrianasinoro@gmail.com')
+            ->from('hasina@gasigasy.com')
             ->subject("Votre facture " . $this->facture->id)
             ->attach($this->pdfPath);
 
