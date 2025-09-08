@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Facture_controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -45,18 +46,22 @@ Route::prefix('clients')->group(function () {
 //API factures
 Route::prefix('factures')->group(function () {
     Route::get('/',[\App\Http\Controllers\Facture_controller::class,'get_All_Factures']);
-    Route::get('/{id}',[\App\Http\Controllers\Facture_controller::class,'get_facture']);
-    Route::get('/self/{id}',[\App\Http\Controllers\Facture_controller::class,'get_factures_by_id']);
-    Route::post('/add',[\App\Http\Controllers\Facture_controller::class,'Form_add_facture']);
-    Route::put('/update/{id}', [\App\Http\Controllers\Facture_controller::class, 'update_facture']);
-    Route::middleware('auth:sanctum')->put('/delete/{id}', [\App\Http\Controllers\Facture_controller::class, 'delte_facture']);
     Route::get('/get_payer',[\App\Http\Controllers\Facture_controller::class,'get_all_facture_payer']);
     Route::get('/get_facture_statut/{statut}',[\App\Http\Controllers\Facture_controller::class,'get_facture_by_statut']);
+    Route::get('/facture_stat',[\App\Http\Controllers\Facture_controller::class,'getFacture_stat']);
     Route::get('/count_facture_statut/{statut}',[\App\Http\Controllers\Facture_controller::class,'count_facture_by_statut']);
-    Route::put('/undo/{id}',[\App\Http\Controllers\Facture_controller::class,'undo_facture']);
-    Route::middleware('auth:sanctum')->put('/payer/{id}',[\App\Http\Controllers\Facture_controller::class,'approuver_facture']);
+    Route::get('/self/{id}',[\App\Http\Controllers\Facture_controller::class,'get_factures_by_id']);
     Route::get('/user/{user}',[\App\Http\Controllers\Facture_controller::class,'getFactures_by_users']);
     Route::get('/facture-user/{id}',[\App\Http\Controllers\Facture_controller::class,'getFacture_user_by_facture']);
+    Route::get('/{id}',[\App\Http\Controllers\Facture_controller::class,'get_facture']);
+
+    Route::put('/undo/{id}',[\App\Http\Controllers\Facture_controller::class,'undo_facture']);
+    Route::post('/add',[\App\Http\Controllers\Facture_controller::class,'Form_add_facture']);
+
+    Route::put('/update/{id}', [\App\Http\Controllers\Facture_controller::class, 'update_facture']);
+    Route::middleware('auth:sanctum')->put('/delete/{id}', [\App\Http\Controllers\Facture_controller::class, 'delte_facture']);
+    Route::middleware('auth:sanctum')->put('/payer/{id}',[\App\Http\Controllers\Facture_controller::class,'approuver_facture']);
+
 });
 
 //API sous facture

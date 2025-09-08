@@ -1,44 +1,39 @@
-import React, { useState, useEffect } from "react";
-import image from '../assets/img/illustration/5142475.jpg';
+import React, { useEffect, useState } from "react";
+import image from "../assets/img/illustration/5142475.jpg";
+import { getApiUrl } from "../Link/URL";
 
 export default function Home({ user }) {
     const [stats, setStats] = useState({
-        facturesNouvelles: 0,
-        facturesAnnulees: 0,
-        totalMontant: 0
+        attente: 0,
+        annule: 0,
+        total: 0,
     });
-    const [dateDebut, setDateDebut] = useState("");
-    const [dateFin, setDateFin] = useState("");
-    const [loading, setLoading] = useState(false);
+
+    const [dates, setDates] = useState({
+        debut: "",
+        fin: "",
+    });
+
+    const fetchStats = async () => {
+        try {
+            const query = `?debut=${dates.debut}&fin=${dates.fin}`;
+            const response = await fetch(getApiUrl(`factures/facture_stat${query}`));
+            const data = await response.json();
+            setStats({
+                attente: data.attente,
+                annule: data.annule,
+                total: data.total,
+            });
+        } catch (error) {
+            console.error("Erreur chargement stats :", error);
+        }
+    };
 
     useEffect(() => {
         if (user?.role === 2) {
             fetchStats();
         }
-    }, [user, dateDebut, dateFin]);
-
-    const fetchStats = async () => {
-        setLoading(true);
-        try {
-            let url = '/api/factures/stats';
-            const params = new URLSearchParams();
-
-            if (dateDebut) params.append('debut', dateDebut);
-            if (dateFin) params.append('fin', dateFin);
-
-            if (params.toString()) {
-                url += `?${params.toString()}`;
-            }
-
-            const response = await fetch(url);
-            const data = await response.json();
-            setStats(data);
-        } catch (error) {
-            console.error('Erreur lors du chargement des statistiques:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    }, [dates, user]);
 
     const getRoleName = (role) => {
         switch (role) {
@@ -66,109 +61,79 @@ export default function Home({ user }) {
         }
     };
 
-    const formatNumber = (number) => {
-        return new Intl.NumberFormat('fr-FR').format(number);
-    };
-
     return (
         <>
-            <div className="py-5"/>
-            <div className="container col-xxl-8 px-4">
-                <div className="row flex-lg-row-reverse align-items-center g-5 py-5">
-                    <div className="col-10 col-sm-8 col-lg-6">
-                        <img
-                            src={image}
-                            className="d-block mx-lg-auto img-fluid"
-                            alt="Illustration"
-                            width="700"
-                            height="500"
-                            loading="lazy"
-                        />
-                    </div>
-                    <div className="col-lg-6">
-                        <h1 className="display-5 fw-bold lh-1 mb-3">
-                            Bonjour {user?.name ?? "Utilisateur"} 👋
-                        </h1>
-                        <h4 className="text-primary mb-3">
-                            Rôle : {getRoleName(user?.role)}
-                        </h4>
-                        <p className="lead">
-                            {getBlabla(user?.role)}
-                        </p>
-                    </div>
-                </div>
-
+            <div className="container mt-4">
                 {user?.role === 2 && (
-                    <div className="row mt-5">
-                        <div className="col-12">
-                            <h3 className="mb-4">Tableau de bord des factures</h3>
+                    <>
+                        {/* Filtres */}
+                        <div className="row g-3 mb-4">
+                            <div className="col-md-4">
+                                <input
+                                    type="date"
+                                    className="form-control"
+                                    value={dates.debut}
+                                    onChange={(e) => setDates({ ...dates, debut: e.target.value })}
+                                />
+                            </div>
+                            <div className="col-md-4">
+                                <input
+                                    type="date"
+                                    className="form-control"
+                                    value={dates.fin}
+                                    onChange={(e) => setDates({ ...dates, fin: e.target.value })}
+                                />
+                            </div>
+                            <div className="col-md-4">
+                                <button className="btn btn-primary w-100" onClick={fetchStats}>
+                                    Appliquer filtre
+                                </button>
+                            </div>
+                        </div>
 
-                            {/* Filtres par période */}
-                            <div className="row mb-4">
-                                <div className="col-md-4">
-                                    <label htmlFor="dateDebut" className="form-label">Date de début</label>
-                                    <input
-                                        type="date"
-                                        className="form-control"
-                                        id="dateDebut"
-                                        value={dateDebut}
-                                        onChange={(e) => setDateDebut(e.target.value)}
-                                    />
-                                </div>
-                                <div className="col-md-4">
-                                    <label htmlFor="dateFin" className="form-label">Date de fin</label>
-                                    <input
-                                        type="date"
-                                        className="form-control"
-                                        id="dateFin"
-                                        value={dateFin}
-                                        onChange={(e) => setDateFin(e.target.value)}
-                                    />
-                                </div>
-                                <div className="col-md-4 d-flex align-items-end">
-                                    <button
-                                        className="btn btn-primary"
-                                        onClick={fetchStats}
-                                        disabled={loading}
-                                    >
-                                        {loading ? 'Chargement...' : 'Appliquer filtre'}
-                                    </button>
+                        {/* Statistiques */}
+                        <div className="row text-center mb-5">
+                            <div className="col-md-4">
+                                <div className="card shadow-sm p-3">
+                                    <h5 className="text-warning">Factures en attente</h5>
+                                    <h2>{stats.attente ?? 0}</h2>
                                 </div>
                             </div>
-
-                            {/* Cartes de statistiques */}
-                            <div className="row">
-                                <div className="col-md-4 mb-4">
-                                    <div className="card bg-primary text-white h-100">
-                                        <div className="card-body">
-                                            <h5 className="card-title">Factures en attente</h5>
-                                            <h2 className="card-text">{stats.facturesNouvelles}</h2>
-                                            <p className="card-text">Nouvelles factures nécessitant validation</p>
-                                        </div>
-                                    </div>
+                            <div className="col-md-4">
+                                <div className="card shadow-sm p-3">
+                                    <h5 className="text-danger">Factures annulées</h5>
+                                    <h2>{stats.annule ?? 0}</h2>
                                 </div>
-                                <div className="col-md-4 mb-4">
-                                    <div className="card bg-danger text-white h-100">
-                                        <div className="card-body">
-                                            <h5 className="card-title">Factures annulées</h5>
-                                            <h2 className="card-text">{stats.facturesAnnulees}</h2>
-                                            <p className="card-text">Factures refusées ou annulées</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="col-md-4 mb-4">
-                                    <div className="card bg-success text-white h-100">
-                                        <div className="card-body">
-                                            <h5 className="card-title">Total des montants</h5>
-                                            <h2 className="card-text">{formatNumber(stats.totalMontant)} Ar</h2>
-                                            <p className="card-text">Montant total des factures sur la période</p>
-                                        </div>
-                                    </div>
+                            </div>
+                            <div className="col-md-4">
+                                <div className="card shadow-sm p-3">
+                                    <h5 className="text-success">Montant total (Ar)</h5>
+                                    <h2>{(stats.total || 0).toLocaleString()} Ar</h2>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </>
                 )}
+                <h1 className="display-6 fw-bold">
+                    Bonjour {user?.name ?? "Utilisateur"} 👋
+                </h1>
+                <h5 className="text-primary mb-4">
+                    Rôle : {getRoleName(user?.role)}
+                </h5>
+                <p>{getBlabla(user?.role)}</p>
+
+                {/* Filtres et statistiques uniquement pour les managers (role = 2) */}
+
+                {/* Image (toujours affichée) */}
+                <div className="text-center">
+                    <img
+                        src={image}
+                        className="img-fluid rounded"
+                        alt="Illustration"
+                        width="600"
+                        height="400"
+                    />
+                </div>
             </div>
         </>
     );

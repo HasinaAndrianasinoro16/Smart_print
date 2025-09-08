@@ -188,4 +188,32 @@ class Facture_controller extends Controller
             return response()->json(['error' => $exception->getMessage()], 500);
         }
     }
+
+    public function getFacture_stat(Request $request)
+    {
+        try {
+            $debut = $request->query('debut');
+            $fin = $request->query('fin');
+
+            $query = DB::table('facture_total_view');
+
+            if ($debut && $fin) {
+                $query->whereBetween('date_emission', [$debut, $fin]);
+            }
+
+            $attente = (clone $query)->where('statut', 0)->count();
+
+            $annule = (clone $query)->where('statut', 2)->count();
+
+            $total = (clone $query)->sum('total_facture');
+
+            return response()->json([
+                'attente' => $attente,
+                'annule' => $annule,
+                'total' => $total,
+            ]);
+        }catch (\Exception $exception){
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
+    }
 }

@@ -117,4 +117,14 @@ class Facture extends Model
             throw new \Exception($exception->getMessage());
         }
     }
+
+    public static function facture_stats()
+    {
+        try {
+            $stats= DB::table('facture_total_view')->get();
+            return $stats;
+        }catch (\Exception $exception){
+            throw new \Exception($exception->getMessage());
+        }
+    }
 }
