@@ -29,20 +29,20 @@ export default function Headers({ user, setUser }) {
         }
     };
 
-    const count_factures = async () => {
-        try {
-            const response = await fetch(getApiUrl("factures/count_facture_statut/0"));
-            if (!response.ok) throw new Error("Erreur lors du comptage");
-            const data = await response.json();
-            setCount(data || 0);
-        } catch (e) {
-            console.error(e);
-        }
-    };
-
-    useEffect(() => {
-        count_factures();
-    }, []);
+    // const count_factures = async () => {
+    //     try {
+    //         const response = await fetch(getApiUrl("factures/count_facture_statut/0"));
+    //         if (!response.ok) throw new Error("Erreur lors du comptage");
+    //         const data = await response.json();
+    //         setCount(data || 0);
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
+    // };
+    //
+    // useEffect(() => {
+    //     count_factures();
+    // }, []);
 
     return (
         <>
@@ -87,7 +87,7 @@ export default function Headers({ user, setUser }) {
                             <li className="nav-item">
                                 <Link to="/factures" className="nav-link text-white" onClick={() => setShowSidebar(false)}>
                                     <i className="fas fa-money-check-alt me-2"></i> Factures
-                                    {count > 0 && <span className="badge bg-danger ms-2">{count}</span>}
+                                    {/*{count > 0 && <span className="badge bg-danger ms-2">{count}</span>}*/}
                                 </Link>
                             </li>
                             <li className="nav-item">

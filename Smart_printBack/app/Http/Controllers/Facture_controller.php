@@ -203,13 +203,16 @@ class Facture_controller extends Controller
 
             $attente = (clone $query)->where('statut', 0)->count();
 
-            $annule = (clone $query)->where('statut', 2)->count();
+            $annule = (clone $query)->where('statut', 1)->count();
 
-            $total = (clone $query)->sum('total_facture');
+            $paye = (clone $query)->where('statut', 2)->count();
+
+            $total = (clone $query)->where('statut',0)->sum('total_facture');
 
             return response()->json([
                 'attente' => $attente,
                 'annule' => $annule,
+                'paye' => $paye,
                 'total' => $total,
             ]);
         }catch (\Exception $exception){

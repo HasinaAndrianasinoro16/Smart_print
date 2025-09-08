@@ -6,6 +6,7 @@ export default function Home({ user }) {
     const [stats, setStats] = useState({
         attente: 0,
         annule: 0,
+        paye: 0,
         total: 0,
     });
 
@@ -23,6 +24,7 @@ export default function Home({ user }) {
                 attente: data.attente,
                 annule: data.annule,
                 total: data.total,
+                paye: data.paye,
             });
         } catch (error) {
             console.error("Erreur chargement stats :", error);
@@ -73,7 +75,7 @@ export default function Home({ user }) {
                                     type="date"
                                     className="form-control"
                                     value={dates.debut}
-                                    onChange={(e) => setDates({ ...dates, debut: e.target.value })}
+                                    onChange={(e) => setDates({...dates, debut: e.target.value})}
                                 />
                             </div>
                             <div className="col-md-4">
@@ -81,7 +83,7 @@ export default function Home({ user }) {
                                     type="date"
                                     className="form-control"
                                     value={dates.fin}
-                                    onChange={(e) => setDates({ ...dates, fin: e.target.value })}
+                                    onChange={(e) => setDates({...dates, fin: e.target.value})}
                                 />
                             </div>
                             <div className="col-md-4">
@@ -93,46 +95,51 @@ export default function Home({ user }) {
 
                         {/* Statistiques */}
                         <div className="row text-center mb-5">
-                            <div className="col-md-4">
+                            <div className="col-md-3">
                                 <div className="card shadow-sm p-3">
                                     <h5 className="text-warning">Factures en attente</h5>
                                     <h2>{stats.attente ?? 0}</h2>
                                 </div>
                             </div>
-                            <div className="col-md-4">
+                            <div className="col-md-3">
+                                <div className="card shadow-sm p-3">
+                                    <h5 className="text-success">Factures payer</h5>
+                                    <h2>{stats.paye ?? 0}</h2>
+                                </div>
+                            </div>
+                            <div className="col-md-3">
                                 <div className="card shadow-sm p-3">
                                     <h5 className="text-danger">Factures annulées</h5>
                                     <h2>{stats.annule ?? 0}</h2>
                                 </div>
                             </div>
-                            <div className="col-md-4">
+                            <div className="col-md-3">
                                 <div className="card shadow-sm p-3">
-                                    <h5 className="text-success">Montant total (Ar)</h5>
-                                    <h2>{(stats.total || 0).toLocaleString()} Ar</h2>
+                                    <h5 className="text-primary">Montant total (Ar)</h5>
+                                    <h2>{(stats.total || 0).toLocaleString('fr-FR')} Ar</h2>
                                 </div>
                             </div>
                         </div>
                     </>
                 )}
-                <h1 className="display-6 fw-bold">
-                    Bonjour {user?.name ?? "Utilisateur"} 👋
-                </h1>
-                <h5 className="text-primary mb-4">
-                    Rôle : {getRoleName(user?.role)}
-                </h5>
-                <p>{getBlabla(user?.role)}</p>
+                <div className="row p-4 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 ">
+                    <div className="col-lg-5 p-3 p-lg-5 pt-lg-3">
+                        <h1 className="display-5 fw-bold lh-1">Bonjour {user?.name ?? "Utilisateur"}</h1>
+                        <h5 className="text-primary mb-4">
+                            Rôle : {getRoleName(user?.role)}
+                        </h5>
+                        <p className="lead">{getBlabla(user?.role)}</p>
 
-                {/* Filtres et statistiques uniquement pour les managers (role = 2) */}
-
-                {/* Image (toujours affichée) */}
-                <div className="text-center">
-                    <img
-                        src={image}
-                        className="img-fluid rounded"
-                        alt="Illustration"
-                        width="600"
-                        height="400"
-                    />
+                    </div>
+                    <div className="col-lg-5 offset-lg-1 p-0 overflow-hidden ">
+                        <img
+                            src={image}
+                            className="img-fluid rounded"
+                            alt="Illustration"
+                            width="600"
+                            height="400"
+                        />
+                    </div>
                 </div>
             </div>
         </>
