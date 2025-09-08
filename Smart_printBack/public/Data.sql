@@ -113,3 +113,21 @@ FROM
     facture f
         JOIN
     sousfacture sf ON f.id = sf.facture;
+
+CREATE OR REPLACE VIEW facture_total_view AS
+SELECT
+    f.id,
+    f.client,
+    f.date_emission,
+    f.date_echeance,
+    f.condition_paiement,
+    f.statut,
+    (SELECT COALESCE(SUM(sf.quantite * sf.prix_unitaire), 0)
+     FROM sousfacture sf WHERE sf.facture = f.id) as total_produits,
+    (SELECT COALESCE(SUM(sf.prix_unitaire), 0)
+     FROM servicefacture sf WHERE sf.facture = f.id) as total_services,
+    ((SELECT COALESCE(SUM(sf.quantite * sf.prix_unitaire), 0)
+      FROM sousfacture sf WHERE sf.facture = f.id) +
+     (SELECT COALESCE(SUM(sf.prix_unitaire), 0)
+      FROM servicefacture sf WHERE sf.facture = f.id)) as total_facture
+FROM facture f;
