@@ -72,6 +72,7 @@ export default function ModalUpdateService({ idService, onClose }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         fetchServiceInfo();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [idService]);
 
     const handleInputChange = (e) => {
