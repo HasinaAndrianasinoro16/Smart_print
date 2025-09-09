@@ -7,7 +7,6 @@ import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { Dialog } from "primereact/dialog";
 import ModalsUpdateProduits from "../Components/ModalsUpdateProduits";
 import ModalsCreateProduits from "../Components/ModalsCreateProduits";
-import Headers from "../Body/Headers";
 export default function ListeProduit(){
     const [globalFilter, setGlobalFilter] = useState('');
     const [visible, setVisible] = useState(false);

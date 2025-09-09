@@ -11,7 +11,6 @@ import FactureForm from "../Components/FactureForm";
 import {getApiUrl, getCookie} from "../Link/URL";
 import ModalsCreateBonCommande from "../Components/ModalsCreateBonCommande";
 import ServiceForm from "../Components/ServiceForm";
-import Headers from "../Body/Headers";
 
 export default function Facturation({user}){
     const [globalFilter, setGlobalFilter] = useState('');

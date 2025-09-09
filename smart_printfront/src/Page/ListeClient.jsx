@@ -6,7 +6,6 @@ import {getApiUrl, getCookie} from "../Link/URL";
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { Dialog } from "primereact/dialog";
 import ModalsUpdateClients from "../Components/ModalsUpdateClients";
- import Headers from "../Body/Headers";
  import ModalsAjoutClient from "../Components/ModalsAjoutClient";
 
 export default function ListeClient() {

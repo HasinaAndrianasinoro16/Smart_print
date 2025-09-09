@@ -7,7 +7,6 @@ import {Column} from "primereact/column";
 import { Dialog } from "primereact/dialog";
 import ModalsCreateService from "../Components/ModalsCreateService";
 import Modal_update_service from "../Components/ModlalUpdateService";
-import Headers from "../Body/Headers";
 
 export default function ListeService(){
     const [globalFilter, setGlobalFilter] = useState('');
