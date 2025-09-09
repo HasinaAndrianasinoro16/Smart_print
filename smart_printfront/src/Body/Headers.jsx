@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Mylogo from "../assets/img/upscalemedia-transformed.jpeg";
 import { getApiUrl } from "../Link/URL";
@@ -20,6 +20,9 @@ export default function Headers({ user, setUser }) {
                 },
                 credentials: "include",
             });
+
+            if(!response.ok) throw new Error("Erreur");
+
             setUser(null);
             navigate("/login");
         } catch (error) {

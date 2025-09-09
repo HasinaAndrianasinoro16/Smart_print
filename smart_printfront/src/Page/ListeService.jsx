@@ -6,7 +6,7 @@ import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import { Dialog } from "primereact/dialog";
 import ModalsCreateService from "../Components/ModalsCreateService";
-import Modal_update_service from "../Components/ModlalUpdateService";
+import ModalUpdateService from "../Components/ModlalUpdateService";
 
 export default function ListeService(){
     const [globalFilter, setGlobalFilter] = useState('');
@@ -130,7 +130,7 @@ export default function ListeService(){
                 onHide={() => setVisible(false)}
             >
                 {selectedIdService && (
-                    <Modal_update_service
+                    <ModalUpdateService
                         idService={selectedIdService}
                         onClose={() => { setVisible(false); Liste_service(); }}
                     />

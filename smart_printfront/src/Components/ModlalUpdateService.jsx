@@ -4,7 +4,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { ProgressSpinner } from "primereact/progressspinner";
 import {getApiUrl, getCookie} from "../Link/URL";
 
-export default function Modal_update_service({ idService, onClose }) {
+export default function ModalUpdateService({ idService, onClose }) {
     const [formData, setFormData] = useState({
         designation: '',
         prix: null

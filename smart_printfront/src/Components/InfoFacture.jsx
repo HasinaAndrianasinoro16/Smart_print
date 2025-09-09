@@ -113,6 +113,7 @@ export default function InfoFacture() {
     useEffect(() => {
         if (!factureId) return;
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [factureId]);
 
     // Suppression d'un bon de commande
@@ -131,6 +132,7 @@ export default function InfoFacture() {
             if (!response.ok) throw new Error("Erreur lors de la suppression");
 
             const result = await response.json();
+            console.log("bon de commande supprimer:", result);
             showSuccess("Bon de commande supprimé avec succès !");
             await fetchData();
         } catch (error) {
