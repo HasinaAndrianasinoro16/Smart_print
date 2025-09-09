@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
-import {getApiUrl, getCookie} from "../Link/URL";
 import { ProgressSpinner } from "primereact/progressspinner";
+import {getApiUrl, getCookie} from "../Link/URL";
 
-export default function Modals_Create_produits({ onClose }) {
+export default function ModalsCreateService({ onClose }) {
     const [formData, setFormData] = useState({
         designation: '',
-        prix_unitaire: null
+        prix: null
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -40,12 +40,14 @@ export default function Modals_Create_produits({ onClose }) {
     };
 
     const handleNumberChange = (value) => {
-        setFormData(prev => ({ ...prev, prix_unitaire: value }));
+        setFormData(prev => ({ ...prev, prix: value }));
     };
 
-    const save_produits = async () => {
-        if (!formData.designation.trim() || formData.prix_unitaire === null) {
-            setError("Veuillez remplir tous les champs.");
+
+
+    const saveService = async () => {
+        if (!formData.designation.trim() || formData.prix === null) {
+            setError("Veuillez remplir tous les champs");
             return;
         }
 
@@ -55,7 +57,7 @@ export default function Modals_Create_produits({ onClose }) {
         try {
             const csrfToken = await getCsrfToken();
 
-            const response = await fetch(getApiUrl('produits/add'), {
+            const response = await fetch(getApiUrl('services/add'), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -66,17 +68,17 @@ export default function Modals_Create_produits({ onClose }) {
                 credentials: 'include',
                 body: JSON.stringify({
                     designation: formData.designation.trim(),
-                    prix_unitaire: formData.prix_unitaire
+                    prix: formData.prix
                 })
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message || "Erreur lors de l'ajout du produit");
+                throw new Error(errorData.message || "Erreur lors de l'ajout du service");
             }
 
-            alert("Produit ajouté avec succès !");
-            setFormData({ designation: '', prix_unitaire: null });
+            alert("Service ajouté avec succès ✅");
+            setFormData({ designation: '', prix: null });
             if (onClose) onClose();
 
         } catch (error) {
@@ -90,8 +92,8 @@ export default function Modals_Create_produits({ onClose }) {
     return (
         <div className="p-4">
             {error && (
-                <div className="alert alert-danger mb-4">
-                    <i className="fas fa-exclamation-circle me-2"></i>
+                <div className="p-3 mb-4 bg-red-100 text-red-700 rounded-md flex items-center">
+                    <i className="fas fa-exclamation-circle mr-2"></i>
                     {error}
                 </div>
             )}
@@ -99,22 +101,26 @@ export default function Modals_Create_produits({ onClose }) {
             <div className="row">
                 <div className="col-md-12">
                     <div className="mb-4">
-                        <label htmlFor="designation" className="form-label">Désignation :</label>
+                        <label htmlFor="designation" className="form-label">
+                            Désignation :
+                        </label>
                         <InputText
                             id="designation"
                             value={formData.designation}
                             onChange={handleInputChange}
                             className="w-100"
-                            required
                             disabled={loading}
+                            required
                         />
                     </div>
 
                     <div className="mb-4">
-                        <label htmlFor="prix" className="form-label">Prix unitaire :</label>
+                        <label htmlFor="prix" className="form-label">
+                            Prix unitaire (MGA) :
+                        </label>
                         <InputNumber
                             inputId="prix"
-                            value={formData.prix_unitaire}
+                            value={formData.prix}
                             onValueChange={(e) => handleNumberChange(e.value)}
                             mode="currency"
                             currency="MGA"
@@ -126,25 +132,27 @@ export default function Modals_Create_produits({ onClose }) {
                 </div>
             </div>
 
-            <div className="text-center mt-4">
+            <div className="text-center">
                 <button
-                    className="btn btn-success px-4 py-2"
-                    onClick={save_produits}
+                    onClick={saveService}
                     disabled={loading}
+                    className={`px-4 py-2 rounded-md text-white font-medium flex items-center bg-success
+                              ${loading ? 'bg-sucsess' : 'bg-sucsess hover:bg-sucsess'} 
+                              transition-colors duration-200`}
                 >
                     {loading ? (
                         <>
                             <ProgressSpinner
                                 style={{ width: '20px', height: '20px' }}
                                 strokeWidth="6"
-                                className="me-2"
+                                className="mr-2"
                             />
-                            En cours...
+                            Enregistrement...
                         </>
                     ) : (
                         <>
-                            <i className="fas fa-save me-2"></i>
-                            Enregistrer
+                            <i className="fas fa-save mr-2"></i>
+                            Enregistrer le service
                         </>
                     )}
                 </button>

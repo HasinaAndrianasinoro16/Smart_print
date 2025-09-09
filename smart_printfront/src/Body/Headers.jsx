@@ -5,7 +5,7 @@ import { getApiUrl } from "../Link/URL";
 
 export default function Headers({ user, setUser }) {
     const navigate = useNavigate();
-    const [count, setCount] = useState(0);
+    // const [count, setCount] = useState(0);
     const [showSidebar, setShowSidebar] = useState(false);
 
     const handleLogout = async () => {

@@ -7,7 +7,7 @@ import {Link} from "react-router-dom";
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 
 
-export default function Liste_facture_manager(){
+export default function ListeFactureManager(){
     const [globalFilter, setGlobalFilter] = useState('');
     const [facture, setFacture] = useState([]);
     // const [selectedFacture, setSelectedFacture] = useState(null);
@@ -48,6 +48,7 @@ export default function Liste_facture_manager(){
         }
     }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         Liste_facture_a_approuver();
     }, []);

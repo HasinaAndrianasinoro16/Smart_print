@@ -5,11 +5,11 @@ import { InputText } from 'primereact/inputtext';
 import { Dialog } from "primereact/dialog";
 import { Link } from 'react-router-dom';
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
-// import Modals_Ajout_client from "../Components/Modals_Ajout_client";
-import Modals_Creation_Facture from "../Components/Modals_Creation_Facture";
+// import ModalsAjoutClient from "../Components/ModalsAjoutClient";
+import ModalsCreationFacture from "../Components/ModalsCreationFacture";
 import FactureForm from "../Components/FactureForm";
 import {getApiUrl, getCookie} from "../Link/URL";
-import Modals_create_BonCommande from "../Components/Modals_create_BonCommande";
+import ModalsCreateBonCommande from "../Components/ModalsCreateBonCommande";
 import ServiceForm from "../Components/ServiceForm";
 import Headers from "../Body/Headers";
 
@@ -167,7 +167,7 @@ export default function Facturation({user}){
                     await Liste_facture();
                 }}
             >
-                <Modals_Creation_Facture onClose={() => {setVisible2(false); Liste_facture();}} User={user} />
+                <ModalsCreationFacture onClose={() => {setVisible2(false); Liste_facture();}} User={user} />
             </Dialog>
 
             <Dialog header="Creation facture" visible={visible3} style={{width: '110vw'}}
@@ -177,7 +177,7 @@ export default function Facturation({user}){
 
             <Dialog header="Creation Bon de commande" visible={visible4} style={{width: '50vw'}}
                     onHide={() => setVisible4(false)}>
-                <Modals_create_BonCommande facture={selectedFactureId}/>
+                <ModalsCreateBonCommande facture={selectedFactureId}/>
             </Dialog>
             <Dialog header="Formulaire ajout de service a une facture" visible={visible5} style={{width: '120W'}}
                     onHide={() => setVisible5(false)}>

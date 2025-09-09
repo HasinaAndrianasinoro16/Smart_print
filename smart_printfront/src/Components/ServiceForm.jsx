@@ -62,6 +62,7 @@ export default function ServiceForm({ facture, onSuccess }) {
         }
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         fetchServices();
     }, []);

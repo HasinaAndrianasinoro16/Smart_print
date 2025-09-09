@@ -69,6 +69,7 @@ export default function Modal_update_service({ idService, onClose }) {
         }
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         fetchServiceInfo();
     }, [idService]);

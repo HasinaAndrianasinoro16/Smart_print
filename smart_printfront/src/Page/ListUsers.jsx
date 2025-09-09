@@ -5,10 +5,10 @@ import {InputText} from "primereact/inputtext";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import {Dialog} from "primereact/dialog";
-import Modal_Create_Users from "../Components/Modal_Create_Users";
-import Modals_update_users from "../Components/Modals_update_users";
+import ModalCreateUsers from "../Components/ModalCreateUsers";
+import ModalsUpdateUsers from "../Components/ModalsUpdateUsers";
 
-export default function List_users(){
+export default function ListUsers(){
     const [users, setUsers] = useState([]);
     const [globalFilter, setGlobalFilter] = useState('');
     const [visible, setVisible] = useState(false);
@@ -29,6 +29,7 @@ export default function List_users(){
         }
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         Liste_users();
     }, []);
@@ -67,7 +68,7 @@ export default function List_users(){
                 style={{width:'50w'}}
                 onHide={() => setVisible(false)}
                 >
-                <Modal_Create_Users onClose={() => {setVisible(false); Liste_users();}}/>
+                <ModalCreateUsers onClose={() => {setVisible(false); Liste_users();}}/>
             </Dialog>
             <Dialog
                 header="Creer un utilisateur"
@@ -75,8 +76,8 @@ export default function List_users(){
                 style={{width:'70w'}}
                 onHide={() => setVisible1(false)}
             >
-                <Modals_update_users onClose={() => {setVisible1(false); Liste_users();}} idUser={selectedUserId}/>
-                {/*<Modal_Create_Users onClose={() => {setVisible(false); Liste_users();}}/>*/}
+                <ModalsUpdateUsers onClose={() => {setVisible1(false); Liste_users();}} idUser={selectedUserId}/>
+                {/*<ModalCreateUsers onClose={() => {setVisible(false); Liste_users();}}/>*/}
             </Dialog>
             <div className="py-3"/>
             <div className="container-fluid">

@@ -4,7 +4,7 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 
-export default function Modals_update_users({ idUser, onClose }) {
+export default function ModalsUpdateUsers({ idUser, onClose }) {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -72,6 +72,7 @@ export default function Modals_update_users({ idUser, onClose }) {
         }
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         fetchUserInfo();
     }, [idUser]);

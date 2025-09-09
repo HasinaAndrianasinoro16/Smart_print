@@ -3,7 +3,7 @@ import { InputText } from "primereact/inputtext";
 import {getApiUrl, getCookie} from "../Link/URL";
 import { ProgressSpinner } from "primereact/progressspinner";
 
-export default function Modals_create_BonCommande({ facture, onSuccess }) {
+export default function ModalsCreateBonCommande({ facture, onSuccess }) {
     const [file, setFile] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -194,7 +194,7 @@ export default function Modals_create_BonCommande({ facture, onSuccess }) {
 // import { InputText } from "primereact/inputtext";
 // import { getApiUrl } from "../Link/URL";
 //
-// export default function Modals_create_BonCommande({ facture }) {
+// export default function ModalsCreateBonCommande({ facture }) {
 //     const [file, setFile] = useState(null);
 //     const [isLoading, setIsLoading] = useState(false);
 //

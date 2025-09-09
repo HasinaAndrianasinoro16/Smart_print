@@ -5,11 +5,11 @@ import { Column } from "primereact/column";
 import {getApiUrl, getCookie} from "../Link/URL";
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { Dialog } from "primereact/dialog";
-import Modals_update_clients from "../Components/Modals_update_clients";
+import ModalsUpdateClients from "../Components/ModalsUpdateClients";
  import Headers from "../Body/Headers";
- import Modals_Ajout_client from "../Components/Modals_Ajout_client";
+ import ModalsAjoutClient from "../Components/ModalsAjoutClient";
 
-export default function Liste_Client() {
+export default function ListeClient() {
     const [globalFilter, setGlobalFilter] = useState('');
     const [Clients, setClients] = useState([]);
     const [visible, setVisible] = useState(false);
@@ -52,6 +52,7 @@ export default function Liste_Client() {
         }
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         Liste_clients();
     }, []);
@@ -121,7 +122,7 @@ export default function Liste_Client() {
                 onHide={() => setVisible(false)}
             >
                 {selectedClientId && (
-                    <Modals_update_clients
+                    <ModalsUpdateClients
                         idClients={selectedClientId}
                         onClose={() => { setVisible(false); Liste_clients(); }}
                     />
@@ -129,7 +130,7 @@ export default function Liste_Client() {
             </Dialog>
             <Dialog header="Ajout de Client" visible={visible1} style={{width: '70vw'}}
                     onHide={() => setVisible1(false)}>
-                <Modals_Ajout_client onCLose={() => {setVisible1(false); Liste_clients();}} />
+                <ModalsAjoutClient onCLose={() => {setVisible1(false); Liste_clients();}} />
             </Dialog>
 
             <div className="py-3"/>

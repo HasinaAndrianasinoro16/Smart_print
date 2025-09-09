@@ -9,15 +9,15 @@ import "./App.css";
 
 import Headers from "./Body/Headers";
 import Facturation from "./Page/Facturation";
-import Info_facture from "./Components/Info_facture";
-import Histoique_facture from "./Page/Hitsorique_facture";
-import Liste_Client from "./Page/Liste_Client";
-import Liste_produit from "./Page/Liste_produit";
-import Liste_service from "./Page/Liste_service";
-import Liste_facture_manager from "./Page/Liste_facture_manager";
+import InfoFacture from "./Components/InfoFacture";
+import Histoique_facture from "./Page/HitsoriqueFacture";
+import ListeClient from "./Page/ListeClient";
+import ListeProduit from "./Page/ListeProduit";
+import ListeService from "./Page/ListeService";
+import ListeFactureManager from "./Page/ListeFactureManager";
 import Login from "./Page/Login";
 import Home from "./Page/Home";
-import List_users from "./Page/List_users";
+import ListUsers from "./Page/ListUsers";
 import { getApiUrl } from "./Link/URL";
 
 function App() {
@@ -71,13 +71,13 @@ function App() {
             <Routes>
                 <Route path="/" element={user ? <Home user={user}/> : <Navigate to="/login" /> }/>
                 <Route path="/liste_facture" element={user ? <Facturation user={user} /> : <Navigate to="/login" />} />
-                <Route path="/info" element={user ? <Info_facture /> : <Navigate to="/login" />} />
-                <Route path="/factures" element={user ? <Liste_facture_manager/> : <Navigate to="/login"/>}/>
+                <Route path="/info" element={user ? <InfoFacture /> : <Navigate to="/login" />} />
+                <Route path="/factures" element={user ? <ListeFactureManager/> : <Navigate to="/login"/>}/>
                 <Route path="/Historique" element={user ? <Histoique_facture /> : <Navigate to="/login" />} />
-                <Route path="/liste_client" element={user ? <Liste_Client /> : <Navigate to="/login" />} />
-                <Route path="/liste_produit" element={user ? <Liste_produit /> : <Navigate to="/login" />} />
-                <Route path="/liste_service" element={user ? <Liste_service /> : <Navigate to="/login" />} />
-                <Route path="/liste_utilisateur" element={user ? <List_users /> : <Navigate to="/login" />} />
+                <Route path="/liste_client" element={user ? <ListeClient /> : <Navigate to="/login" />} />
+                <Route path="/liste_produit" element={user ? <ListeProduit /> : <Navigate to="/login" />} />
+                <Route path="/liste_service" element={user ? <ListeService /> : <Navigate to="/login" />} />
+                <Route path="/liste_utilisateur" element={user ? <ListUsers /> : <Navigate to="/login" />} />
             </Routes>
                 </main>
             </div>

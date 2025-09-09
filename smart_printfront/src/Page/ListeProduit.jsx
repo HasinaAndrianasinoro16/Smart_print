@@ -5,10 +5,10 @@ import { Column } from "primereact/column";
 import {getApiUrl, getCookie} from "../Link/URL";
 import { ConfirmPopup, confirmPopup } from 'primereact/confirmpopup';
 import { Dialog } from "primereact/dialog";
-import Modals_update_produits from "../Components/Modals_update_produits";
-import Modals_Create_produits from "../Components/Modals_Create_produits";
+import ModalsUpdateProduits from "../Components/ModalsUpdateProduits";
+import ModalsCreateProduits from "../Components/ModalsCreateProduits";
 import Headers from "../Body/Headers";
-export default function Liste_produit(){
+export default function ListeProduit(){
     const [globalFilter, setGlobalFilter] = useState('');
     const [visible, setVisible] = useState(false);
     const [visible2, setVisible2] = useState(false);
@@ -50,6 +50,8 @@ export default function Liste_produit(){
             console.error("erreur:", e.message || e.toString());
         }
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         Liste_produits();
     },[]);
@@ -122,7 +124,7 @@ export default function Liste_produit(){
                 onHide={() => setVisible(false)}
             >
                 {selectedIdProduits && (
-                    <Modals_update_produits
+                    <ModalsUpdateProduits
                         idProduits={selectedIdProduits}
                         onClose={() => {setVisible(false); Liste_produits();}}
                         />
@@ -135,7 +137,7 @@ export default function Liste_produit(){
                 style={{width: '50vw'}}
                 onHide={() => setVisible2(false)}
             >
-                <Modals_Create_produits onClose={() => {setVisible2(false); Liste_produits();}} />
+                <ModalsCreateProduits onClose={() => {setVisible2(false); Liste_produits();}} />
             </Dialog>
 
             <div className="py-3"/>

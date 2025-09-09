@@ -3,7 +3,7 @@ import { InputText } from "primereact/inputtext";
 import { InputNumber } from "primereact/inputnumber";
 import {getApiUrl, getCookie} from "../Link/URL";
 
-export default function Modals_Ajout_client({onCLose}) {
+export default function ModalsAjoutClient({onCLose}) {
     const [formData, setFormData] = useState({
         nom: '',
         adresse: '',

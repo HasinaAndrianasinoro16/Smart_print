@@ -8,7 +8,7 @@ import { Toast } from 'primereact/toast';
 import html2pdf from "html2pdf.js";
 import MyLogo from "../assets/img/upscalemedia-transformed.jpeg";
 
-export default function Info_facture() {
+export default function InfoFacture() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const factureId = queryParams.get("id");
@@ -109,6 +109,7 @@ export default function Info_facture() {
     };
 
     // Chargement des données
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         if (!factureId) return;
         fetchData();
@@ -515,7 +516,7 @@ export default function Info_facture() {
 // import html2pdf from "html2pdf.js";
 // import {ConfirmPopup, confirmPopup} from "primereact/confirmpopup";
 //
-// export default function Info_facture() {
+// export default function InfoFacture() {
 //     const location = useLocation();
 //     const queryParams = new URLSearchParams(location.search);
 //     const factureId = queryParams.get("id");

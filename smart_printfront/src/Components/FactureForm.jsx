@@ -60,6 +60,7 @@ export default function FactureForm({ facture, onSuccess }) {
         }
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         fetchProduits();
     }, []);

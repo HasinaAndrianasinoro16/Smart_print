@@ -5,7 +5,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { ProgressSpinner } from "primereact/progressspinner";
 import {getApiUrl, getCookie} from "../Link/URL";
 
-export default function Modals_Creation_Facture({ onSuccess, onClose, User }) {
+export default function ModalsCreationFacture({ onSuccess, onClose, User }) {
     const [formData, setFormData] = useState({
         client: null,
         date_emission: null,

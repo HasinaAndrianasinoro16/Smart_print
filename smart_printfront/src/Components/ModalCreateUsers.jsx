@@ -3,7 +3,7 @@ import {getApiUrl, getCookie} from "../Link/URL";
 import {InputText} from "primereact/inputtext";
 import {Dropdown} from "primereact/dropdown";
 
-export default function Modal_Create_Users({onClose}){
+export default function ModalCreateUsers({onClose}){
     const [nom, setNom] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');

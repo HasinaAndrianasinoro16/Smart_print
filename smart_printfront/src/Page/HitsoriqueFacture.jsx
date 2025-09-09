@@ -77,6 +77,7 @@ export default function HistoriqueFacture() {
         }
     }, []);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         loadData();
     }, [loadData]);

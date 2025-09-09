@@ -4,7 +4,7 @@ import { InputNumber } from "primereact/inputnumber";
 import { ProgressSpinner } from "primereact/progressspinner";
 import {getApiUrl, getCookie} from "../Link/URL";
 
-export default function Modals_update_clients({ idClients, onClose }) {
+export default function ModalsUpdateClients({ idClients, onClose }) {
     const [formData, setFormData] = useState({
         nom: '',
         adresse: '',
@@ -67,6 +67,7 @@ export default function Modals_update_clients({ idClients, onClose }) {
         }
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         fetchClientInfo();
     }, [idClients]);

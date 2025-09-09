@@ -5,11 +5,11 @@ import {InputText} from "primereact/inputtext";
 import {DataTable} from "primereact/datatable";
 import {Column} from "primereact/column";
 import { Dialog } from "primereact/dialog";
-import Modals_Create_Service from "../Components/Modals_Create_Service";
-import Modal_update_service from "../Components/Modlal_update_service";
+import ModalsCreateService from "../Components/ModalsCreateService";
+import Modal_update_service from "../Components/ModlalUpdateService";
 import Headers from "../Body/Headers";
 
-export default function Liste_service(){
+export default function ListeService(){
     const [globalFilter, setGlobalFilter] = useState('');
     const [visible, setVisible] = useState(false);
     const [visible2, setVisible2] = useState(false);
@@ -52,6 +52,7 @@ export default function Liste_service(){
         }
     }
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         Liste_service();
     }, []);
@@ -121,7 +122,7 @@ export default function Liste_service(){
                 style={{width: '50vw'}}
                 onHide={() => setVisible2(false)}
             >
-                <Modals_Create_Service onClose={() => {setVisible(false); Liste_service();}} />
+                <ModalsCreateService onClose={() => {setVisible(false); Liste_service();}} />
             </Dialog>
             <Dialog
                 header="Modifier un Service"

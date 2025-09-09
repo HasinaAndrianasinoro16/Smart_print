@@ -31,6 +31,7 @@ export default function Home({ user }) {
         }
     };
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         if (user?.role === 2) {
             fetchStats();
