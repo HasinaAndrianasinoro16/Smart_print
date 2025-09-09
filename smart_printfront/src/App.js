@@ -10,7 +10,7 @@ import "./App.css";
 import Headers from "./Body/Headers";
 import Facturation from "./Page/Facturation";
 import InfoFacture from "./Components/InfoFacture";
-import Histoique_facture from "./Page/HitsoriqueFacture";
+import HistoiqueFacture from "./Page/HitsoriqueFacture";
 import ListeClient from "./Page/ListeClient";
 import ListeProduit from "./Page/ListeProduit";
 import ListeService from "./Page/ListeService";
@@ -73,7 +73,7 @@ function App() {
                 <Route path="/liste_facture" element={user ? <Facturation user={user} /> : <Navigate to="/login" />} />
                 <Route path="/info" element={user ? <InfoFacture /> : <Navigate to="/login" />} />
                 <Route path="/factures" element={user ? <ListeFactureManager/> : <Navigate to="/login"/>}/>
-                <Route path="/Historique" element={user ? <Histoique_facture /> : <Navigate to="/login" />} />
+                <Route path="/Historique" element={user ? <HistoiqueFacture /> : <Navigate to="/login" />} />
                 <Route path="/liste_client" element={user ? <ListeClient /> : <Navigate to="/login" />} />
                 <Route path="/liste_produit" element={user ? <ListeProduit /> : <Navigate to="/login" />} />
                 <Route path="/liste_service" element={user ? <ListeService /> : <Navigate to="/login" />} />
