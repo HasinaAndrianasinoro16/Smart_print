@@ -75,6 +75,7 @@ export default function ModalsUpdateUsers({ idUser, onClose }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         fetchUserInfo();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [idUser]);
 
     const handleInputChange = (e) => {

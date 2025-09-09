@@ -189,7 +189,7 @@ export default function InfoFacture() {
                 throw new Error(errorText);
             }
 
-            const data = await response.json();
+             await response.json();
             showSuccess("Email envoyé avec succès !");
         } catch (error) {
             console.error("Erreur:", error);

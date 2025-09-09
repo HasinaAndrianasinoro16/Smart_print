@@ -70,6 +70,7 @@ export default function ModalsUpdateClients({ idClients, onClose }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         fetchClientInfo();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [idClients]);
 
     const handleInputChange = (e) => {

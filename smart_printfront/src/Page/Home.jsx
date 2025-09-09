@@ -36,6 +36,7 @@ export default function Home({ user }) {
         if (user?.role === 2) {
             fetchStats();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dates, user]);
 
     const getRoleName = (role) => {

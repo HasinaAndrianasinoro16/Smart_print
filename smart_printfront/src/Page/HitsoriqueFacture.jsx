@@ -153,7 +153,7 @@ export default function HistoriqueFacture() {
                 throw new Error("Erreur lors de la modification de la facture");
             }
 
-            const result = await response.json();
+             await response.json();
             alert("Bon de commande restituée avec succès");
             await loadData();
 
@@ -182,7 +182,7 @@ export default function HistoriqueFacture() {
                 throw new Error("Erreur lors de la modification de la facture");
             }
 
-            const result = await response.json();
+             await response.json();
             alert("Facture restituée avec succès");
             await loadData();
 

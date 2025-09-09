@@ -65,6 +65,7 @@ export default function ModalsUpdateProduits({ idProduits, onClose }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         fetchProduitInfo();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [idProduits]);
 
     const handleInputChange = (e) => {
