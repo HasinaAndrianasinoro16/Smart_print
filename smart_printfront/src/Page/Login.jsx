@@ -122,7 +122,7 @@ export default function Login({ setUser }) {
                     <form className="p-4 p-md-5 border rounded-3 bg-light" onSubmit={handleSubmit}>
                         <div className="text-center">
                             <img src={MyLogo} alt="Logo" width="140" className="mb-3" />
-                            <h2 className="h4 mb-4">Connexion administrateur</h2>
+                            <h2 className="h4 mb-4">Connexion</h2>
                         </div>
 
                         {error && <div className="alert alert-danger">{error}</div>}
