@@ -16,6 +16,7 @@ services:
             - DB_HOST=db
             - SESSION_DRIVER=database
             - SESSION_DOMAIN=localhost
+#            - SANCTUM_STATEFUL_DOMAINS=localhost,127.0.0.1
             - SANCTUM_STATEFUL_DOMAINS=localhost:3000
         networks:
             - laravel_network

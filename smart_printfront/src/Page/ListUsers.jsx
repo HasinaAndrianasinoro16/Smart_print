@@ -70,7 +70,7 @@ export default function ListUsers(){
                 <ModalCreateUsers onClose={() => {setVisible(false); Liste_users();}}/>
             </Dialog>
             <Dialog
-                header="Creer un utilisateur"
+                header="Modifier un utilisateur"
                 visible={visible1}
                 style={{width:'70w'}}
                 onHide={() => setVisible1(false)}
