@@ -11,8 +11,12 @@ services:
         volumes:
             - .:/var/www
             - ./storage:/var/www/storage
+            - laravel_sessions:/tmp
         environment:
             - DB_HOST=db
+            - SESSION_DRIVER=database
+            - SESSION_DOMAIN=localhost
+            - SANCTUM_STATEFUL_DOMAINS=localhost:3000
         networks:
             - laravel_network
         depends_on:
@@ -50,6 +54,9 @@ services:
 volumes:
     postgres_data:
         driver: local
+    laravel_sessions:
+        driver: local
+
 
 networks:
     laravel_network:
